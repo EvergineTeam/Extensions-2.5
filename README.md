@@ -1,4 +1,4 @@
 Extensions
 ==========
 
-External sdk integrated in WaveEngine
+External APIs integrated in WaveEngine
