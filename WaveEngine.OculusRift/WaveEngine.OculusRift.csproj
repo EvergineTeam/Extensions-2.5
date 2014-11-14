@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{31E07DA6-5D7A-4089-8D60-BF2E56029BD1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WaveEngine.OculusRift</RootNamespace>
+    <AssemblyName>WaveEngine.OculusRift</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="SharpDX.DXGI, Version=2.6.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Users\javie_000\Downloads\SharpOVR Sample\packages\SharpDX.2.6.2\Bin\DirectX11-Signed-net40\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="D3D11ConfigData.cs" />
+    <Compile Include="D3D11TextureData.cs" />
+    <Compile Include="DistortionCapabilities.cs" />
+    <Compile Include="EyeDesc.cs" />
+    <Compile Include="EyeRenderDesc.cs" />
+    <Compile Include="EyeType.cs" />
+    <Compile Include="FovPort.cs" />
+    <Compile Include="FrameTiming.cs" />
+    <Compile Include="HMD.cs" />
+    <Compile Include="HMDCapabilities.cs" />
+    <Compile Include="HMDDesc.cs" />
+    <Compile Include="HMDType.cs" />
+    <Compile Include="HSWDisplayState.cs" />
+    <Compile Include="OVR.cs" />
+    <Compile Include="OVRService.cs" />
+    <Compile Include="PoseF.cs" />
+    <Compile Include="PoseStateF.cs" />
+    <Compile Include="Profile.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyNames.cs" />
+    <Compile Include="Rect.cs" />
+    <Compile Include="RenderAPIConfigHeader.cs" />
+    <Compile Include="RenderAPIType.cs" />
+    <Compile Include="SensorData.cs" />
+    <Compile Include="Size2.cs" />
+    <Compile Include="StatusBits.cs" />
+    <Compile Include="TextureFormat.cs" />
+    <Compile Include="TextureHeader.cs" />
+    <Compile Include="TrackingCapabilities.cs" />
+    <Compile Include="TrackingState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="libovr.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\WaveEngine.Common\Projects\WaveEngine.Common.csproj">
+      <Project>{55b6b4f4-bce2-4ef7-836f-44f17332f924}</Project>
+      <Name>WaveEngine.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\WaveEngine.Framework\Projects\WaveEngine.Framework.csproj">
+      <Project>{75527125-5aa8-45d0-a801-f674ee689e78}</Project>
+      <Name>WaveEngine.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Platforms\Windows\Adapter\WaveEngine.Adapter.csproj">
+      <Project>{d0d1320b-c32e-46cd-945b-ca6214b208a3}</Project>
+      <Name>WaveEngine.Adapter</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\Resources\PostBuildTargets\Windows.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
