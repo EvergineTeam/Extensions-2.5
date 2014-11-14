@@ -24,6 +24,9 @@ namespace WaveEngine.ImageEffects
     /// </summary>
     public class GlowMaterial : Material
     {
+        /// <summary>
+        /// Passes for this material.
+        /// </summary>
         public enum Passes
         {
             /// <summary>

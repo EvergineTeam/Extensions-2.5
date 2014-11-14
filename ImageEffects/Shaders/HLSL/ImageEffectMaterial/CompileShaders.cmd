@@ -19,6 +19,7 @@ goto compile
 
 :compile
 call :CompileShader ImageEffect vs vsImageEffect
+call :CompileShader ImageEffect ps psImageEffect
 
 echo.
 

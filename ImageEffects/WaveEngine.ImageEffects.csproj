@@ -20,20 +20,20 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\WaveEngine.ImageEffects.XML</DocumentationFile>
+    <DocumentationFile>bin\x86\Debug\WaveEngine.ImageEffects.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\WaveEngine.ImageEffects.XML</DocumentationFile>
+    <DocumentationFile>bin\x86\Release\\WaveEngine.ImageEffects.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -47,6 +47,10 @@
   <ItemGroup>
     <Compile Include="Antialiasing\AntialiasingLens.cs" />
     <Compile Include="Antialiasing\AntialiasingMaterial.cs" />
+    <Compile Include="ColorCorrection\ColorCorrectionLens.cs" />
+    <Compile Include="ColorCorrection\ColorCorrectionMaterial.cs" />
+    <Compile Include="Distortion\DistortionLens.cs" />
+    <Compile Include="Distortion\DistortionMaterial.cs" />
     <Compile Include="FishEye\FishEyeLens.cs" />
     <Compile Include="FishEye\FishEyeMaterial.cs" />
     <Compile Include="Glow\GlowLens.cs" />
@@ -68,17 +72,23 @@
     <Compile Include="Convolution\ConvolutionMaterial.cs" />
     <Compile Include="Pixelate\PixelateLens.cs" />
     <Compile Include="Pixelate\PixelateMaterial.cs" />
+    <Compile Include="Posterize\PosterizeLens.cs" />
+    <Compile Include="Posterize\PosterizeMaterial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RadialBlur\RadialBlurLens.cs" />
     <Compile Include="RadialBlur\RadialBlurMaterial.cs" />
     <Compile Include="Scanlines\ScanlinesLens.cs" />
     <Compile Include="Scanlines\ScanlinesMaterial.cs" />
+    <Compile Include="ScreenOverlay\ScreenOverlayLens.cs" />
+    <Compile Include="ScreenOverlay\ScreenOverlayMaterial.cs" />
     <Compile Include="Sepia\SepiaLens.cs" />
     <Compile Include="Sepia\SepiaMaterial.cs" />
     <Compile Include="Sobel\SobelLens.cs" />
     <Compile Include="Sobel\SobelMaterial.cs" />
     <Compile Include="Tiling\TilingLens.cs" />
     <Compile Include="Tiling\TilingMaterial.cs" />
+    <Compile Include="TiltShift\TiltShiftLens.cs" />
+    <Compile Include="TiltShift\TiltShiftMaterial.cs" />
     <Compile Include="ToneMapping\ToneMappingLens.cs" />
     <Compile Include="ToneMapping\ToneMappingMaterial.cs" />
     <Compile Include="Vignette\VignetteLens.cs" />
@@ -87,7 +97,14 @@
   <ItemGroup>
     <EmbeddedResource Include="Shaders\HLSL\AntialiasingMaterial\AntialiasingpsFXAA.fxo" />
     <EmbeddedResource Include="FilmGrain\NoiseEffectGrain.wpk" />
+    <EmbeddedResource Include="Distortion\DistortionNormals.wpk" />
+    <EmbeddedResource Include="ColorCorrection\RGBTable16x1.wpk" />
     <None Include="Shaders\HLSL\AntialiasingMaterial\CompileShaders.cmd" />
+    <EmbeddedResource Include="Shaders\HLSL\ColorCorrectionMaterial\ColorCorrectionpsColorCorrection.fxo" />
+    <EmbeddedResource Include="Shaders\HLSL\ColorCorrectionMaterial\ColorCorrectionpsColorCorrectionLinear.fxo" />
+    <None Include="Shaders\HLSL\ColorCorrectionMaterial\CompileShaders.cmd" />
+    <None Include="Shaders\HLSL\DistortionMaterial\CompileShaders.cmd" />
+    <EmbeddedResource Include="Shaders\HLSL\DistortionMaterial\DistortionpsDistortion.fxo" />
     <None Include="Shaders\HLSL\FishEyeMaterial\CompileShaders.cmd" />
     <EmbeddedResource Include="Shaders\HLSL\FishEyeMaterial\FishEyepsFishEye.fxo" />
     <None Include="Shaders\HLSL\GlowMaterial\CompileShaders.cmd" />
@@ -119,14 +136,23 @@
     <EmbeddedResource Include="Shaders\HLSL\GrayScaleMaterial\GrayScalepsGrayScale.fxo" />
     <None Include="Shaders\HLSL\ImageEffectMaterial\CompileShaders.cmd" />
     <EmbeddedResource Include="Shaders\HLSL\ImageEffectMaterial\ImageEffectvsImageEffect.fxo" />
+    <EmbeddedResource Include="Shaders\HLSL\ImageEffectMaterial\ImageEffectpsImageEffect.fxo" />
     <None Include="Shaders\HLSL\InvertMaterial\CompileShaders.cmd" />
     <EmbeddedResource Include="Shaders\HLSL\InvertMaterial\InvertpsInvert.fxo" />
     <None Include="Shaders\HLSL\PixelateMaterial\CompileShaders.cmd" />
     <EmbeddedResource Include="Shaders\HLSL\PixelateMaterial\PixelatepsPixel.fxo" />
+    <None Include="Shaders\HLSL\PosterizeMaterial\CompileShaders.cmd" />
+    <EmbeddedResource Include="Shaders\HLSL\PosterizeMaterial\PosterizepsPosterize.fxo" />
     <None Include="Shaders\HLSL\RadialBlurMaterial\CompileShaders.cmd" />
     <EmbeddedResource Include="Shaders\HLSL\RadialBlurMaterial\RadialBlurpsRadialBlur.fxo" />
     <None Include="Shaders\HLSL\ScanlinesMaterial\CompileShaders.cmd" />
     <EmbeddedResource Include="Shaders\HLSL\ScanlinesMaterial\ScanlinespsScanlines.fxo" />
+    <None Include="Shaders\HLSL\ScreenOverlayMaterial\CompileShaders.cmd" />
+    <EmbeddedResource Include="Shaders\HLSL\ScreenOverlayMaterial\ScreenOverlaypsScreenOverlayAdditive.fxo" />
+    <EmbeddedResource Include="Shaders\HLSL\ScreenOverlayMaterial\ScreenOverlaypsScreenOverlayMultiply.fxo" />
+    <EmbeddedResource Include="Shaders\HLSL\ScreenOverlayMaterial\ScreenOverlaypsScreenOverlayOverlay.fxo" />
+    <EmbeddedResource Include="Shaders\HLSL\ScreenOverlayMaterial\ScreenOverlaypsScreenOverlayScreenBlend.fxo" />
+    <EmbeddedResource Include="Shaders\HLSL\ScreenOverlayMaterial\ScreenOverlaypsScreenOverlayAlphaBlend.fxo" />
     <None Include="Shaders\HLSL\SepiaMaterial\CompileShaders.cmd" />
     <EmbeddedResource Include="Shaders\HLSL\SepiaMaterial\SepiapsSepia.fxo" />
     <None Include="Shaders\HLSL\SobelMaterial\CompileShaders.cmd" />
@@ -136,6 +162,10 @@
     <None Include="Shaders\HLSL\Structures.fxh" />
     <None Include="Shaders\HLSL\TilingMaterial\CompileShaders.cmd" />
     <EmbeddedResource Include="Shaders\HLSL\TilingMaterial\TilingpsTiling.fxo" />
+    <None Include="Shaders\HLSL\TiltShiftMaterial\CompileShaders.cmd" />
+    <EmbeddedResource Include="Shaders\HLSL\TiltShiftMaterial\TiltShiftpsTiltShift.fxo" />
+    <EmbeddedResource Include="Shaders\HLSL\TiltShiftMaterial\TiltShiftpsFastBlur.fxo" />
+    <EmbeddedResource Include="Shaders\HLSL\TiltShiftMaterial\TiltShiftvsFastBlur.fxo" />
     <None Include="Shaders\HLSL\ToneMappingMaterial\CompileShaders.cmd" />
     <EmbeddedResource Include="Shaders\HLSL\ToneMappingMaterial\ToneMappingpsFilmic.fxo" />
     <EmbeddedResource Include="Shaders\HLSL\ToneMappingMaterial\ToneMappingpsLinear.fxo" />
@@ -153,16 +183,6 @@
     <None Include="Shaders\HLSL\ImageEffectMaterial\ImageEffect.fx" />
     <None Include="Shaders\HLSL\InvertMaterial\Invert.fx" />
     <None Include="Shaders\HLSL\SobelMaterial\Sobel.fx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WaveEngine.Common\WaveEngine.Common.csproj">
-      <Project>{55b6b4f4-bce2-4ef7-836f-44f17332f924}</Project>
-      <Name>WaveEngine.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WaveEngine.Framework\WaveEngine.Framework.csproj">
-      <Project>{75527125-5aa8-45d0-a801-f674ee689e78}</Project>
-      <Name>WaveEngine.Framework</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\HLSL\AntialiasingMaterial\Antialiasing.fx" />
@@ -209,11 +229,31 @@
   <ItemGroup>
     <None Include="Shaders\HLSL\FishEyeMaterial\FishEye.fx" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\HLSL\PosterizeMaterial\Posterize.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\HLSL\DistortionMaterial\Distortion.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\HLSL\TiltShiftMaterial\TiltShift.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\HLSL\ScreenOverlayMaterial\ScreenOverlay.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shaders\HLSL\ColorCorrectionMaterial\ColorCorrection.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\WaveEngine.Common\Projects\WaveEngine.Common.csproj">
+      <Project>{55b6b4f4-bce2-4ef7-836f-44f17332f924}</Project>
+      <Name>WaveEngine.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\WaveEngine.Framework\Projects\WaveEngine.Framework.csproj">
+      <Project>{75527125-5aa8-45d0-a801-f674ee689e78}</Project>
+      <Name>WaveEngine.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
-    <PostBuildEvent>
-      copy /Y "$(TargetDir)*.dll" "$(WaveEngine)v1.0\Lib\Windows"
-      copy /Y "$(TargetDir)$(TargetName).xml" "$(WaveEngine)v1.0\Lib\Windows"
-    </PostBuildEvent>
-  </PropertyGroup>
+  <Import Project="..\..\Resources\PostBuildTargets\Windows.targets" />
 </Project>

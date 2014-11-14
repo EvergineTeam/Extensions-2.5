@@ -33,13 +33,14 @@ struct VS_IN_TEXTURE
 
 struct VS_OUT_TEXTURE
 {
-	float4 Position 		: SV_POSITION;
 	float4 OutUV[8]			: TEXCOORD0;
+	float4 Position 		: SV_POSITION;
 };
 
 struct PS_IN_TEXTURE
 {
-	float2 TexCoord 		: TEXCOORD0;
+	float4 Position 	: SV_POSITION;
+	float2 TexCoord 	: TEXCOORD0;
 };
 
 struct PS_IN_TEXTUREWEIGTH
@@ -68,7 +69,7 @@ float4 psBloomDown(PS_IN_TEXTURE input) : SV_Target0
 	half Amount = saturate(BloomLuminance * 0.5);
 	color.rgb *= Amount;
 
-	return float4(color.xyz, 1.0);
+	return float4(color.rgb, 1.0);
 }
 
 // Bloom

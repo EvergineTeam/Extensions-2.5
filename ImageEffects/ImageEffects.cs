@@ -59,6 +59,20 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
+        /// Gets a new <see cref="DistortionLens" />.
+        /// </summary>
+        /// <param name="normalTexturePath">Texture use to apply the distortion effect.</param>
+        /// <returns>
+        /// A instance of DistortionLens.
+        /// </returns>
+        public static DistortionLens Distortion(string normalTexturePath = null)
+        {
+            DistortionLens distortion = new DistortionLens(normalTexturePath);
+
+            return distortion;
+        }
+
+        /// <summary>
         /// Gets a new <see cref="FastBlurLens"/>.
         /// </summary>
         /// <returns>A instance of FastBlurLens.</returns>
@@ -122,6 +136,15 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
+        /// Gets a new <see cref="PosterizeLens"/>.
+        /// </summary>
+        /// <returns>A instance of PosterizeLens.</returns>
+        public static PosterizeLens Posterize()
+        {
+            return new PosterizeLens();
+        }
+
+        /// <summary>
         /// Gets a new <see cref="RadialBlurLens"/>.
         /// </summary>
         /// <returns>A instance of RadialBblurLens.</returns>
@@ -137,6 +160,16 @@ namespace WaveEngine.ImageEffects
         public static ScanlinesLens ScanLines()
         {
             return new ScanlinesLens();
+        }
+
+        /// <summary>
+        /// Gets a new <see cref="ScreenOverlayLens"/>.
+        /// </summary>
+        /// <param name="normalTexturePath">Texture use to apply the ScreenOverlay effect.</param>
+        /// <returns>A instance of ScreenOverlayLens.</returns>
+        public static ScreenOverlayLens ScreenOverlay(string overlayTexturePath = null)
+        {
+            return new ScreenOverlayLens(overlayTexturePath);
         }
 
         /// <summary>
@@ -164,6 +197,15 @@ namespace WaveEngine.ImageEffects
         public static TilingLens Tiling()
         {
             return new TilingLens();
+        }
+
+        /// <summary>
+        /// Gets a new <see cref="TiltShiftLens"/>.
+        /// </summary>
+        /// <returns>A instance of TiltShiftLens.</returns>
+        public static TiltShiftLens TiltShift()
+        {
+            return new TiltShiftLens();
         }
 
         /// <summary>

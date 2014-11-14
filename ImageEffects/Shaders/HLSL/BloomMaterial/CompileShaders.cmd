@@ -36,7 +36,7 @@ endlocal
 exit /b
 
 :CompileShader
-set fxc=%fxcpath% /nologo %1.fx /T %2_4_0_level_9_3 /I Structures.fxh /E %3 /Fo %1%3.fxo  
+set fxc=%fxcpath% /nologo %1.fx /T %2_4_0_level_9_3 /E %3 /Fo %1%3.fxo  
 echo.
 echo %fxc%
 %fxc% || set error=1

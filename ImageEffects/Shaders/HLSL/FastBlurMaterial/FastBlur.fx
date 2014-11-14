@@ -26,8 +26,8 @@ struct VS_IN_TEXTURE
 
 struct VS_OUT_TEXTURE
 {
-	float4 Position 		: SV_POSITION;
 	float4 OutUV[8]			: TEXCOORD0;
+	float4 Position 		: SV_POSITION;
 };
 
 struct PS_IN_TEXTURE

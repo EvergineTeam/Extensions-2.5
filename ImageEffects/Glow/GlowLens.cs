@@ -93,6 +93,7 @@ namespace WaveEngine.ImageEffects
 
             RenderTarget rt1 = graphicsDevice.RenderTargets.GetTemporalRenderTarget(width, height);
             RenderTarget rt2 = graphicsDevice.RenderTargets.GetTemporalRenderTarget(width, height);
+            graphicsDevice.RenderState.Viewport = new Viewport(0, 0, width, height);
 
             // Down sampler
             mat.Texture = this.Source;
@@ -105,6 +106,7 @@ namespace WaveEngine.ImageEffects
             this.RenderToImage(rt2, this.material);
 
             // UpCombine
+            graphicsDevice.RenderState.Viewport = new Viewport(0, 0, this.Source.Width, this.Source.Height);
             mat.Pass = GlowMaterial.Passes.UpCombine;
             mat.Texture = this.Source;
             mat.Texture1 = rt2;
