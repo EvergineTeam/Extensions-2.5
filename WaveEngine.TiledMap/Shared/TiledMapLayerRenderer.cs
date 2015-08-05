@@ -487,10 +487,11 @@ namespace WaveEngine.TiledMap
             Vector2 position;
             this.GetTilePosition(tile, tileset, out position);
 
+            #region Flip calculation - Original version
+            /*
             float texCoordXStart, texCoordXEnd;
             float texCoordYStart, texCoordYEnd;
 
-            #region Flip calculation
             if (tile.HorizontalFlip)
             {
                 texCoordXStart = tileRectangle.X + tileRectangle.Width;
@@ -520,31 +521,90 @@ namespace WaveEngine.TiledMap
                 texCoordYStart = tileRectangle.Y;
                 texCoordYEnd = tileRectangle.Y + tileRectangle.Height;
             }
-            #endregion
 
             // Vertex 0
             this.vertices[vertexId].Position = new Vector3(position.X, position.Y, 0);
             this.vertices[vertexId].Color = Color.White;
             this.vertices[vertexId].TexCoord = new Vector2(texCoordXStart, texCoordYStart);
             vertexId++;
-
+            
             // Vertex 1
             this.vertices[vertexId].Position = new Vector3(position.X + tileset.TileWidth, position.Y, 0);
             this.vertices[vertexId].Color = Color.White;
             this.vertices[vertexId].TexCoord = new Vector2(texCoordXEnd, texCoordYStart);
             vertexId++;
-
+            
             // Vertex 2
             this.vertices[vertexId].Position = new Vector3(position.X + tileset.TileWidth, position.Y + tileset.TileHeight, 0);
             this.vertices[vertexId].Color = Color.White;
             this.vertices[vertexId].TexCoord = new Vector2(texCoordXEnd, texCoordYEnd);
             vertexId++;
-
+            
             // Vertex 3
             this.vertices[vertexId].Position = new Vector3(position.X, position.Y + tileset.TileHeight, 0);
             this.vertices[vertexId].Color = Color.White;
             this.vertices[vertexId].TexCoord = new Vector2(texCoordXStart, texCoordYEnd);
             vertexId++;
+            */
+            #endregion Flip calculation - Original version
+
+            #region Flip calculation - Fixed version
+            var topLeft = new Vector2(tileRectangle.X, tileRectangle.Y);
+            var topRight = new Vector2(tileRectangle.X + tileRectangle.Width, tileRectangle.Y);
+            var bottomRight = new Vector2(tileRectangle.X + tileRectangle.Width, tileRectangle.Y + tileRectangle.Height);
+            var bottomLeft = new Vector2(tileRectangle.X, tileRectangle.Y + tileRectangle.Height);
+
+            if (tile.DiagonalFlip)
+            {
+                var temp = topRight;
+                topRight = bottomLeft;
+                bottomLeft = temp;
+            }
+
+            if (tile.HorizontalFlip)
+            {
+                var temp = topLeft;
+                topLeft = topRight;
+                topRight = temp;
+                temp = bottomRight;
+                bottomRight = bottomLeft;
+                bottomLeft = temp;
+            }
+
+            if (tile.VerticalFlip)
+            {
+                var temp = topLeft;
+                topLeft = bottomLeft;
+                bottomLeft = temp;
+                temp = topRight;
+                topRight = bottomRight;
+                bottomRight = temp;
+            }
+
+            // Vertex 0
+            this.vertices[vertexId].Position = new Vector3(position.X, position.Y, 0);
+            this.vertices[vertexId].Color = Color.White;
+            this.vertices[vertexId].TexCoord = topLeft;
+            vertexId++;
+
+            // Vertex 1
+            this.vertices[vertexId].Position = new Vector3(position.X + tileset.TileWidth, position.Y, 0);
+            this.vertices[vertexId].Color = Color.White;
+            this.vertices[vertexId].TexCoord = topRight;
+            vertexId++;
+
+            // Vertex 2
+            this.vertices[vertexId].Position = new Vector3(position.X + tileset.TileWidth, position.Y + tileset.TileHeight, 0);
+            this.vertices[vertexId].Color = Color.White;
+            this.vertices[vertexId].TexCoord = bottomRight;
+            vertexId++;
+
+            // Vertex 3
+            this.vertices[vertexId].Position = new Vector3(position.X, position.Y + tileset.TileHeight, 0);
+            this.vertices[vertexId].Color = Color.White;
+            this.vertices[vertexId].TexCoord = bottomLeft;
+            vertexId++;
+            #endregion Flip calculation - Fixed version
         }
 
         /// <summary>
