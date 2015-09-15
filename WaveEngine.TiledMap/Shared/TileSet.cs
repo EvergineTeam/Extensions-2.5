@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // TileSet
 //
-// Copyright © 2014 Wave Corporation
+// Copyright © 2015 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -121,11 +121,27 @@ namespace WaveEngine.TiledMap
         /// </summary>
         public int YTilesCount
         {
-            //get { return (int)tmxTileset.Image.Height / this.TileHeight; }
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the drawing offset in the X axis.
+        /// </summary>
+        public int XDrawingOffset
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the drawing offset in the Y axis.
+        /// </summary>
+        public int YDrawingOffset
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// Gets the tileset image texture.
@@ -168,6 +184,8 @@ namespace WaveEngine.TiledMap
             this.Margin = tmxTileset.Margin;
             this.XTilesCount = (int)(tmxTileset.Image.Width - (2 * this.Margin) + this.Spacing) / (this.TileWidth + this.Spacing);
             this.YTilesCount = (int)(tmxTileset.Image.Height - (2 * this.Margin) + this.Spacing) / (this.TileHeight + this.Spacing);
+            this.XDrawingOffset = (int)tmxTileset.TileOffset.X;
+            this.YDrawingOffset = (int)tmxTileset.TileOffset.Y;
 
             this.FirstGid = tmxTileset.FirstGid;
             this.LastGid = tmxTileset.FirstGid + (this.XTilesCount * this.YTilesCount) - 1;

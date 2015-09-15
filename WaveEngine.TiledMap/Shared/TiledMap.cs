@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // TiledMap
 //
-// Copyright © 2014 Wave Corporation
+// Copyright © 2015 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -147,7 +147,7 @@ namespace WaveEngine.TiledMap
         public string Version { get; private set; }
 
         /// <summary>
-        /// Map orientation. Tiled supports "orthogonal", "isometric" and "staggered" (since 0.9.0) at the moment.
+        /// Map orientation. Tiled supports "orthogonal", "isometric", "staggered" and "hexagonal" (since 0.11.0) at the moment.
         /// </summary>
         public TiledMapOrientationType Orientation { get; private set; }
 
@@ -160,6 +160,21 @@ namespace WaveEngine.TiledMap
         public TiledMapRenderOrderType RenderOrder { get; private set; }
 
         /// <summary>
+        /// Stagger Axis. For staggered maps, indicates if the tiles are ordered in X axis or Y axis.
+        /// </summary>
+        public TiledMapStaggerAxisType StaggerAxis { get; private set; }
+
+        /// <summary>
+        /// Stagger Index. For staggered maps, indicates if the tiles index is odd or even.
+        /// </summary>
+        public TiledMapStaggerIndexType StaggerIndex { get; private set; }
+
+        /// <summary>
+        /// The tile side length for hexagonal maps.
+        /// </summary>
+        public int HexSideLength { get; private set; }
+
+        /// <summary>
         /// The map width in tiles.
         /// </summary>
         public int Width { get; private set; }
@@ -170,7 +185,7 @@ namespace WaveEngine.TiledMap
         public int Height { get; private set; }
 
         /// <summary>
-        /// The width of a tile.s
+        /// The width of a tile.
         /// </summary>
         public int TileWidth { get; private set; }
 
@@ -225,15 +240,30 @@ namespace WaveEngine.TiledMap
             this.minLayerDrawOrder = -100;
             this.maxLayerDrawOrder = 100;
 
-            this.tmxMap = new TmxMap(this.tmxPath);
-            this.Version = this.tmxMap.Version;
+            try
+            {
+                this.tmxMap = new TmxMap(new WaveDocumentLoader(), this.tmxPath);
+                this.Version = this.tmxMap.Version;
+            }
+            catch (Exception ex)
+            {
+                throw new FormatException("Invalid TiledMap format: A problem occurred during parsing the TMX file.", ex);
+            }
+
             this.Orientation = (TiledMapOrientationType)((int)this.tmxMap.Orientation);
             this.RenderOrder = (TiledMapRenderOrderType)((int)this.tmxMap.RenderOrder);
+            this.StaggerAxis = (TiledMapStaggerAxisType)((int)this.tmxMap.StaggerAxis);
+            this.StaggerIndex = (TiledMapStaggerIndexType)((int)this.tmxMap.StaggerIndex);
             this.Width = this.tmxMap.Width;
             this.Height = this.tmxMap.Height;
             this.TileWidth = this.tmxMap.TileWidth;
             this.TileHeight = this.tmxMap.TileHeight;
             this.BackgroundColor = new Color(this.tmxMap.BackgroundColor.R, this.tmxMap.BackgroundColor.G, this.tmxMap.BackgroundColor.B);
+
+            if (this.tmxMap.HexSideLength.HasValue)
+            {
+                this.HexSideLength = this.tmxMap.HexSideLength.Value;
+            }
 
             this.tileLayers = new Dictionary<string, TiledMapLayer>();
             this.TileLayers = new ReadOnlyDictionary<string, TiledMapLayer>(this.tileLayers);
@@ -274,37 +304,191 @@ namespace WaveEngine.TiledMap
         /// <param name="position">The world position</param>
         /// <param name="tileX">Out tile X coordinate</param>
         /// <param name="tileY">Out tile Y coordinate</param>
-        public void GetTileCoordinatesByPosition(Vector2 position, out int tileX, out int tileY)
+        public void GetTileCoordinatesByWorldPosition(Vector2 position, out int tileX, out int tileY)
         {
+            int sideLengthX = 0;
+            int sideLengthY = 0;
+            bool staggerX = this.StaggerAxis == TiledMapStaggerAxisType.X;
+            bool staggerEven = this.StaggerIndex == TiledMapStaggerIndexType.Even;
+
+            if (this.Orientation == TiledMapOrientationType.Hexagonal)
+            {
+                if (this.StaggerAxis == TiledMapStaggerAxisType.X)
+                {
+                    sideLengthX = this.HexSideLength;
+                }
+                else
+                {
+                    sideLengthY = this.HexSideLength;
+                }
+            }
+
             position = Vector3.Transform(position.ToVector3(this.transform.DrawOrder), this.transform.WorldInverseTransform).ToVector2();
-            position.X /= this.TileWidth;
-            position.Y /= this.TileHeight;
+
+            Vector2 referencePosition = new Vector2(
+                position.X / (this.TileWidth + sideLengthX),
+                position.Y / (this.TileHeight + sideLengthY));
+
+            if (referencePosition.X < 0)
+            {
+                referencePosition.X -= 1;
+            }
+
+            if (referencePosition.Y < 0)
+            {
+                referencePosition.Y -= 1;
+            }
 
             switch (this.Orientation)
             {
                 case TiledMapOrientationType.Orthogonal:
-                    tileX = (int)position.X;
-                    tileY = (int)position.Y;
+                    tileX = (int)referencePosition.X;
+                    tileY = (int)referencePosition.Y;
                     break;
 
                 case TiledMapOrientationType.Isometric:
                     float halfHeight = this.Height * 0.5f;
-                    tileX = (int)(-halfHeight + (position.X + position.Y));
+                    tileX = (int)(-halfHeight + (referencePosition.X + referencePosition.Y));
 
-                    float y = halfHeight + (-position.X + position.Y);
+                    float y = halfHeight + (-referencePosition.X + referencePosition.Y);
                     y = (y >= 0) ? y : y - 1;
                     tileY = (int)y;
                     break;
 
                 case TiledMapOrientationType.Staggered:
-                    int coordX = (int)(-0.5f + (position.X + position.Y));
 
-                    y = 0.5f + (-position.X + position.Y);
+                    if (staggerEven)
+                    {
+                        if (staggerX)
+                        {
+                            referencePosition.Y -= 0.5f;
+                        }
+                        else
+                        {
+                            referencePosition.X -= 0.5f;
+                        }
+                    }
+
+                    int coordX = (int)(-0.5f + (referencePosition.X + referencePosition.Y));
+
+                    y = 0.5f + (-referencePosition.X + referencePosition.Y);
                     y = (y >= 0) ? y : y - 1;
                     int coordY = (int)y;
 
-                    tileX = (coordX - coordY) / 2;
-                    tileY = coordX + coordY;
+                    int evenOffset = staggerEven ? 1 : 0;
+
+                    if (staggerX)
+                    {
+                        tileX = coordX - coordY;
+                        tileY = (coordX + coordY + evenOffset) / 2;
+                    }
+                    else
+                    {
+                        tileX = (coordX - coordY + evenOffset) / 2;
+                        tileY = coordX + coordY;
+                    }
+                    break;
+
+                case TiledMapOrientationType.Hexagonal:
+                    Vector2 tileCoordinates = Vector2.Zero;
+                    var sideOffsetX = (this.TileWidth - sideLengthX) / 2;
+                    var sideOffsetY = (this.TileHeight - sideLengthY) / 2;
+
+                    if (staggerX)
+                    {
+                        position.X -= staggerEven ? this.TileWidth : sideOffsetX;
+                    }
+                    else
+                    {
+                        position.Y -= staggerEven ? this.TileHeight : sideOffsetY;
+                    }
+
+                    referencePosition = new Vector2(
+                        (float)Math.Floor(position.X / (this.TileWidth + sideLengthX)),
+                        (float)Math.Floor(position.Y / (this.TileHeight + sideLengthY)));
+
+                    // Relative x and y position on the base square of the grid-aligned tile
+                    Vector2 rel = new Vector2(
+                        position.X - referencePosition.X * (this.TileWidth + sideLengthX),
+                        position.Y - referencePosition.Y * (this.TileHeight + sideLengthY));
+
+                    // Adjust the reference point to the correct tile coordinates
+                    // Determine the nearest hexagon tile by the distance to the center
+                    Vector2[] centers = new Vector2[4];
+                    var columnWidth = sideOffsetX + sideLengthX;
+                    var rowHeight = sideOffsetY + sideLengthY;
+
+                    if (staggerX)
+                    {
+                        int left = sideLengthX / 2;
+                        int centerX = left + columnWidth;
+                        int centerY = this.TileHeight / 2;
+
+                        centers[0] = new Vector2(left, centerY);
+                        centers[1] = new Vector2(centerX, centerY - rowHeight);
+                        centers[2] = new Vector2(centerX, centerY + rowHeight);
+                        centers[3] = new Vector2(centerX + columnWidth, centerY);
+
+                        referencePosition.X *= 2;
+
+                        if (staggerEven)
+                        {
+                            referencePosition.X += 1;
+                        }
+                    }
+                    else
+                    {
+                        int top = sideLengthY / 2;
+                        int centerX = this.TileWidth / 2;
+                        int centerY = top + rowHeight;
+
+                        centers[0] = new Vector2(centerX, top);
+                        centers[1] = new Vector2(centerX - columnWidth, centerY);
+                        centers[2] = new Vector2(centerX + columnWidth, centerY);
+                        centers[3] = new Vector2(centerX, centerY + rowHeight);
+
+                        referencePosition.Y *= 2;
+
+                        if (staggerEven)
+                        {
+                            referencePosition.Y += 1;
+                        }
+                    }
+
+                    int nearest = 0;
+                    float minDist = float.MaxValue;
+
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        Vector2 center = centers[i];
+                        float dc = (center - rel).LengthSquared();
+
+                        if (dc < minDist)
+                        {
+                            minDist = dc;
+                            nearest = i;
+                        }
+                    }
+
+                    var offsetsStaggerX = new Vector2[]{
+                        new Vector2( 0,  0),
+                        new Vector2(+1, -1),
+                        new Vector2(+1,  0),
+                        new Vector2(+2,  0),
+                    };
+
+                    var offsetsStaggerY = new Vector2[]{
+                        new Vector2( 0,  0),
+                        new Vector2(-1, +1),
+                        new Vector2( 0, +1),
+                        new Vector2( 0, +2),
+                    };
+
+                    var offsets = staggerX ? offsetsStaggerX : offsetsStaggerY;
+                    tileCoordinates = referencePosition + offsets[nearest];
+
+                    tileX = (int)tileCoordinates.X;
+                    tileY = (int)tileCoordinates.Y;
                     break;
 
                 default:
@@ -312,6 +496,32 @@ namespace WaveEngine.TiledMap
                     tileY = 0;
                     break;
             }
+        }
+
+        /// <summary>
+        /// Does the stagger x.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <returns></returns>
+        internal bool DoStaggerX(int x)
+        {
+            var isStaggerX = this.StaggerAxis == TiledMapStaggerAxisType.X;
+            var staggerEven = this.StaggerIndex == TiledMapStaggerIndexType.Even ? 1 : 0;
+
+            return isStaggerX && ((x & 1) ^ staggerEven) == 1;
+        }
+
+        /// <summary>
+        /// Does the stagger y.
+        /// </summary>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        internal bool DoStaggerY(int y)
+        {
+            var isStaggerX = this.StaggerAxis == TiledMapStaggerAxisType.X;
+            var staggerEven = this.StaggerIndex == TiledMapStaggerIndexType.Even ? 1 : 0;
+
+            return !isStaggerX && ((y & 1) ^ staggerEven) == 1;
         }
         #endregion
 
@@ -382,7 +592,8 @@ namespace WaveEngine.TiledMap
             }
             .AddComponent(new Transform2D()
             {
-                Opacity = (float)tmxLayer.Opacity
+                Opacity = (float)tmxLayer.Opacity,
+                Origin = this.transform.Origin
             })
             .AddComponent(tileMapLayer)
             .AddComponent(new TiledMapLayerRenderer(this.layerType, this.samplerMode));

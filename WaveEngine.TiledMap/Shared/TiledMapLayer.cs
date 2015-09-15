@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // TiledMapLayer
 //
-// Copyright © 2014 Wave Corporation
+// Copyright © 2015 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -60,14 +60,6 @@ namespace WaveEngine.TiledMap
         {
             get { return this.tiles; }
         }
-
-        /// <summary>
-        /// Gets the tiled map
-        /// </summary>
-        public TiledMap TiledMap
-        {
-            get { return this.tiledMap; }
-        }
         #endregion
 
         #region Initialization
@@ -81,18 +73,7 @@ namespace WaveEngine.TiledMap
             this.tiles = new List<LayerTile>();
             this.NeedRefresh = true;
         }
-        #endregion
 
-        #region Public Methods
-        /// <summary>
-        /// Dispose this component
-        /// </summary>
-        public void Dispose()
-        {
-        }
-        #endregion
-
-        #region Private Methods
         /// <summary>
         /// Initializes this component
         /// </summary>
@@ -125,6 +106,10 @@ namespace WaveEngine.TiledMap
                 LayerTile tile = new LayerTile(tmxTile, selectedTileset);
                 this.tiles.Add(tile);
 
+                Vector2 tileLocalPosition;
+                this.GetTilePosition(tile, selectedTileset, out tileLocalPosition);
+                tile.LocalPosition = tileLocalPosition;
+
                 int x = i % this.tiledMap.Width;
                 int y = i / this.tiledMap.Width;
                 this.tileTable[x, y] = tile;
@@ -132,8 +117,108 @@ namespace WaveEngine.TiledMap
         }
         #endregion
 
-
         #region Public Methods
+        /// <summary>
+        /// Obtains the tile position
+        /// </summary>
+        /// <param name="tile">The tile</param>
+        /// <param name="tileset">The tileset</param>
+        /// <param name="position">The tile position</param>
+        internal void GetTilePosition(LayerTile tile, Tileset tileset, out Vector2 position)
+        {
+            switch (this.tiledMap.Orientation)
+            {
+                case TiledMapOrientationType.Orthogonal:
+                    position = new Vector2(
+                        tile.X * this.tiledMap.TileWidth,
+                        tile.Y * this.tiledMap.TileHeight);
+                    break;
+
+                case TiledMapOrientationType.Isometric:
+                    position = new Vector2(
+                        ((tile.X - tile.Y) * this.tiledMap.TileWidth * 0.5f) + (this.tiledMap.Height * this.tiledMap.TileWidth * 0.5f) - this.tiledMap.TileWidth * 0.5f,
+                        (tile.X + tile.Y) * this.tiledMap.TileHeight * 0.5f);
+                    break;
+
+                case TiledMapOrientationType.Staggered:
+                case TiledMapOrientationType.Hexagonal:
+
+                    int sideLengthX = 0;
+                    int sideLengthY = 0;
+
+                    float rowSize = 0;
+                    float columSize = 0;
+                    int staggerIndexSign = this.tiledMap.StaggerIndex == TiledMapStaggerIndexType.Odd ? 1 : -1;
+                    var staggerAxisOffset = this.tiledMap.StaggerIndex == TiledMapStaggerIndexType.Even ? 0.5f : 0;
+
+                    if (this.tiledMap.Orientation == TiledMapOrientationType.Hexagonal)
+                    {
+                        if (this.tiledMap.StaggerAxis == TiledMapStaggerAxisType.X)
+                        {
+                            sideLengthX = this.tiledMap.HexSideLength;
+                        }
+                        else
+                        {
+                            sideLengthY = this.tiledMap.HexSideLength;
+                        }
+                    }
+
+                    if (this.tiledMap.StaggerAxis == TiledMapStaggerAxisType.X)
+                    {
+                        rowSize = (tile.X / 2) + ((tile.X % 2) * 0.5f);
+                        columSize = staggerAxisOffset + tile.Y + ((tile.X % 2) * 0.5f * staggerIndexSign);
+                    }
+                    else
+                    {
+                        rowSize = staggerAxisOffset + tile.X + ((tile.Y % 2) * 0.5f * staggerIndexSign);
+                        columSize = tile.Y * 0.5f;
+                    }
+
+                    position = new Vector2(
+                            rowSize * (this.tiledMap.TileWidth + sideLengthX),
+                            columSize * (this.tiledMap.TileHeight + sideLengthY));
+                    break;
+
+                default:
+                    position = Vector2.Zero;
+                    break;
+            }
+
+            position.X += tileset.XDrawingOffset;
+            position.Y += tileset.YDrawingOffset + this.tiledMap.TileHeight - tileset.TileHeight;
+        }
+
+        /// <summary>
+        /// Gets a <see cref="NeighboursCollection"/> that contains the neighbour of the spefied tile.
+        /// </summary>
+        /// <param name="tile">The tile.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">The tile argument can not be null</exception>
+        public NeighboursCollection GetNeighboursFromTile(LayerTile tile)
+        {
+            if (tile == null)
+            {
+                throw new ArgumentNullException("The tile argument can not be null");
+            }
+
+            switch (tiledMap.Orientation)
+            {
+                case TiledMapOrientationType.Orthogonal:
+                    return new OrthogonalNeighbours(this, tile);
+
+                case TiledMapOrientationType.Isometric:
+                    return new IsometricNeighbours(this, tile);
+
+                case TiledMapOrientationType.Staggered:
+                    return new StaggeredNeighbours(this, tile, tiledMap.StaggerAxis, tiledMap.StaggerIndex);
+
+                case TiledMapOrientationType.Hexagonal:
+                    return new HexagonalNeighbours(this, tile, tiledMap.StaggerAxis, tiledMap.StaggerIndex);
+
+                default:
+                    return null;
+            }
+        }
 
         /// <summary>
         /// Get Tile coordinates (x, y) by world position
@@ -142,10 +227,9 @@ namespace WaveEngine.TiledMap
         public LayerTile GetLayerTileByWorldPosition(Vector2 position)
         {
             int tileX, tileY;
-            this.tiledMap.GetTileCoordinatesByPosition(position, out tileX, out tileY);
+            this.tiledMap.GetTileCoordinatesByWorldPosition(position, out tileX, out tileY);
             return this.GetLayerTileByMapCoordinates(tileX, tileY);
         }
-
 
         /// <summary>
         /// Gets a tile by its map coordinates
@@ -155,17 +239,24 @@ namespace WaveEngine.TiledMap
         /// <returns></returns>
         public LayerTile GetLayerTileByMapCoordinates(int x, int y)
         {
-            if (x < 0 || x >= this.tiledMap.Width)
+            LayerTile result = null;
+
+            if (x >= 0
+             && x < this.tiledMap.Width
+             && y >= 0
+             && y < this.tiledMap.Height)
             {
-                throw new IndexOutOfRangeException(string.Format("x param must be in [{0}, {1}] range", 0, this.tiledMap.Width - 1));
+                result = this.tileTable[x, y];
             }
 
-            if (y < 0 || y >= this.tiledMap.Height)
-            {
-                throw new IndexOutOfRangeException(string.Format("y param must be in [{0}, {1}] range", 0, this.tiledMap.Height - 1));
-            }
+            return result;
+        }
 
-            return this.tileTable[x, y];
+        /// <summary>
+        /// Dispose this component
+        /// </summary>
+        public void Dispose()
+        {
         }
         #endregion
     }

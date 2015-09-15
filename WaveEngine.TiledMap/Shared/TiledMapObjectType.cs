@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // TiledMapObjectType
 //
-// Copyright © 2014 Wave Corporation
+// Copyright © 2015 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion

@@ -1,8 +1,19 @@
+#region File Description
+//-----------------------------------------------------------------------------
+// ARCameraComponent
+//
+// Copyright © 2015 Wave Engine S.L. All rights reserved.
+// Use is subject to license terms.
+//-----------------------------------------------------------------------------
+#endregion
+
+#region Usings Statements
 using System;
 using WaveEngine.Framework.Graphics;
 using WaveEngine.Common.Math;
 using WaveEngine.Framework;
 using WaveEngine.Framework.Services;
+#endregion
 
 namespace WaveEngine.Vuforia
 {
@@ -45,8 +56,10 @@ namespace WaveEngine.Vuforia
 			if (this.arService.State == ARState.TRACKING) 
 			{
 				this.view = this.arService.Pose;
-				this.position = this.arService.PoseInv.Translation;
-                this.lookAt = this.position + (this.arService.PoseInv.Backward * this.farPlane);
+				this.Transform.Position = this.arService.PoseInv.Translation;
+
+                this.upVector = this.arService.Pose.Up;
+                this.Transform.LookAt(this.Transform.Position + (this.arService.PoseInv.Backward * this.farPlane), this.upVector);
 
 				this.projection = this.arService.GetCameraProjection (this.nearPlane, this.farPlane);
 

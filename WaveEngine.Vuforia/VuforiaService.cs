@@ -1,3 +1,13 @@
+#region File Description
+//-----------------------------------------------------------------------------
+// VuforiaService
+//
+// Copyright © 2015 Wave Engine S.L. All rights reserved.
+// Use is subject to license terms.
+//-----------------------------------------------------------------------------
+#endregion
+
+#region Usings Statements
 using System;
 using System.Runtime.InteropServices;
 using WaveEngine.Common.Math;
@@ -7,6 +17,7 @@ using System.Diagnostics;
 using WaveEngine.Vuforia;
 using WaveEngine.Framework.Services;
 using WaveEngine.Common;
+#endregion
 
 #if IOS
 using WaveEngine.Vuforia.iOS;

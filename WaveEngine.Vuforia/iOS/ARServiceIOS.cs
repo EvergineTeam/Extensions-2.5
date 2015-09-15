@@ -1,9 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
 using WaveEngine.Vuforia;
-using MonoTouch.UIKit;
+using UIKit;
 using WaveEngine.Common.Math;
-using MonoTouch.Foundation;
+using Foundation;
 using WaveEngine.Framework.Services;
 using WaveEngine.Common.Graphics;
 

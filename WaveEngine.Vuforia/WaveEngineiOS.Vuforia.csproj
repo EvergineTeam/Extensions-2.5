@@ -6,11 +6,11 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{4A120C13-C21E-40B2-AC07-871C7E9E6E63}</ProjectGuid>
-    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>WaveEngineiOS.Vuforia</RootNamespace>
+    <RootNamespace>WaveEngine.Vuforia</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>WaveEngineiOS.Vuforia</AssemblyName>
+    <AssemblyName>WaveEngine.Vuforia</AssemblyName>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -27,7 +27,7 @@
     <ConsolePause>false</ConsolePause>
     <MtouchDebug>true</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <DocumentationFile>bin\iOS\Debug\WaveEngineiOS.Vuforia.XML</DocumentationFile>
+    <DocumentationFile>bin\iOS\Debug\WaveEngine.Vuforia.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <DocumentationFile>bin\iOS\Release\WaveEngineiOS.Vuforia.XML</DocumentationFile>
+    <DocumentationFile>bin\iOS\Release\WaveEngine.Vuforia.XML</DocumentationFile>
     <DefineConstants>__MOBILE__;__IOS__;__IOS__;__MOBILE__;IOS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
@@ -46,6 +46,9 @@
     <Compile Include="IVuforiaService.cs" />
     <Compile Include="iOS\ARServiceIOS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfoExt.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="VuforiaService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -55,7 +58,7 @@
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="monotouch" />
+    <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\WaveEngine.Common\Projects\WaveEngineiOS.Common.csproj">
@@ -67,6 +70,6 @@
       <Name>WaveEngineiOS.Framework</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\..\Resources\PostBuildTargets\iOS.targets" />
 </Project>

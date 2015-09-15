@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="SharedProjectFile_SccProperties">
-    <SharedProjectFile_ProjectGuid>{4837f7c9-0d3c-4fce-bc1b-668169efc2b2}</SharedProjectFile_ProjectGuid>
+    <SharedProjectFile_ProjectGuid>{7b3cdc96-11df-4328-91bf-e51abd34934c}</SharedProjectFile_ProjectGuid>
     <SharedProjectFile_SccProjectName>SAK</SharedProjectFile_SccProjectName>
     <SharedProjectFile_SccAuxPath>SAK</SharedProjectFile_SccAuxPath>
     <SharedProjectFile_SccLocalPath>SAK</SharedProjectFile_SccLocalPath>
@@ -10,14 +10,18 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>c4f43321-a626-49bf-8247-0123ab96e606</SharedGUID>
+    <SharedGUID>f91804aa-c185-4ff5-b144-efb7b6cd0437</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>WaveEngine.TiledMap</Import_RootNamespace>
+    <Import_RootNamespace>WaveEngine.TiledMap.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)LayerTile.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Neighbours\IsometricNeighbours.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Neighbours\OrthogonalNeighbours.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Neighbours\StaggeredNeighbours.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Neighbours\HexagonalNeighbours.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Neighbours\NeighboursCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapLayerRenderer.cs" />
@@ -26,16 +30,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapObjectType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapOrientationType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapRenderOrderType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TiledMapStaggerAxisType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TiledMapStaggerIndexType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TileSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TilesetTerrain.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TilesetTile.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Tmx\ImageLayer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Tmx\Layer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Tmx\Map.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Tmx\ObjectGroup.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Tmx\TiledCore.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Tmx\Tileset.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WaveXDocumentLoader.cs" />
   </ItemGroup>
-
 </Project>

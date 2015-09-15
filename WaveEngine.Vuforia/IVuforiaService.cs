@@ -1,7 +1,18 @@
+#region File Description
+//-----------------------------------------------------------------------------
+// IVuforiaService
+//
+// Copyright © 2015 Wave Engine S.L. All rights reserved.
+// Use is subject to license terms.
+//-----------------------------------------------------------------------------
+#endregion
+
+#region Usings Statements
 using System;
 using WaveEngine.Vuforia;
 using WaveEngine.Common.Math;
 using System.Drawing;
+#endregion
 
 namespace WaveEngine.Vuforia
 {

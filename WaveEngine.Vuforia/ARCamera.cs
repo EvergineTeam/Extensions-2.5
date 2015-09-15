@@ -1,9 +1,20 @@
+#region File Description
+//-----------------------------------------------------------------------------
+// ARCamera
+//
+// Copyright © 2015 Wave Engine S.L. All rights reserved.
+// Use is subject to license terms.
+//-----------------------------------------------------------------------------
+#endregion
+
+#region Usings Statements
 using System;
 using WaveEngine.Framework.Graphics;
 using WaveEngine.Common.Math;
 using WaveEngine.Framework;
 using System.Collections.Generic;
 using WaveEngine.Common.Graphics;
+#endregion
 
 namespace WaveEngine.Vuforia
 {

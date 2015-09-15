@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>1622f3bd-878c-4c74-8169-cc464d66daa6</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WaveEngine.Networking</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)EventDelegates.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Host.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)INetworkClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)INetworkFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)INetworkServer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)INetworkService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Messages\DeliveryMethod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Messages\IncomingMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Messages\MessageType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Messages\OutgoingMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkServer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkSyncComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetworkSyncType.cs" />
+  </ItemGroup>
+</Project>

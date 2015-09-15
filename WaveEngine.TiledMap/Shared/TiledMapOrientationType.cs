@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // TiledMapOrientationType
 //
-// Copyright © 2014 Wave Corporation
+// Copyright © 2015 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -18,12 +18,14 @@ using System.Threading.Tasks;
 namespace WaveEngine.TiledMap
 {
     /// <summary>
-    /// Map orientation. Tiled supports "orthogonal", "isometric" and "staggered" (since 0.9.0) at the moment.
+    /// Map orientation. Tiled supports "orthogonal", "isometric", "staggered" and "hexagonal" (since 0.11.0) at the moment.
     /// </summary>
     public enum TiledMapOrientationType
     {
+        Unknown,
         Orthogonal,
         Isometric,
-        Staggered
+        Staggered,
+        Hexagonal
     }
 }

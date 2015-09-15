@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // TiledMapObject
 //
-// Copyright © 2014 Wave Corporation
+// Copyright © 2015 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TiledSharp;
 #endregion
 
 namespace WaveEngine.TiledMap
@@ -73,7 +74,7 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Gets the point list 
         /// </summary>
-        public List<Tuple<int, int>> Points { get; private set; }
+        public List<TmxObjectPoint> Points { get; private set; }
 
         /// <summary>
         /// Gets the object property list
@@ -91,17 +92,17 @@ namespace WaveEngine.TiledMap
             this.Name = tmxObject.Name;
             this.ObjectType = (TiledMapObjectType)((int)tmxObject.ObjectType);
             this.Type = tmxObject.Type;
-            this.X = tmxObject.X;
-            this.Y = tmxObject.Y;
-            this.Width = tmxObject.Width;
-            this.Height = tmxObject.Height;
+            this.X = (float)tmxObject.X;
+            this.Y = (float)tmxObject.Y;
+            this.Width = (float)tmxObject.Width;
+            this.Height = (float)tmxObject.Height;
             this.Rotation = tmxObject.Rotation;
             this.Visible = tmxObject.Visible;
 
             this.Properties = new Dictionary<string, string>(tmxObject.Properties);
             if (tmxObject.Points != null)
             {
-                this.Points = new List<Tuple<int, int>>(tmxObject.Points);
+                this.Points = new List<TmxObjectPoint>(tmxObject.Points);
             }
         }
         #endregion

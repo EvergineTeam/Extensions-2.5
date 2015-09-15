@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // Tile
 //
-// Copyright © 2014 Wave Corporation
+// Copyright © 2015 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TiledSharp;
+using WaveEngine.Common.Math;
 #endregion
 
 namespace WaveEngine.TiledMap
@@ -25,9 +26,9 @@ namespace WaveEngine.TiledMap
     {
         #region Properties
         /// <summary>
-        /// Gets the global tile ID.
+        /// Gets the tile ID.
         /// </summary>
-        public int Gid
+        public int Id
         {
             get;
             private set;
@@ -95,6 +96,15 @@ namespace WaveEngine.TiledMap
             get;
             private set;
         }
+
+        /// <summary>
+        /// Gets the tile local position
+        /// </summary>
+        public Vector2 LocalPosition
+        {
+            get;
+            internal set;
+        }
         #endregion
 
         #region Initialization
@@ -105,7 +115,6 @@ namespace WaveEngine.TiledMap
         /// <param name="tileset">Th</param>
         public LayerTile(TmxLayerTile tmxTile, Tileset tileset)
         {
-            this.Gid = tmxTile.Gid;
             this.X = tmxTile.X;
             this.Y = tmxTile.Y;
             this.HorizontalFlip = tmxTile.HorizontalFlip;
@@ -115,10 +124,23 @@ namespace WaveEngine.TiledMap
             if (tileset != null)
             {
                 this.Tileset = tileset;
-                int tileId = this.Gid - this.Tileset.FirstGid;
+                this.Id = tmxTile.Gid - this.Tileset.FirstGid;
 
-                this.TilesetTile = this.Tileset.TilesTable[tileId];
+                this.TilesetTile = this.Tileset.TilesTable[this.Id];
             }
+        }
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format("{0}, {1} [{2}]", this.X, this.Y, this.Id);
         }
         #endregion
     }
