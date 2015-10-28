@@ -64,6 +64,7 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
   </ItemGroup>
+  <Import Project="..\Shared\WaveEngine.ImageEffects.Shared.projitems" Label="Shared" Condition="Exists('..\Shared\WaveEngine.ImageEffects.Shared.projitems')" />
   <Import Project="..\..\..\Resources\StyleCop\StyleCop.Targets" />
   <Import Project="..\..\..\Resources\PostBuildTargets\iOS.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

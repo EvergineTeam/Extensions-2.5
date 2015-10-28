@@ -7,8 +7,9 @@
 // -----------------------------------------------------------------------------
 #endregion
 
-#region using
+#region Using Statements
 using System;
+using System.Runtime.Serialization;
 using WaveEngine.Common.Graphics;
 using WaveEngine.Common.Math;
 using WaveEngine.Framework;
@@ -21,43 +22,98 @@ namespace WaveEngine.Kinect.Drawables
     /// <summary>
     /// Kinect Skeleton Drawable 3D
     /// </summary>
+    [DataContract(Namespace = "WaveEngine.Kinect.Drawables")]
     public class KinectSkeletonsDrawable3D : Drawable3D
     {
         /// <summary>
         /// The behavior
         /// </summary>
         [RequiredComponent]
-        private KinectSkeletonsBehavior behavior;
+        private KinectSkeletonsBehavior behavior = null;
 
         /// <summary>
         /// The color0
         /// </summary>
-        private Color color0 = Color.Yellow;
+        [DataMember]
+        private Color lineColor;
 
         /// <summary>
         /// The color1
-        /// </summary>
-        private Color color1 = Color.Red;
+        /// </summary>        
+        private Color pointColor;
 
         /// <summary>
         /// The points
         /// </summary>
         private Vector3 point0, point1;
 
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets line color
+        /// </summary>      
+        [DataMember]
+        public Color LineColor
+        {
+            get
+            {
+                return this.lineColor;
+            }
+
+            set
+            {
+                this.lineColor = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets point color
+        /// </summary>      
+        [DataMember]
+        public Color PointColor
+        {
+            get
+            {
+                return this.pointColor;
+            }
+
+            set
+            {
+                this.pointColor = value;
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Default values
+        /// </summary>
+        protected override void DefaultValues()
+        {
+            base.DefaultValues();
+
+            this.lineColor = Color.Yellow;
+            this.pointColor = Color.Red;
+        }
+
         /// <summary>
         /// Draws the current frame
         /// </summary>
         /// <param name="gameTime">Current Gametime</param>
         public override void Draw(TimeSpan gameTime)
-        {
-            //// this.RenderManager.LineBatch3D.DrawCircle(Vector3.Zero, 50, this.color0);
+        {            
+            if (this.behavior == null ||
+                this.behavior.DrawPoints3D == null ||
+                this.behavior.DrawOrientations == null)
+            {
+                return;
+            }
 
-            foreach(var p in this.behavior.DrawPoints3D)
+            foreach (var p in this.behavior.DrawPoints3D)
             {
                 this.point0 = p;
-
-                // this.RenderManager.LineBatch3D.DrawCircle(ref this.point0, 0.05f, ref this.color0);
-                this.RenderManager.LineBatch3D.DrawPoint(ref this.point0, 0.02f, ref this.color0);
+         
+                this.RenderManager.LineBatch3D.DrawPoint(ref this.point0, 0.02f, ref this.lineColor);
             }
 
             foreach (var line in this.behavior.DrawOrientations)

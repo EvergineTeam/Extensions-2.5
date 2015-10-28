@@ -7,12 +7,14 @@
 // -----------------------------------------------------------------------------
 #endregion
 
-#region using
+#region Using Statements
 using System;
+using System.Runtime.Serialization;
 using WaveEngine.Common.Graphics;
 using WaveEngine.Common.Math;
 using WaveEngine.Framework;
 using WaveEngine.Framework.Graphics;
+using WaveEngine.Framework.Services;
 using WaveEngine.Kinect.Behaviors;
 #endregion
 
@@ -21,28 +23,93 @@ namespace WaveEngine.Kinect.Drawables
     /// <summary>
     /// Kinect Skeleton drawable2D class
     /// </summary>
-    public class KinectSkeletonsDrawable : Drawable2D
+    [DataContract(Namespace = "WaveEngine.Kinect.Drawables")]
+    public class KinectSkeletonsDrawable2D : Drawable2D
     {
         /// <summary>
         /// The behavior
         /// </summary>
         [RequiredComponent]
-        private KinectSkeletonsBehavior behavior;
+        private KinectSkeletonsBehavior behavior = null;
 
         /// <summary>
         /// The color0
-        /// </summary>
-        private Color color0 = Color.Yellow;
+        /// </summary>        
+        private Color lineColor;
 
         /// <summary>
         /// The color1
-        /// </summary>
-        private Color color1 = Color.Red;
+        /// </summary>        
+        private Color pointColor;
 
         /// <summary>
         /// The points
         /// </summary>
         private Vector2 point0, point1;
+
+        /// <summary>
+        /// If viewport manager is actived or not
+        /// </summary>
+        private bool existsVM;
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets line color
+        /// </summary>    
+        [DataMember]
+        public Color LineColor
+        {
+            get
+            {
+                return this.lineColor;
+            }
+
+            set
+            {
+                this.lineColor = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets point color
+        /// </summary>        
+        [DataMember]
+        public Color PointColor
+        {
+            get
+            {
+                return this.pointColor;
+            }
+
+            set
+            {
+                this.pointColor = value;
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Default values
+        /// </summary>
+        protected override void DefaultValues()
+        {
+            base.DefaultValues();
+
+            this.lineColor = Color.Yellow;
+            this.pointColor = Color.Red;
+        }
+
+        /// <summary>
+        /// Resolve dependencies method
+        /// </summary>
+        protected override void ResolveDependencies()
+        {
+            base.ResolveDependencies();
+
+            this.existsVM = (WaveServices.ViewportManager != null && WaveServices.ViewportManager.IsActivated) ? true : false;
+        }
 
         /// <summary>
         /// Allows to perform custom drawing.
@@ -54,12 +121,28 @@ namespace WaveEngine.Kinect.Drawables
         /// </remarks>
         public override void Draw(TimeSpan gameTime)
         {
+            if (this.behavior == null ||
+                this.behavior.DrawPoints2DProjected == null ||
+                this.behavior.DrawLines == null)
+            {
+                return;
+            }
+
             foreach (var p in this.behavior.DrawPoints2DProjected)
             {
                 this.point0.X = p.X;
                 this.point0.Y = p.Y;
-                this.RenderManager.LineBatch2D.DrawCircleVM(ref this.point0, 10, ref this.color0, 0);
-                this.RenderManager.LineBatch2D.DrawPointVM(ref this.point0, 10, ref this.color1, 0);
+
+                if (existsVM)
+                {
+                    this.layer.LineBatch2D.DrawCircleVM(ref this.point0, 10, ref this.lineColor, 0);
+                    this.layer.LineBatch2D.DrawPointVM(ref this.point0, 10, ref this.pointColor, 0);
+                }
+                else
+                {                                   
+                    this.layer.LineBatch2D.DrawCircle(ref this.point0, 10, ref this.lineColor, 0);
+                    this.layer.LineBatch2D.DrawPoint(ref this.point0, 10, ref this.pointColor, 0);
+                }
             }
 
             foreach (Line l in this.behavior.DrawLines)
@@ -68,7 +151,15 @@ namespace WaveEngine.Kinect.Drawables
                 this.point0.Y = l.StartPoint.Y;
                 this.point1.X = l.EndPoint.X;
                 this.point1.Y = l.EndPoint.Y;
-                this.RenderManager.LineBatch2D.DrawLineVM(ref point0, ref point1, ref color1, 0);
+
+                if (existsVM)
+                {
+                    this.RenderManager.LineBatch2D.DrawLineVM(ref point0, ref point1, ref pointColor, 0);
+                }
+                else
+                {
+                    this.RenderManager.LineBatch2D.DrawLine(ref point0, ref point1, ref pointColor, 0);
+                }
             }
         }
 

@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4A120C13-C21E-40B2-AC07-871C7E9E6E63}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>WaveEngine.Vuforia</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>WaveEngine.Vuforia</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iOS\Debug\</OutputPath>
+    <DefineConstants>DEBUG;__IOS__;__MOBILE__;IOS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchDebug>true</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <DocumentationFile>bin\iOS\Debug\WaveEngine.Vuforia.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iOS\Release\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <DocumentationFile>bin\iOS\Release\WaveEngine.Vuforia.XML</DocumentationFile>
+    <DefineConstants>__IOS__;__MOBILE__;IOS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="ARServiceIOS.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="WaveEngine.VuforiaBinding, Version=1.0.5772.20120, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\iOS\WaveEngine.VuforiaBinding.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Common\Projects\WaveEngineiOS.Common.csproj">
+      <Project>{ca72b53e-7cb1-48fb-b38f-cf1f85c6dab3}</Project>
+      <Name>WaveEngineiOS.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Components\Projects\WaveEngineiOS.Components.csproj">
+      <Project>{3efa8318-eb28-455d-b2a5-8c6189fff0a6}</Project>
+      <Name>WaveEngineiOS.Components</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Framework\Projects\WaveEngineiOS.Framework.csproj">
+      <Project>{3534edae-dd3c-4d93-b7f5-9c5d7edf6679}</Project>
+      <Name>WaveEngineiOS.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="..\Shared\WaveEngine.Vuforia.Shared.projitems" Label="Shared" Condition="Exists('..\Shared\WaveEngine.Vuforia.Shared.projitems')" />
+  <Import Project="..\..\Shared\WaveEngine.Vuforia.Shared.projitems" Label="Shared" Condition="Exists('..\..\Shared\WaveEngine.Vuforia.Shared.projitems')" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <Import Project="..\..\..\..\Resources\PostBuildTargets\iOS.targets" />
+</Project>

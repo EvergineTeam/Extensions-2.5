@@ -7,7 +7,7 @@
 //-----------------------------------------------------------------------------
 #endregion
 
-#region Using region
+#region Using Statements
 using System;
 using System.Collections.Generic;
 using Microsoft.Kinect;
@@ -16,15 +16,17 @@ using WaveEngine.Common.Math;
 using WaveEngine.Framework;
 using WaveEngine.Framework.Graphics;
 using WaveEngine.Framework.Services;
+using System.Runtime.Serialization;
+using WaveEngine.Kinect.Enums;
+using WaveEngine.Common.Attributes;
 #endregion
 
 namespace WaveEngine.Kinect.Behaviors
 {
-    using WaveEngine.Kinect.Enums;
-
     /// <summary>
     /// Kinect Skeleton Behavior
     /// </summary>
+    [DataContract(Namespace = "WaveEngine.Kinect.Behaviors")]
     public class KinectSkeletonsBehavior : Behavior
     {
         /// <summary>
@@ -58,16 +60,25 @@ namespace WaveEngine.Kinect.Behaviors
         private float depthFactorY;
 
         /// <summary>
+        /// The current source
+        /// </summary>
+        private KinectSources currentSource;
+
+        #region Properties
+
+        /// <summary>
         /// Gets or sets the draw points.
         /// </summary>
         /// <value>
         /// The draw points.
         /// </value>
+        [DontRenderProperty]
         public List<Vector3> DrawPoints3D { get; set; }
 
         /// <summary>
         /// Projected DrawPoints
         /// </summary>
+        [DontRenderProperty]
         public List<Vector2> DrawPoints2DProjected { get; set; }
 
         /// <summary>
@@ -76,17 +87,14 @@ namespace WaveEngine.Kinect.Behaviors
         /// <value>
         /// The draw lines.
         /// </value>
+        [DontRenderProperty]
         public List<Line> DrawLines { get; set; }
 
         /// <summary>
         /// Orientations
         /// </summary>
+        [DontRenderProperty]
         public List<Line> DrawOrientations { get; set; }
-
-        /// <summary>
-        /// The current source
-        /// </summary>
-        private KinectSources currentSource;
 
         /// <summary>
         /// Gets or sets the current source.
@@ -94,6 +102,7 @@ namespace WaveEngine.Kinect.Behaviors
         /// <value>
         /// The current source.
         /// </value>
+        [DataMember]
         public KinectSources CurrentSource
         {
             get
@@ -105,13 +114,15 @@ namespace WaveEngine.Kinect.Behaviors
             {
                 this.currentSource = value;
             }
-        }
+        } 
+
+        #endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KinectSkeletonsBehavior"/> class.
         /// </summary>
         public KinectSkeletonsBehavior()
-        {          
+        {
         }
 
         /// <summary>
@@ -170,10 +181,24 @@ namespace WaveEngine.Kinect.Behaviors
 
             this.kinectService = WaveServices.GetService<KinectService>();
 
-            this.colorFactorX = WaveServices.ViewportManager.VirtualWidth / this.kinectService.ColorTexture.Width;
-            this.colorFactorY = WaveServices.ViewportManager.VirtualHeight / this.kinectService.ColorTexture.Height;
-            this.depthFactorX = WaveServices.ViewportManager.VirtualWidth / this.kinectService.DepthTexture.Width;
-            this.depthFactorY = WaveServices.ViewportManager.VirtualHeight / this.kinectService.DepthTexture.Height;
+            if (this.kinectService != null)
+            {
+                if (WaveServices.ViewportManager != null && WaveServices.ViewportManager.IsActivated)
+                {
+                    this.colorFactorX = (float)WaveServices.ViewportManager.VirtualWidth / (float)this.kinectService.ColorTexture.Width;
+                    this.colorFactorY = (float)WaveServices.ViewportManager.VirtualHeight / (float)this.kinectService.ColorTexture.Height;
+                    this.depthFactorX = (float)WaveServices.ViewportManager.VirtualWidth / (float)this.kinectService.DepthTexture.Width;
+                    this.depthFactorY = (float)WaveServices.ViewportManager.VirtualHeight / (float)this.kinectService.DepthTexture.Height;
+                }
+                else
+                {
+                    this.colorFactorX = (float)WaveServices.Platform.ScreenWidth / (float)this.kinectService.ColorTexture.Width;
+                    this.colorFactorY = (float)WaveServices.Platform.ScreenHeight / (float)this.kinectService.ColorTexture.Height;
+                    this.depthFactorX = (float)WaveServices.Platform.ScreenWidth / (float)this.kinectService.DepthTexture.Width;
+                    this.depthFactorY = (float)WaveServices.Platform.ScreenHeight / (float)this.kinectService.DepthTexture.Height;
+                }
+            }
+
             this.DrawPoints2DProjected = new List<Vector2>();
             this.DrawPoints3D = new List<Vector3>();
             this.DrawLines = new List<Line>();
@@ -193,6 +218,11 @@ namespace WaveEngine.Kinect.Behaviors
         /// </remarks>
         protected override void Update(TimeSpan gameTime)
         {
+            if (this.kinectService == null)
+            {
+                return;
+            }
+
             var bodies = this.kinectService.Bodies;
 
             this.DrawPoints2DProjected.Clear();
@@ -235,7 +265,7 @@ namespace WaveEngine.Kinect.Behaviors
                             float angle;
 
                             Quaternion.ToAngleAxis(ref q, out axis, out angle);
-                            
+
                             float aux = axis.X;
                             axis.X = axis.Y;
                             axis.Y = -aux;

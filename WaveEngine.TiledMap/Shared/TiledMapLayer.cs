@@ -184,8 +184,11 @@ namespace WaveEngine.TiledMap
                     break;
             }
 
-            position.X += tileset.XDrawingOffset;
-            position.Y += tileset.YDrawingOffset + this.tiledMap.TileHeight - tileset.TileHeight;
+            if (tileset != null)
+            {
+                position.X += tileset.XDrawingOffset;
+                position.Y += tileset.YDrawingOffset + this.tiledMap.TileHeight - tileset.TileHeight;
+            }
         }
 
         /// <summary>

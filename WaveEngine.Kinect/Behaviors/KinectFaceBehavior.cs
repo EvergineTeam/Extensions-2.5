@@ -7,7 +7,7 @@
 // -----------------------------------------------------------------------------
 #endregion
 
-#region using
+#region Using Statements
 using System;
 using System.Collections.Generic;
 using Microsoft.Kinect;
@@ -19,6 +19,7 @@ using WaveEngine.Common.Graphics;
 using WaveEngine.Framework.Graphics;
 using WaveEngine.Framework.Services;
 using WaveEngine.Kinect.Enums;
+using System.Runtime.Serialization;
 #endregion
 
 namespace WaveEngine.Kinect.Behaviors
@@ -26,6 +27,7 @@ namespace WaveEngine.Kinect.Behaviors
     /// <summary>
     /// Kinect Face Behavior
     /// </summary>
+    [DataContract(Namespace = "WaveEngine.Kinect.Behaviors")]
     public class KinectFaceBehavior : Behavior
     {
         /// <summary>
@@ -91,6 +93,7 @@ namespace WaveEngine.Kinect.Behaviors
         /// <value>
         /// The current source.
         /// </value>
+        [DataMember]
         public KinectSources CurrentSource
         {
             get
@@ -123,7 +126,7 @@ namespace WaveEngine.Kinect.Behaviors
         {
             base.ResolveDependencies();
 
-            this.kinectService = WaveServices.GetService<KinectService>();
+            this.kinectService = WaveServices.GetService<KinectService>();            
         }
 
         /// <summary>
@@ -136,6 +139,11 @@ namespace WaveEngine.Kinect.Behaviors
         /// </remarks>
         protected override void Update(TimeSpan gameTime)
         {
+            if (this.kinectService == null)
+            {
+                return;
+            }
+
             FaceFrameResult[] faces = this.kinectService.FaceFrameResults;
             FaceFrameSource[] sources = this.kinectService.FaceFrameSources;
 
@@ -161,15 +169,35 @@ namespace WaveEngine.Kinect.Behaviors
                             case KinectSources.Color:
                                 points = face.FacePointsInColorSpace.Values;
                                 rectangle = face.FaceBoundingBoxInColorSpace;
-                                this.textureFactorX = WaveServices.ViewportManager.VirtualWidth / this.kinectService.ColorTexture.Width;
-                                this.textureFactorY = WaveServices.ViewportManager.VirtualHeight / this.kinectService.ColorTexture.Height;
+
+                                if (WaveServices.ViewportManager != null && WaveServices.ViewportManager.IsActivated)
+                                {
+                                    this.textureFactorX = (float)WaveServices.ViewportManager.VirtualWidth / (float)this.kinectService.ColorTexture.Width;
+                                    this.textureFactorY = (float)WaveServices.ViewportManager.VirtualHeight / (float)this.kinectService.ColorTexture.Height;
+                                }
+                                else
+                                {
+                                    this.textureFactorX = (float)WaveServices.Platform.ScreenWidth / (float)this.kinectService.ColorTexture.Width;
+                                    this.textureFactorY = (float)WaveServices.Platform.ScreenHeight / (float)this.kinectService.ColorTexture.Height;
+                                }
+                                
                                 break;
                             case KinectSources.Depth:
                             case KinectSources.Infrared:
                                 points = face.FacePointsInInfraredSpace.Values;
                                 rectangle = face.FaceBoundingBoxInInfraredSpace;
-                                this.textureFactorX = WaveServices.ViewportManager.VirtualWidth / this.kinectService.InfraredTexture.Width;
-                                this.textureFactorY = WaveServices.ViewportManager.VirtualHeight / this.kinectService.InfraredTexture.Height;
+
+                                if (WaveServices.ViewportManager != null && WaveServices.ViewportManager.IsActivated)
+                                {
+                                    this.textureFactorX = (float)WaveServices.ViewportManager.VirtualWidth / (float)this.kinectService.InfraredTexture.Width;
+                                    this.textureFactorY = (float)WaveServices.ViewportManager.VirtualHeight / (float)this.kinectService.InfraredTexture.Height;
+                                }
+                                else
+                                {
+                                    this.textureFactorX = (float)WaveServices.Platform.ScreenWidth / (float)this.kinectService.InfraredTexture.Width;
+                                    this.textureFactorY = (float)WaveServices.Platform.ScreenHeight / (float)this.kinectService.InfraredTexture.Height;
+                                }
+
                                 break;
                             default:
                                 return;

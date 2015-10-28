@@ -178,6 +178,9 @@ namespace WaveEngine.Spine
             this.material = new StandardMaterial() { LightingEnabled = false, LayerType = this.LayerType, SamplerMode = this.SamplerMode };
         }
 
+        /// <summary>
+        /// Default values
+        /// </summary>
         protected override void DefaultValues()
         {
             base.DefaultValues();

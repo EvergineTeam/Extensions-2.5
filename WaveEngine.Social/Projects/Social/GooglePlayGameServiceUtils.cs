@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Android.App;
 using WaveEngine.Social;
 using WaveEngine.Framework;
+using System.Diagnostics;
 
 #endregion
 
@@ -46,7 +47,14 @@ namespace WaveEngineAndroid.Social.Social
                 tcsLogin.TrySetResult(signedIn);
             };
 
-            this.helper.SignIn();
+            try
+            {
+                this.helper.SignIn();
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine(e);
+            }
 
             return tcsLogin.Task;
         }

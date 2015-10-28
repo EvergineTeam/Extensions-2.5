@@ -7,31 +7,30 @@
 // -----------------------------------------------------------------------------
 #endregion
 
+#region Using Statements
 using System;
+using System.Runtime.Serialization;
 using WaveEngine.Common.Graphics;
 using WaveEngine.Common.Math;
 using WaveEngine.Framework;
 using WaveEngine.Framework.Graphics;
 using WaveEngine.Framework.Resources;
 using WaveEngine.Kinect.Behaviors;
+#endregion
 
 namespace WaveEngine.Kinect.Drawables
 {
     /// <summary>
     /// Kinect Face Drawable2D class
     /// </summary>
+    [DataContract(Namespace = "WaveEngine.Kinect.Drawables")]
     public class KinectFaceDrawable2D : Drawable2D
     {
         /// <summary>
         /// The behavior
         /// </summary>
         [RequiredComponent]
-        private KinectFaceBehavior behavior;
-
-        /// <summary>
-        /// The color0
-        /// </summary>
-        private Color color0 = Color.Green;
+        private KinectFaceBehavior behavior = null;
 
         /// <summary>
         /// The point 0
@@ -44,6 +43,42 @@ namespace WaveEngine.Kinect.Drawables
         private Vector2 point1;
 
         /// <summary>
+        /// The line color
+        /// </summary>        
+        private Color lineColor;
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets line color
+        /// </summary>        
+        [DataMember]
+        public Color LineColor
+        {
+            get
+            {
+                return this.lineColor;
+            }
+
+            set
+            {
+                this.lineColor = value;
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// The default values.
+        /// </summary>
+        protected override void DefaultValues()
+        {
+            base.DefaultValues();
+
+            this.lineColor = Color.LightGreen;
+        }
+
+        /// <summary>
         /// Allows to perform custom drawing.
         /// </summary>
         /// <param name="gameTime">The elapsed game time.</param>
@@ -53,11 +88,19 @@ namespace WaveEngine.Kinect.Drawables
         /// </remarks>
         public override void Draw(TimeSpan gameTime)
         {
+            if (this.behavior == null ||
+                this.behavior.DrawPoints == null ||
+                this.behavior.DrawLines == null ||
+                this.behavior.DrawTexts == null)
+            {
+                return;
+            }
+
             // Draw points
             foreach (Vector2 p in this.behavior.DrawPoints)
             {
                 this.point0 = p;
-                this.RenderManager.LineBatch2D.DrawPointVM(ref this.point0, 10, ref this.color0, 0);
+                this.layer.LineBatch2D.DrawPointVM(ref this.point0, 10, ref this.lineColor, 0);
             }
 
             // Draw lines
@@ -67,7 +110,7 @@ namespace WaveEngine.Kinect.Drawables
                 this.point0.Y = l.StartPoint.Y;
                 this.point1.X = l.EndPoint.X;
                 this.point1.Y = l.EndPoint.Y;
-                this.RenderManager.LineBatch2D.DrawLineVM(ref this.point0, ref this.point1, ref this.color0, 0);
+                this.layer.LineBatch2D.DrawLineVM(ref this.point0, ref this.point1, ref this.lineColor, 0);
             }
 
             // Draw texts
