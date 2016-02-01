@@ -13,10 +13,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using TiledSharp;
+using WaveEngine.Common.Attributes;
 using WaveEngine.Common.Graphics;
 using WaveEngine.Common.Math;
 using WaveEngine.Framework;
@@ -30,20 +32,25 @@ namespace WaveEngine.TiledMap
     /// <summary>
     /// Load and store all information concerning Tiled Maps (.TMX) files. To create/edit .tmx files you need to use Tiled Map Editor (http://www.mapeditor.org/)
     /// </summary>
+    [DataContract]
     public class TiledMap : Component
     {
+        /// <summary>
+        /// The transform 2D
+        /// </summary>
         [RequiredComponent]
         private Transform2D transform = null;
 
         /// <summary>
         /// The tmx file path
         /// </summary>
+        [DataMember]
         private string tmxPath;
 
         /// <summary>
         /// The tmx parsed instance
         /// </summary>
-        private TmxMap tmxMap;
+        internal TmxMap TmxMap;
 
         /// <summary>
         /// The list of tilesets
@@ -51,23 +58,15 @@ namespace WaveEngine.TiledMap
         private List<Tileset> tilesets;
 
         /// <summary>
-        /// The layer type
-        /// </summary>
-        private Type layerType;
-
-        /// <summary>
-        /// The sampler mode.
-        /// </summary>
-        private AddressMode samplerMode;
-
-        /// <summary>
         /// DrawOrder of the last layer
         /// </summary>
+        [DataMember]
         private float minLayerDrawOrder;
 
         /// <summary>
         /// DrawOrder of the first layer
         /// </summary>
+        [DataMember]
         private float maxLayerDrawOrder;
 
         /// <summary>
@@ -82,11 +81,21 @@ namespace WaveEngine.TiledMap
 
         #region Properties
         /// <summary>
-        /// Gets the Path of the Tiled Map TMX file
+        /// Gets or sets the Path of the Tiled Map TMX file
         /// </summary>
+        [RenderPropertyAsAsset(AssetType.Unknown)]
         public string TmxPath
         {
             get { return this.tmxPath; }
+            set
+            {
+                this.tmxPath = value;
+
+                if (this.isInitialized)
+                {
+                    this.ReloadTmxFile();
+                }
+            }
         }
 
         /// <summary>
@@ -204,29 +213,16 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Initializes a new instance of the <see cref="TiledMap" /> class.
         /// </summary>
+        public TiledMap()
+            : base()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TiledMap" /> class.
+        /// </summary>
         /// <param name="tmxPath">TMX file path.</param>
         public TiledMap(string tmxPath)
-            : this(tmxPath, DefaultLayers.Alpha, AddressMode.PointClamp)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TiledMap" /> class.
-        /// </summary>
-        /// <param name="tmxPath">TMX file path.</param>
-        /// <param name="layerType">Render layer associated to this Tiled Map</param>
-        public TiledMap(string tmxPath, Type layerType)
-            : this(tmxPath, layerType, AddressMode.PointClamp)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TiledMap" /> class.
-        /// </summary>
-        /// <param name="tmxPath">TMX file path.</param>
-        /// <param name="layerType">Render layer associated to this Tiled Map</param>
-        /// <param name="samplerMode">The sampler mode.</param>
-        public TiledMap(string tmxPath, Type layerType, AddressMode samplerMode)
         {
             if (string.IsNullOrEmpty(tmxPath))
             {
@@ -234,40 +230,21 @@ namespace WaveEngine.TiledMap
             }
 
             this.tmxPath = tmxPath;
-            this.tilesets = new List<Tileset>();
-            this.layerType = layerType;
-            this.samplerMode = samplerMode;
+        }
+
+        /// <summary>
+        /// Sets default values
+        /// </summary>
+        protected override void DefaultValues()
+        {
+            base.DefaultValues();
+
             this.minLayerDrawOrder = -100;
             this.maxLayerDrawOrder = 100;
 
-            try
-            {
-                this.tmxMap = new TmxMap(new WaveDocumentLoader(), this.tmxPath);
-                this.Version = this.tmxMap.Version;
-            }
-            catch (Exception ex)
-            {
-                throw new FormatException("Invalid TiledMap format: A problem occurred during parsing the TMX file.", ex);
-            }
-
-            this.Orientation = (TiledMapOrientationType)((int)this.tmxMap.Orientation);
-            this.RenderOrder = (TiledMapRenderOrderType)((int)this.tmxMap.RenderOrder);
-            this.StaggerAxis = (TiledMapStaggerAxisType)((int)this.tmxMap.StaggerAxis);
-            this.StaggerIndex = (TiledMapStaggerIndexType)((int)this.tmxMap.StaggerIndex);
-            this.Width = this.tmxMap.Width;
-            this.Height = this.tmxMap.Height;
-            this.TileWidth = this.tmxMap.TileWidth;
-            this.TileHeight = this.tmxMap.TileHeight;
-            this.BackgroundColor = new Color(this.tmxMap.BackgroundColor.R, this.tmxMap.BackgroundColor.G, this.tmxMap.BackgroundColor.B);
-
-            if (this.tmxMap.HexSideLength.HasValue)
-            {
-                this.HexSideLength = this.tmxMap.HexSideLength.Value;
-            }
-
+            this.tilesets = new List<Tileset>();
             this.tileLayers = new Dictionary<string, TiledMapLayer>();
             this.TileLayers = new ReadOnlyDictionary<string, TiledMapLayer>(this.tileLayers);
-
             this.objectLayers = new Dictionary<string, TiledMapObjectLayer>();
             this.ObjectLayers = new ReadOnlyDictionary<string, TiledMapObjectLayer>(this.objectLayers);
         }
@@ -296,6 +273,102 @@ namespace WaveEngine.TiledMap
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Obtains the tile position
+        /// </summary>
+        /// <param name="x">The X tile coord.</param>
+        /// <param name="y">The Y tile coord.</param>
+        /// <param name="tileset">The tileset.</param>
+        /// <param name="position">The tile position</param>
+        internal void GetTilePosition(int x, int y, Tileset tileset, out Vector2 position)
+        {
+            if (this.TmxMap == null)
+            {
+                position = Vector2.Zero;
+                return;
+            }
+
+            switch (this.Orientation)
+            {
+                case TiledMapOrientationType.Orthogonal:
+                    position = new Vector2(
+                        x * this.TileWidth,
+                        y * this.TileHeight);
+                    break;
+
+                case TiledMapOrientationType.Isometric:
+                    position = new Vector2(
+                        ((x - y) * this.TileWidth * 0.5f) + (this.Height * this.TileWidth * 0.5f) - this.TileWidth * 0.5f,
+                        (x + y) * this.TileHeight * 0.5f);
+                    break;
+
+                case TiledMapOrientationType.Staggered:
+                case TiledMapOrientationType.Hexagonal:
+
+                    int sideLengthX = 0;
+                    int sideLengthY = 0;
+
+                    float rowSize = 0;
+                    float columSize = 0;
+                    int staggerIndexSign = this.StaggerIndex == TiledMapStaggerIndexType.Odd ? 1 : -1;
+                    var staggerAxisOffset = this.StaggerIndex == TiledMapStaggerIndexType.Even ? 0.5f : 0;
+
+                    if (this.Orientation == TiledMapOrientationType.Hexagonal)
+                    {
+                        if (this.StaggerAxis == TiledMapStaggerAxisType.X)
+                        {
+                            sideLengthX = this.HexSideLength;
+                        }
+                        else
+                        {
+                            sideLengthY = this.HexSideLength;
+                        }
+                    }
+
+                    if (this.StaggerAxis == TiledMapStaggerAxisType.X)
+                    {
+                        rowSize = (x / 2) + ((x % 2) * 0.5f);
+                        columSize = staggerAxisOffset + y + ((x % 2) * 0.5f * staggerIndexSign);
+                    }
+                    else
+                    {
+                        rowSize = staggerAxisOffset + x + ((y % 2) * 0.5f * staggerIndexSign);
+                        columSize = y * 0.5f;
+                    }
+
+                    position = new Vector2(
+                            rowSize * (this.TileWidth + sideLengthX),
+                            columSize * (this.TileHeight + sideLengthY));
+                    break;
+
+                default:
+                    position = Vector2.Zero;
+                    break;
+            }
+
+            if (tileset != null)
+            {
+                position.X += tileset.XDrawingOffset;
+                position.Y += tileset.YDrawingOffset + this.TileHeight - tileset.TileHeight;
+            }
+        }
+
+        /// <summary>
+        /// Calculate rectangle
+        /// </summary>
+        /// <returns></returns>
+        internal RectangleF CalcRectangle()
+        {
+            RectangleF rectangle = new RectangleF();
+
+            Vector2 position;
+            this.GetTilePosition(this.TmxMap.Width, this.TmxMap.Height, null, out position);
+
+            rectangle = new RectangleF(0, 0, position.X, position.Y);
+
+            return rectangle;
         }
 
         /// <summary>
@@ -533,10 +606,72 @@ namespace WaveEngine.TiledMap
         {
             base.Initialize();
 
-            this.CreateTilesets();
+            this.LoadTmxFile();
+        }
 
-            this.CreateObjectLayers();
-            this.CreateTileLayers();
+        /// <summary>
+        /// Reload TMX file
+        /// </summary>
+        private void ReloadTmxFile()
+        {
+            this.UnloadTmxFile();
+            this.LoadTmxFile();
+        }
+
+        /// <summary>
+        /// Unload TMX file
+        /// </summary>
+        private void UnloadTmxFile()
+        {
+            this.TmxMap = null;
+
+            this.tilesets.Clear();
+            this.tileLayers.Clear();
+            this.TileLayers = null;
+            this.objectLayers = new Dictionary<string, TiledMapObjectLayer>();
+            this.ObjectLayers = new ReadOnlyDictionary<string, TiledMapObjectLayer>(this.objectLayers);
+        }
+
+        /// <summary>
+        /// Load TMX file
+        /// </summary>
+        private void LoadTmxFile()
+        {
+            if (string.IsNullOrEmpty(this.tmxPath))
+            {
+                return;
+            }
+
+            try
+            {
+                this.TmxMap = new TmxMap(new WaveDocumentLoader(), this.tmxPath);
+                this.Version = this.TmxMap.Version;
+
+                this.Orientation = (TiledMapOrientationType)((int)this.TmxMap.Orientation);
+                this.RenderOrder = (TiledMapRenderOrderType)((int)this.TmxMap.RenderOrder);
+                this.StaggerAxis = (TiledMapStaggerAxisType)((int)this.TmxMap.StaggerAxis);
+                this.StaggerIndex = (TiledMapStaggerIndexType)((int)this.TmxMap.StaggerIndex);
+                this.Width = this.TmxMap.Width;
+                this.Height = this.TmxMap.Height;
+                this.TileWidth = this.TmxMap.TileWidth;
+                this.TileHeight = this.TmxMap.TileHeight;
+                this.BackgroundColor = new Color(this.TmxMap.BackgroundColor.R, this.TmxMap.BackgroundColor.G, this.TmxMap.BackgroundColor.B);
+
+                if (this.TmxMap.HexSideLength.HasValue)
+                {
+                    this.HexSideLength = this.TmxMap.HexSideLength.Value;
+                }
+
+                this.CreateTilesets();
+                this.CreateObjectLayers();
+
+                this.transform.Rectangle = this.CalcRectangle();
+                this.CreateTileLayers();
+            }
+            catch (Exception ex)
+            {
+                throw new FormatException("Invalid TiledMap format: A problem occurred during parsing the TMX file.", ex);
+            }
         }
 
         /// <summary>
@@ -545,9 +680,10 @@ namespace WaveEngine.TiledMap
         private void CreateTilesets()
         {
             // Load tilesets
-            foreach (var tmxTileset in this.tmxMap.Tilesets)
+            foreach (var tmxTileset in this.TmxMap.Tilesets)
             {
-                this.tilesets.Add(new Tileset(tmxTileset, this));
+                var tileset = new Tileset(tmxTileset, this);
+                this.tilesets.Add(tileset);
             }
         }
 
@@ -556,7 +692,7 @@ namespace WaveEngine.TiledMap
         /// </summary>
         private void CreateObjectLayers()
         {
-            foreach (var tmxObjectLayer in this.tmxMap.ObjectGroups)
+            foreach (var tmxObjectLayer in this.TmxMap.ObjectGroups)
             {
                 var tileMapObjectLayer = new TiledMapObjectLayer(tmxObjectLayer);
                 this.objectLayers.Add(tmxObjectLayer.Name, tileMapObjectLayer);
@@ -569,9 +705,10 @@ namespace WaveEngine.TiledMap
         private void CreateTileLayers()
         {
             // Create layers
-            foreach (var tmxLayer in this.tmxMap.Layers)
+            for (int i = 0; i < this.TmxMap.Layers.Count; i++)
             {
-                this.CreateChildTileLayer(tmxLayer);
+                var tmxLayer = this.TmxMap.Layers[i];
+                this.CreateChildTileLayer(tmxLayer, i);
             }
 
             this.UpdateLayerDrawOrders();
@@ -580,25 +717,47 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Create the tile layer as a child entity
         /// </summary>
-        /// <param name="tmxLayer">the tmx parsed layer.</param>
-        private void CreateChildTileLayer(TmxLayer tmxLayer)
+        /// <param name="tmxLayer">The tmx layer.</param>
+        /// <param name="layerIndex">The layer index</param>
+        private void CreateChildTileLayer(TmxLayer tmxLayer, int layerIndex)
         {
-            var tileMapLayer = new TiledMapLayer(tmxLayer);
-            this.tileLayers.Add(tmxLayer.Name, tileMapLayer);
+            var tag = "TileLayer_" + layerIndex;
+            var tmxLayerName = tmxLayer.Name;
 
-            Entity layerEntity = new Entity(tmxLayer.Name)
+            Entity layerEntity = null;
+            TiledMapLayer tileMapLayer = null;
+            layerEntity = this.Owner.FindChildrenByTag(tag).FirstOrDefault();
+
+            if (layerEntity != null)
             {
-                IsVisible = tmxLayer.Visible
+                tileMapLayer = layerEntity.FindComponent<TiledMapLayer>();
+                if (tileMapLayer != null)
+                {
+                    tileMapLayer.TmxLayerName = tmxLayerName;
+                    layerEntity.Name = tmxLayerName;
+                }
+                else
+                {
+                    this.Owner.RemoveChild(layerEntity.Name);
+                    layerEntity = null;
+                }
             }
-            .AddComponent(new Transform2D()
-            {
-                Opacity = (float)tmxLayer.Opacity,
-                Origin = this.transform.Origin
-            })
-            .AddComponent(tileMapLayer)
-            .AddComponent(new TiledMapLayerRenderer(this.layerType, this.samplerMode));
 
-            this.Owner.AddChild(layerEntity);
+            if (layerEntity == null)
+            {
+                tileMapLayer = new TiledMapLayer()
+                {
+                    TmxLayerName = tmxLayerName
+                };
+
+                layerEntity = new Entity(tmxLayerName) { Tag = "TileLayer_" + layerIndex }
+                    .AddComponent(tileMapLayer)
+                    .AddComponent(new Transform2D() { Origin = this.transform.Origin, Opacity = (float)tmxLayer.Opacity })
+                    .AddComponent(new TiledMapLayerRenderer());
+                this.Owner.AddChild(layerEntity);
+            }
+
+            this.tileLayers.Add(tmxLayerName, tileMapLayer);
         }
 
         /// <summary>
@@ -607,9 +766,15 @@ namespace WaveEngine.TiledMap
         private void UpdateLayerDrawOrders()
         {
             float drawOrderStep;
-            if (this.tmxMap.Layers.Count > 1)
+
+            if (this.TmxMap == null)
             {
-                drawOrderStep = (this.minLayerDrawOrder - this.maxLayerDrawOrder) / (this.tmxMap.Layers.Count - 1);
+                return;
+            }
+
+            if (this.TmxMap.Layers.Count > 1)
+            {
+                drawOrderStep = (this.minLayerDrawOrder - this.maxLayerDrawOrder) / (this.TmxMap.Layers.Count - 1);
             }
             else
             {
@@ -622,7 +787,7 @@ namespace WaveEngine.TiledMap
             }
 
             int i = 0;
-            foreach (var tmxLayer in this.tmxMap.Layers)
+            foreach (var tmxLayer in this.TmxMap.Layers)
             {
                 Entity childLayer = this.Owner.FindChild(tmxLayer.Name);
                 Transform2D transform = childLayer.FindComponent<Transform2D>();

@@ -10,7 +10,7 @@
 #region Using Statements
 using OculusWrap;
 using System;
-using WaveEngine.Adapter.Graphics;
+using WaveEngine.DirectX;
 using WaveEngine.Common;
 using WaveEngine.Common.Graphics;
 using WaveEngine.Common.Math;

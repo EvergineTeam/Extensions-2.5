@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using WaveEngine.Common.Math;
 using WaveEngine.Framework;
 using WaveEngine.Framework.Graphics;
+using WaveEngine.Framework.Managers;
 using WaveEngine.Framework.Services;
 
 namespace WaveEngine.AI.ChaseAndEvade
@@ -64,8 +65,19 @@ namespace WaveEngine.AI.ChaseAndEvade
             get
             {
                 Vector2 center = Vector2.Zero;
-                center.X = WaveServices.ViewportManager.VirtualWidth / 2;
-                center.Y = WaveServices.ViewportManager.VirtualHeight / 2;
+
+                var virtualScreenManager = this.Owner.Scene.VirtualScreenManager;
+
+                ////if (virtualScreenManager.Enabled)
+                ////{
+                center.X = virtualScreenManager.VirtualWidth / 2;
+                center.Y = virtualScreenManager.VirtualHeight / 2;
+                ////}
+                ////else
+                ////{
+                ////    this.Owner.Scene.VirtualScreenManager;
+                ////}
+
                 return center;
             }
         }

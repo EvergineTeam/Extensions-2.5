@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,28 +12,24 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
     <DocumentationFile>bin\x86\Debug\WaveEngine.Cardboard.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;WINDOWS</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>none</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
     <DocumentationFile>bin\x86\Release\WaveEngine.Cardboard.XML</DocumentationFile>
-    <WarningLevel>4</WarningLevel>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -51,19 +47,19 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\WaveEngine.Common\Projects\WaveEngine.Common.csproj">
-      <Project>{55b6b4f4-bce2-4ef7-836f-44f17332f924}</Project>
+      <Project>{55B6B4F4-BCE2-4EF7-836F-44F17332F924}</Project>
       <Name>WaveEngine.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Common\WaveEngine.Components\Projects\WaveEngine.Components.csproj">
-      <Project>{d32883f0-e199-48f7-bafb-ddc036ceb556}</Project>
+      <Project>{D32883F0-E199-48F7-BAFB-DDC036CEB556}</Project>
       <Name>WaveEngine.Components</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Common\WaveEngine.Framework\Projects\WaveEngine.Framework.csproj">
-      <Project>{75527125-5aa8-45d0-a801-f674ee689e78}</Project>
+      <Project>{75527125-5AA8-45D0-A801-F674EE689E78}</Project>
       <Name>WaveEngine.Framework</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Common\WaveEngine.Materials\Projects\WaveEngine.Materials.csproj">
-      <Project>{97d4cef4-07b4-4f5e-8c47-4972d45d2456}</Project>
+      <Project>{97D4CEF4-07B4-4F5E-8C47-4972D45D2456}</Project>
       <Name>WaveEngine.Materials</Name>
     </ProjectReference>
   </ItemGroup>

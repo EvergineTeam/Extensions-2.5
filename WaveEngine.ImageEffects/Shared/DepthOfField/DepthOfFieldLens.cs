@@ -54,8 +54,7 @@ namespace WaveEngine.ImageEffects
         /// <summary>
         /// Focus distance of the lens.
         /// </summary>
-        [DataMember]
-        [RenderPropertyAsSlider(0.0f, 10.0f, 1f)]
+        [DataMember]        
         public float FocusDistance
         {
             get

@@ -380,7 +380,7 @@ namespace WaveEngine.Cardboard
             {
                 var eyeTexture = this.eyeTextures[eyeIndex];
 
-                if (eyeTexture.RenderTarget != null)
+                if (eyeTexture.RenderTarget != null && (!this.cachedMonoscopicValue || eyeIndex == 0))
                 {
                     WaveServices.GraphicsDevice.RenderTargets.DestroyRenderTarget(eyeTexture.RenderTarget);
                     eyeTexture.RenderTarget = null;

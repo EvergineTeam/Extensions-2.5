@@ -54,14 +54,9 @@ namespace WaveEngine.Spine
         private SkeletalAnimation SkeletalAnimation = null;
 
         /// <summary>
-        /// The material
-        /// </summary>
-        private StandardMaterial material;
-
-        /// <summary>
         /// The draw order
         /// </summary>
-        private List<Slot> drawOrder;
+        private ExposedList<Slot> drawOrder;
 
         /// <summary>
         /// The indices
@@ -90,11 +85,17 @@ namespace WaveEngine.Spine
         /// 0----1
         private ushort[] quadIndices;
 
-        #region Cached fields
         /// <summary>
-        /// The viewport manager cached
+        /// The minimum vertex position
         /// </summary>
-        private ViewportManager viewportManager;
+        private Vector2 minVertexPosition;
+
+        /// <summary>
+        /// The maximum vertex position
+        /// </summary>
+        private Vector2 maxVertexPosition;
+
+        #region Cached fields
         #endregion
 
         /// <summary>
@@ -152,6 +153,11 @@ namespace WaveEngine.Spine
         /// </value>
         [DataMember]
         public DebugMode ActualDebugMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the distance between slots.
+        /// </summary>
+        public float ZOrderBias { get; set; }
         #endregion
 
         #region Initialize
@@ -175,7 +181,6 @@ namespace WaveEngine.Spine
             : base("SkeletalRenderer" + instances++, layerType)
         {
             this.SamplerMode = samplerMode;
-            this.material = new StandardMaterial() { LightingEnabled = false, LayerType = this.LayerType, SamplerMode = this.SamplerMode };
         }
 
         /// <summary>
@@ -188,8 +193,7 @@ namespace WaveEngine.Spine
             this.Transform2D = null;
             this.ActualDebugMode = DebugMode.Bones;
             this.quadIndices = new ushort[6] { 0, 3, 1, 1, 3, 2 };
-            this.material = new StandardMaterial() { LightingEnabled = false };
-
+            this.ZOrderBias = 0.0001f;
         }
         #endregion
 
@@ -211,9 +215,6 @@ namespace WaveEngine.Spine
                 this.RefreshMeshes();
             }
 
-            this.material.LayerType = this.LayerType;
-            this.material.SamplerMode = this.SamplerMode;
-
             float opacity = this.RenderManager.DebugLines ? DebugAlpha : this.Transform2D.GlobalOpacity;
 
             int numVertices = 0;
@@ -223,10 +224,14 @@ namespace WaveEngine.Spine
             float originOffsetX = this.Transform2D.Origin.X * rectangle.Width;
             float originOffsetY = this.Transform2D.Origin.Y * rectangle.Height;
 
-            // Process Mesh
+            Material material = null;
+
+            this.ResetBoundingBox();
+
+            // Process Mesh                        
             for (int i = 0; i < this.drawOrder.Count; i++)
             {
-                Slot slot = this.drawOrder[i];
+                Slot slot = this.drawOrder.Items[i];
                 Attachment attachment = slot.Attachment;
 
                 float alpha = this.SkeletalAnimation.Skeleton.A * slot.A * opacity;
@@ -236,6 +241,7 @@ namespace WaveEngine.Spine
                 byte a = (byte)(alpha * 255);
                 Color color = new Color(r, g, b, a);
 
+
                 if (attachment is RegionAttachment)
                 {
                     RegionAttachment regionAttachment = attachment as RegionAttachment;
@@ -244,9 +250,9 @@ namespace WaveEngine.Spine
                     float[] uvs = regionAttachment.UVs;
 
                     AtlasRegion region = (AtlasRegion)regionAttachment.RendererObject;
-                    this.material.Diffuse = (Texture2D)region.page.rendererObject;
+                    material = (Material)region.page.rendererObject;
 
-                    regionAttachment.ComputeWorldVertices(0, 0, slot.Bone, spineVertices);
+                    regionAttachment.ComputeWorldVertices(slot.Bone, spineVertices);
 
                     this.vertices = new VertexPositionColorTexture[4];
 
@@ -258,6 +264,7 @@ namespace WaveEngine.Spine
                     this.tempVertice.TexCoord.X = uvs[RegionAttachment.X1];
                     this.tempVertice.TexCoord.Y = uvs[RegionAttachment.Y1];
                     this.vertices[0] = this.tempVertice;
+                    this.ComputeBoundingBox(ref this.tempVertice.Position);
 
                     // Vertex TR
                     this.tempVertice.Position.X = originOffsetX + spineVertices[RegionAttachment.X4];
@@ -267,6 +274,7 @@ namespace WaveEngine.Spine
                     this.tempVertice.TexCoord.X = uvs[RegionAttachment.X4];
                     this.tempVertice.TexCoord.Y = uvs[RegionAttachment.Y4];
                     this.vertices[1] = this.tempVertice;
+                    this.ComputeBoundingBox(ref this.tempVertice.Position);
 
                     // Vertex BR
                     this.tempVertice.Position.X = originOffsetX + spineVertices[RegionAttachment.X3];
@@ -276,6 +284,7 @@ namespace WaveEngine.Spine
                     this.tempVertice.TexCoord.X = uvs[RegionAttachment.X3];
                     this.tempVertice.TexCoord.Y = uvs[RegionAttachment.Y3];
                     this.vertices[2] = this.tempVertice;
+                    this.ComputeBoundingBox(ref this.tempVertice.Position);
 
                     // Vertex BL
                     this.tempVertice.Position.X = originOffsetX + spineVertices[RegionAttachment.X2];
@@ -285,6 +294,7 @@ namespace WaveEngine.Spine
                     this.tempVertice.TexCoord.X = uvs[RegionAttachment.X2];
                     this.tempVertice.TexCoord.Y = uvs[RegionAttachment.Y2];
                     this.vertices[3] = this.tempVertice;
+                    this.ComputeBoundingBox(ref this.tempVertice.Position);
 
                     numVertices = 4;
                     numPrimitives = 2;
@@ -299,10 +309,10 @@ namespace WaveEngine.Spine
                     numPrimitives = indices.Length / 3;
 
                     float[] spineVertices = new float[numVertices];
-                    mesh.ComputeWorldVertices(0, 0, slot, spineVertices);
+                    mesh.ComputeWorldVertices(slot, spineVertices);
 
                     AtlasRegion region = (AtlasRegion)mesh.RendererObject;
-                    this.material.Diffuse = (Texture2D)region.page.rendererObject;
+                    material = (Material)region.page.rendererObject;
 
                     this.vertices = new VertexPositionColorTexture[numVertices / 2];
 
@@ -316,6 +326,7 @@ namespace WaveEngine.Spine
                         this.tempVertice.TexCoord.X = uvs[v];
                         this.tempVertice.TexCoord.Y = uvs[v + 1];
                         this.vertices[j] = this.tempVertice;
+                        this.ComputeBoundingBox(ref this.tempVertice.Position);
                     }
                 }
                 else if (attachment is SkinnedMeshAttachment)
@@ -327,10 +338,10 @@ namespace WaveEngine.Spine
                     numPrimitives = indices.Length / 3;
 
                     float[] spineVertices = new float[numVertices];
-                    mesh.ComputeWorldVertices(0, 0, slot, spineVertices);
+                    mesh.ComputeWorldVertices(slot, spineVertices);
 
                     AtlasRegion region = (AtlasRegion)mesh.RendererObject;
-                    this.material.Diffuse = (Texture2D)region.page.rendererObject;
+                    material = (Material)region.page.rendererObject;
 
                     this.vertices = new VertexPositionColorTexture[numVertices / 2];
 
@@ -344,10 +355,11 @@ namespace WaveEngine.Spine
                         this.tempVertice.TexCoord.X = uvs[v];
                         this.tempVertice.TexCoord.Y = uvs[v + 1];
                         this.vertices[j] = this.tempVertice;
+                        this.ComputeBoundingBox(ref this.tempVertice.Position);
                     }
                 }
 
-                if (attachment != null)
+                if (attachment != null && material != null)
                 {
                     bool reset = false;
 
@@ -383,12 +395,17 @@ namespace WaveEngine.Spine
                     this.GraphicsDevice.BindIndexBuffer(mesh.IndexBuffer);
                     mesh.VertexBuffer.SetData(this.vertices);
                     this.GraphicsDevice.BindVertexBuffer(mesh.VertexBuffer);
-                    mesh.ZOrder = this.Transform2D.DrawOrder;
+                    mesh.ZOrder = this.Transform2D.DrawOrder - (i * this.ZOrderBias);
+
+                    material.LayerType = this.LayerType;
+                    material.SamplerMode = this.SamplerMode;
 
                     Matrix worldTransform = this.Transform2D.WorldTransform;
-                    this.RenderManager.DrawMesh(mesh, this.material, ref worldTransform, false);
+                    this.RenderManager.DrawMesh(mesh, material, ref worldTransform, false);
                 }
             }
+
+            this.UpdateBoundingBox();
         }
 
         /// <summary>
@@ -399,7 +416,7 @@ namespace WaveEngine.Spine
             this.DisposeMeshes();
 
             this.drawOrder = this.SkeletalAnimation.Skeleton.DrawOrder;
-            this.spineMeshes = new Mesh[drawOrder.Count];
+            this.spineMeshes = new Mesh[this.drawOrder.Count];
         }
 
         #endregion
@@ -411,8 +428,6 @@ namespace WaveEngine.Spine
         protected override void Initialize()
         {
             base.Initialize();
-
-            this.viewportManager = WaveServices.ViewportManager;
         }
 
         /// <summary>
@@ -433,6 +448,10 @@ namespace WaveEngine.Spine
             Color color = Color.Red;
             Matrix worldTransform = this.Transform2D.WorldTransform;
 
+            var rectangle = this.Transform2D.Rectangle;
+            float originOffsetX = this.Transform2D.Origin.X * rectangle.Width;
+            float originOffsetY = this.Transform2D.Origin.Y * rectangle.Height;
+
             // Draw bones
             if ((this.ActualDebugMode & DebugMode.Bones) == DebugMode.Bones)
             {
@@ -440,15 +459,15 @@ namespace WaveEngine.Spine
                 {
                     if (bone.Parent != null)
                     {
-                        start.X = bone.WorldX;
-                        start.Y = -bone.WorldY;
-                        end.X = (bone.Data.Length * bone.M00) + bone.WorldX;
-                        end.Y = -((bone.Data.Length * bone.M10) + bone.WorldY);
+                        start.X = originOffsetX + bone.WorldX;
+                        start.Y = originOffsetY - bone.WorldY;
+                        end.X = originOffsetX + (bone.Data.Length * bone.M00) + bone.WorldX;
+                        end.Y = originOffsetY - ((bone.Data.Length * bone.M10) + bone.WorldY);
 
                         Vector2.Transform(ref start, ref worldTransform, out start);
                         Vector2.Transform(ref end, ref worldTransform, out end);
 
-                        RenderManager.LineBatch2D.DrawLineVM(ref start, ref end, ref color, this.Transform2D.DrawOrder);
+                        RenderManager.LineBatch2D.DrawLine(ref start, ref end, ref color, this.Transform2D.DrawOrder);
                     }
                 }
             }
@@ -459,7 +478,7 @@ namespace WaveEngine.Spine
                 color = Color.Yellow;
                 for (int i = 0; i < this.drawOrder.Count; i++)
                 {
-                    Slot slot = this.drawOrder[i];
+                    Slot slot = this.drawOrder.Items[i];
                     Attachment attachment = slot.Attachment;
 
                     if (attachment is RegionAttachment)
@@ -467,79 +486,79 @@ namespace WaveEngine.Spine
                         float[] spineVertices = new float[8];
 
                         RegionAttachment mesh = (RegionAttachment)attachment;
-                        mesh.ComputeWorldVertices(0, 0, slot.Bone, spineVertices);
+                        mesh.ComputeWorldVertices(slot.Bone, spineVertices);
 
                         // Edge1
-                        start.X = spineVertices[RegionAttachment.X1];
-                        start.Y = -spineVertices[RegionAttachment.Y1];
-                        end.X = spineVertices[RegionAttachment.X2];
-                        end.Y = -spineVertices[RegionAttachment.Y2];
+                        start.X = originOffsetX + spineVertices[RegionAttachment.X1];
+                        start.Y = originOffsetY - spineVertices[RegionAttachment.Y1];
+                        end.X = originOffsetX + spineVertices[RegionAttachment.X2];
+                        end.Y = originOffsetY - spineVertices[RegionAttachment.Y2];
 
                         Vector2.Transform(ref start, ref worldTransform, out start);
                         Vector2.Transform(ref end, ref worldTransform, out end);
 
-                        RenderManager.LineBatch2D.DrawLineVM(ref start, ref end, ref color, this.Transform2D.DrawOrder);
+                        RenderManager.LineBatch2D.DrawLine(ref start, ref end, ref color, this.Transform2D.DrawOrder);
 
                         // Edge2
-                        start.X = spineVertices[RegionAttachment.X2];
-                        start.Y = -spineVertices[RegionAttachment.Y2];
-                        end.X = spineVertices[RegionAttachment.X3];
-                        end.Y = -spineVertices[RegionAttachment.Y3];
+                        start.X = originOffsetX + spineVertices[RegionAttachment.X2];
+                        start.Y = originOffsetY - spineVertices[RegionAttachment.Y2];
+                        end.X = originOffsetX + spineVertices[RegionAttachment.X3];
+                        end.Y = originOffsetY - spineVertices[RegionAttachment.Y3];
 
                         Vector2.Transform(ref start, ref worldTransform, out start);
                         Vector2.Transform(ref end, ref worldTransform, out end);
 
-                        RenderManager.LineBatch2D.DrawLineVM(ref start, ref end, ref color, this.Transform2D.DrawOrder);
+                        RenderManager.LineBatch2D.DrawLine(ref start, ref end, ref color, this.Transform2D.DrawOrder);
 
                         // Edge3
-                        start.X = spineVertices[RegionAttachment.X3];
-                        start.Y = -spineVertices[RegionAttachment.Y3];
-                        end.X = spineVertices[RegionAttachment.X4];
-                        end.Y = -spineVertices[RegionAttachment.Y4];
+                        start.X = originOffsetX + spineVertices[RegionAttachment.X3];
+                        start.Y = originOffsetY - spineVertices[RegionAttachment.Y3];
+                        end.X = originOffsetX + spineVertices[RegionAttachment.X4];
+                        end.Y = originOffsetY - spineVertices[RegionAttachment.Y4];
 
                         Vector2.Transform(ref start, ref worldTransform, out start);
                         Vector2.Transform(ref end, ref worldTransform, out end);
 
-                        RenderManager.LineBatch2D.DrawLineVM(ref start, ref end, ref color, this.Transform2D.DrawOrder);
+                        RenderManager.LineBatch2D.DrawLine(ref start, ref end, ref color, this.Transform2D.DrawOrder);
 
                         // Edge4
-                        start.X = spineVertices[RegionAttachment.X4];
-                        start.Y = -spineVertices[RegionAttachment.Y4];
-                        end.X = spineVertices[RegionAttachment.X1];
-                        end.Y = -spineVertices[RegionAttachment.Y1];
+                        start.X = originOffsetX + spineVertices[RegionAttachment.X4];
+                        start.Y = originOffsetY - spineVertices[RegionAttachment.Y4];
+                        end.X = originOffsetX + spineVertices[RegionAttachment.X1];
+                        end.Y = originOffsetY - spineVertices[RegionAttachment.Y1];
 
                         Vector2.Transform(ref start, ref worldTransform, out start);
                         Vector2.Transform(ref end, ref worldTransform, out end);
 
-                        RenderManager.LineBatch2D.DrawLineVM(ref start, ref end, ref color, this.Transform2D.DrawOrder);
+                        RenderManager.LineBatch2D.DrawLine(ref start, ref end, ref color, this.Transform2D.DrawOrder);
                     }
                     else if (attachment is MeshAttachment)
                     {
                         MeshAttachment mesh = (MeshAttachment)attachment;
                         int vertexCount = mesh.Vertices.Length;
                         float[] spineVertices = new float[vertexCount];
-                        mesh.ComputeWorldVertices(0, 0, slot, spineVertices);
+                        mesh.ComputeWorldVertices(slot, spineVertices);
 
                         for (int j = 0; j < vertexCount; j += 2)
                         {
-                            start.X = spineVertices[j];
-                            start.Y = -spineVertices[j + 1];
+                            start.X = originOffsetX + spineVertices[j];
+                            start.Y = originOffsetY - spineVertices[j + 1];
 
                             if (j < vertexCount - 2)
                             {
-                                end.X = spineVertices[j + 2];
-                                end.Y = -spineVertices[j + 3];
+                                end.X = originOffsetX + spineVertices[j + 2];
+                                end.Y = originOffsetY - spineVertices[j + 3];
                             }
                             else
                             {
-                                end.X = spineVertices[0];
-                                end.Y = -spineVertices[1];
+                                end.X = originOffsetX + spineVertices[0];
+                                end.Y = originOffsetY - spineVertices[1];
                             }
 
                             Vector2.Transform(ref start, ref worldTransform, out start);
                             Vector2.Transform(ref end, ref worldTransform, out end);
 
-                            RenderManager.LineBatch2D.DrawLineVM(ref start, ref end, ref color, this.Transform2D.DrawOrder);
+                            RenderManager.LineBatch2D.DrawLine(ref start, ref end, ref color, this.Transform2D.DrawOrder);
                         }
                     }
                     else if (attachment is SkinnedMeshAttachment)
@@ -547,28 +566,28 @@ namespace WaveEngine.Spine
                         SkinnedMeshAttachment mesh = (SkinnedMeshAttachment)attachment;
                         int vertexCount = mesh.UVs.Length;
                         float[] spineVertices = new float[vertexCount];
-                        mesh.ComputeWorldVertices(0, 0, slot, spineVertices);
+                        mesh.ComputeWorldVertices(slot, spineVertices);
 
                         for (int j = 0; j < vertexCount; j += 2)
                         {
-                            start.X = spineVertices[j];
-                            start.Y = -spineVertices[j + 1];
+                            start.X = originOffsetX + spineVertices[j];
+                            start.Y = originOffsetY - spineVertices[j + 1];
 
                             if (j < vertexCount - 2)
                             {
-                                end.X = spineVertices[j + 2];
-                                end.Y = -spineVertices[j + 3];
+                                end.X = originOffsetX + spineVertices[j + 2];
+                                end.Y = originOffsetY - spineVertices[j + 3];
                             }
                             else
                             {
-                                end.X = spineVertices[0];
-                                end.Y = -spineVertices[1];
+                                end.X = originOffsetX + spineVertices[0];
+                                end.Y = originOffsetY - spineVertices[1];
                             }
 
                             Vector2.Transform(ref start, ref worldTransform, out start);
                             Vector2.Transform(ref end, ref worldTransform, out end);
 
-                            RenderManager.LineBatch2D.DrawLineVM(ref start, ref end, ref color, this.Transform2D.DrawOrder);
+                            RenderManager.LineBatch2D.DrawLine(ref start, ref end, ref color, this.Transform2D.DrawOrder);
                         }
                     }
                 }
@@ -596,8 +615,11 @@ namespace WaveEngine.Spine
             {
                 foreach (Mesh spineMesh in this.spineMeshes)
                 {
-                    this.GraphicsDevice.DestroyIndexBuffer(spineMesh.IndexBuffer);
-                    this.GraphicsDevice.DestroyVertexBuffer(spineMesh.VertexBuffer);
+                    if (spineMesh != null)
+                    {
+                        this.GraphicsDevice.DestroyIndexBuffer(spineMesh.IndexBuffer);
+                        this.GraphicsDevice.DestroyVertexBuffer(spineMesh.VertexBuffer);
+                    }
                 }
             }
         }
@@ -617,6 +639,38 @@ namespace WaveEngine.Spine
             }
 
             return indices;
+        }
+
+        /// <summary>
+        /// Resets the bounding box.
+        /// </summary>
+        private void ResetBoundingBox()
+        {
+            this.minVertexPosition = new Vector2(float.MaxValue);
+            this.maxVertexPosition = new Vector2(float.MinValue);
+        }
+
+        /// <summary>
+        /// Computes the bounding box.
+        /// </summary>
+        /// <param name="vertexPosition">The vertex position.</param>
+        private void ComputeBoundingBox(ref Vector3 vertexPosition)
+        {
+            this.minVertexPosition.X = MathHelper.Min(this.minVertexPosition.X, vertexPosition.X);
+            this.minVertexPosition.Y = MathHelper.Min(this.minVertexPosition.Y, vertexPosition.Y);
+            this.maxVertexPosition.X = MathHelper.Max(this.maxVertexPosition.X, vertexPosition.X);
+            this.maxVertexPosition.Y = MathHelper.Max(this.maxVertexPosition.Y, vertexPosition.Y);
+        }
+
+        /// <summary>
+        /// Updates the bounding box.
+        /// </summary>
+        private void UpdateBoundingBox()
+        {
+            this.Transform2D.Rectangle.X = this.minVertexPosition.X;
+            this.Transform2D.Rectangle.Y = this.minVertexPosition.Y;
+            this.Transform2D.Rectangle.Width = this.maxVertexPosition.X - this.minVertexPosition.X;
+            this.Transform2D.Rectangle.Height = this.maxVertexPosition.Y - this.minVertexPosition.Y;
         }
         #endregion
     }

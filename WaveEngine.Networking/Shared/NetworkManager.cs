@@ -11,11 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WaveEngine.Common;
 using WaveEngine.Framework;
-using WaveEngine.Framework.Services;
 using WaveEngine.Framework.Services.Serialize;
 using WaveEngine.Networking.Messages;
 
@@ -57,6 +53,11 @@ namespace WaveEngine.Networking
         private Dictionary<string, NetworkBehavior> entityBehaviors;
 
         /// <summary>
+        /// The entity serializer
+        /// </summary>
+        private ISerializer serializer;
+
+        /// <summary>
         /// Gets the scene identifier.
         /// </summary>
         /// <value>
@@ -86,6 +87,7 @@ namespace WaveEngine.Networking
             this.networkService = networkService;
             this.factories = new Dictionary<string, Func<string, string, Entity>>();
             this.entityBehaviors = new Dictionary<string, NetworkBehavior>();
+            this.serializer = SerializerFactory.GetSerializer<Entity>(SerializationType.DATACONTRACT);
         }
 
         /// <summary>
@@ -150,10 +152,9 @@ namespace WaveEngine.Networking
         /// <param name="offlineEntity">The offline entity.</param>
         private void WriteEntity(OutgoingMessage message, Entity offlineEntity)
         {
-            var serializer = SerializerFactory.GetSerializer<Entity>(SerializationType.BINARY);
             using (var stream = new MemoryStream())
             {
-                serializer.Serialize(stream, offlineEntity);
+                this.serializer.Serialize(stream, offlineEntity);
                 var data = new byte[stream.Length];
                 stream.Seek(0, SeekOrigin.Begin);
                 stream.Read(data, 0, data.Length);
@@ -168,13 +169,13 @@ namespace WaveEngine.Networking
         /// <returns>Return the serialized entity from message</returns>
         private Entity ReadEntity(IncomingMessage message)
         {
-            var serializer = SerializerFactory.GetSerializer<Entity>(SerializationType.BINARY);
             var data = message.ReadBytes();
             using (var stream = new MemoryStream())
             {
                 stream.Write(data, 0, data.Length);
                 stream.Seek(0, SeekOrigin.Begin);
-                var entity = serializer.Deserialize(stream);
+
+                var entity = this.serializer.Deserialize(stream);
                 return (Entity)entity;
             }
         }

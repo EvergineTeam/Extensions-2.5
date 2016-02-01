@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using WaveEngine.Common.Attributes;
 using WaveEngine.Common.Helpers;
@@ -48,6 +49,7 @@ namespace WaveEngine.Spine
         /// <summary>
         /// The current skin
         /// </summary>
+        [DataMember]
         private string currentSkin;
 
         /// <summary>
@@ -164,21 +166,25 @@ namespace WaveEngine.Spine
         /// <value>
         /// The skin.
         /// </value>
+        [RenderPropertyAsSelector("SkinNames")]
         public string Skin
         {
             set
             {
-                this.currentSkin = value;
-
-                if (this.Skeleton != null)
+                if (!string.IsNullOrEmpty(value))
                 {
-                    try
+                    this.currentSkin = value;
+
+                    if (this.Skeleton != null)
                     {
-                        this.Skeleton.SetSkin(value);
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.WriteLine(string.Format("The Skin [{0}] is not valid: {2}", value, e.Message));
+                        try
+                        {
+                            this.Skeleton.SetSkin(value);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine(string.Format("The Skin [{0}] is not valid: {2}", value, e.Message));
+                        }
                     }
                 }
             }
@@ -190,8 +196,27 @@ namespace WaveEngine.Spine
         }
 
         /// <summary>
+        /// Gets the names of the different skins.
+        /// </summary>
+        [DontRenderProperty]
+        public IEnumerable<string> SkinNames
+        {
+            get
+            {
+                if (this.Skeleton != null)
+                {
+                    foreach (var skin in this.Skeleton.Data.Skins)
+                    {
+                        yield return skin.Name;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the names of the different animations.
         /// </summary>
+        [DontRenderProperty]
         public IEnumerable<string> AnimationNames
         {
             get
@@ -420,12 +445,10 @@ namespace WaveEngine.Spine
 
                     if (string.IsNullOrEmpty(this.currentSkin))
                     {
-                        this.Skeleton.SetSkin(this.Skeleton.Data.DefaultSkin);
+                        this.currentSkin = this.Skeleton.Data.DefaultSkin.Name;
                     }
-                    else
-                    {
-                        this.Skeleton.SetSkin(this.currentSkin);
-                    }
+
+                    this.Skeleton.SetSkin(this.currentSkin);
 
                     AnimationStateData stateData = new AnimationStateData(this.Skeleton.Data);
                     this.state = new AnimationState(stateData);

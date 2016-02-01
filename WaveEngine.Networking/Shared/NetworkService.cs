@@ -11,6 +11,7 @@ using System;
 using System.Threading.Tasks;
 using WaveEngine.Common;
 using WaveEngine.Framework;
+using WaveEngine.Framework.Services;
 using WaveEngine.Networking.Messages;
 
 namespace WaveEngine.Networking
@@ -202,7 +203,7 @@ namespace WaveEngine.Networking
         /// </summary>
         /// <param name="host">The host.</param>
         /// <returns>An awaitable task</returns>
-        public async Task ConnectAsync(Host host)
+        public async System.Threading.Tasks.Task ConnectAsync(Host host)
         {
             var tcs = new TaskCompletionSource<bool>();
             HostConnected connectHandler = (sender, connectedHost) =>
@@ -354,7 +355,7 @@ namespace WaveEngine.Networking
         {
             if (receivedMessage.Type == MessageType.Synchronization)
             {
-                NetworkManager.HandleMenssage(receivedMessage);
+                WaveServices.Dispatcher.RunOnWaveThread(() => NetworkManager.HandleMenssage(receivedMessage));
                 return;
             }
 

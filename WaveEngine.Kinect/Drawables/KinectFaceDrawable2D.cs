@@ -100,7 +100,7 @@ namespace WaveEngine.Kinect.Drawables
             foreach (Vector2 p in this.behavior.DrawPoints)
             {
                 this.point0 = p;
-                this.layer.LineBatch2D.DrawPointVM(ref this.point0, 10, ref this.lineColor, 0);
+                this.layer.LineBatch2D.DrawPoint(ref this.point0, 10, ref this.lineColor, 0);
             }
 
             // Draw lines
@@ -110,13 +110,13 @@ namespace WaveEngine.Kinect.Drawables
                 this.point0.Y = l.StartPoint.Y;
                 this.point1.X = l.EndPoint.X;
                 this.point1.Y = l.EndPoint.Y;
-                this.layer.LineBatch2D.DrawLineVM(ref this.point0, ref this.point1, ref this.lineColor, 0);
+                this.layer.LineBatch2D.DrawLine(ref this.point0, ref this.point1, ref this.lineColor, 0);
             }
 
             // Draw texts
             foreach (var textStruct in this.behavior.DrawTexts)
             {
-                this.layer.SpriteBatch.DrawStringVM(StaticResources.DefaultSpriteFont, textStruct.Text, textStruct.Position, Color.LightGreen);
+                this.layer.SpriteBatch.DrawString(StaticResources.DefaultSpriteFont, textStruct.Text, textStruct.Position, Color.LightGreen);
             }
         }
 

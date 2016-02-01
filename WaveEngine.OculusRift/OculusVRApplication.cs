@@ -19,12 +19,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 using WaveEngine.Adapter;
-using WaveEngine.Adapter.Graphics;
+using WaveEngine.DirectX;
 using WaveEngine.Common;
 using WaveEngine.Common.Graphics;
 using WaveEngine.Common.Math;
 using WaveEngine.Common.VR;
 using WaveEngine.Framework.Services;
+using SharpDX.MediaFoundation;
 #endregion
 
 namespace WaveEngine.OculusRift
@@ -303,30 +304,45 @@ namespace WaveEngine.OculusRift
 #else
             creationFlags = DeviceCreationFlags.None;
 #endif
-
-            // Create DirectX drawing device.
-            this.device = new SharpDX.Direct3D11.Device(SharpDX.Direct3D.DriverType.Hardware, creationFlags);
-
-            // Create DirectX Graphics Interface factory, used to create the swap chain.
-            this.factory = new Factory();
+            creationFlags |= DeviceCreationFlags.BgraSupport | DeviceCreationFlags.VideoSupport;
 
             // Define the properties of the swap chain.
-            this.desc = new SwapChainDescription();
-            desc.BufferCount = 1;
-            desc.IsWindowed = !this.FullScreen;
-            desc.OutputHandle = windowsHandler;
-            desc.SampleDescription = new SampleDescription(1, 0);
-            desc.Usage = Usage.RenderTargetOutput | Usage.ShaderInput;
-            desc.SwapEffect = SwapEffect.Sequential;
-            desc.Flags = SwapChainFlags.AllowModeSwitch;
-            desc.ModeDescription.Width = this.Width;
-            desc.ModeDescription.Height = this.Height;
-            desc.ModeDescription.Format = Format.R8G8B8A8_UNorm;
-            desc.ModeDescription.RefreshRate.Numerator = 0;
-            desc.ModeDescription.RefreshRate.Denominator = 1;
+            this.desc = new SwapChainDescription()
+            {
+                BufferCount = 1,
+                IsWindowed = !this.FullScreen,
+                OutputHandle = windowsHandler,
+                SampleDescription = new SampleDescription(1, 0),
+                Usage = Usage.RenderTargetOutput | Usage.ShaderInput,
+                SwapEffect = SwapEffect.Sequential,
+                Flags = SwapChainFlags.AllowModeSwitch,
+                ModeDescription = new ModeDescription()
+                {
+                    Width = this.Width,
+                    Height = this.Height,
+                    Format = Format.R8G8B8A8_UNorm,
+                    RefreshRate = new Rational(0, 1)
+                }
+            };
 
-            // Create the swap chain.
-            this.swapChain = new SwapChain(this.factory, this.device, this.desc);
+            FeatureLevel[] supportedLevels = new FeatureLevel[]
+            {
+                FeatureLevel.Level_11_0,
+            };
+
+            // Create Device and SwapChain
+            SharpDX.Direct3D11.Device.CreateWithSwapChain(DriverType.Hardware, creationFlags, supportedLevels, this.desc, out this.device, out this.swapChain);
+
+            // Startup MediaManager
+            MediaManager.Startup();
+
+            // Setup multithread on the Direct3D11 device
+            var multithread = this.device.QueryInterface<SharpDX.Direct3D.DeviceMultithread>();
+            multithread.SetMultithreadProtected(true);
+
+            // Create a DXGI Device Manager
+            this.dxgiDeviceManager = new SharpDX.MediaFoundation.DXGIDeviceManager();
+            this.dxgiDeviceManager.ResetDevice(this.device);
         }
 
         /// <summary>

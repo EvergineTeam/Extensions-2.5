@@ -11,7 +11,7 @@
 using OculusWrap;
 using System;
 using System.Runtime.Serialization;
-using WaveEngine.Adapter.Graphics;
+using WaveEngine.DirectX;
 using WaveEngine.Common;
 using WaveEngine.Common.Attributes;
 using WaveEngine.Common.Graphics;

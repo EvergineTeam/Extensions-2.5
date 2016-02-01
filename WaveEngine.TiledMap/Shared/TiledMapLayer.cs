@@ -11,9 +11,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TiledSharp;
+using WaveEngine.Common.Attributes;
 using WaveEngine.Common.Graphics;
 using WaveEngine.Common.Math;
 using WaveEngine.Framework;
@@ -25,6 +27,7 @@ namespace WaveEngine.TiledMap
     /// <summary>
     /// Gets the tile layer in the TiledMap
     /// </summary>
+    [DataContract]
     public class TiledMapLayer : Component, IDisposable
     {
         /// <summary>
@@ -52,7 +55,36 @@ namespace WaveEngine.TiledMap
         /// </summary>
         internal bool NeedRefresh;
 
+        /// The TMX Layer name
+        [DataMember]
+        private string tmxLayerName;
+
+        /// <summary>
+        /// The layer is loaded
+        /// </summary>
+        private bool isLayerLoaded;
+
         #region Properties
+        /// <summary>
+        /// Gets the layer names.
+        /// </summary>
+        /// <value>
+        /// The layer names.
+        /// </value>
+        [DontRenderProperty]
+        public IEnumerable<string> LayerNames
+        {
+            get
+            {
+                if (this.isLayerLoaded)
+                {
+                    return this.tiledMap.TmxMap.Layers.Select(l => l.Name);
+                }
+
+                return new List<string>();
+            }
+        }
+
         /// <summary>
         /// Gets the tiles list
         /// </summary>
@@ -60,18 +92,44 @@ namespace WaveEngine.TiledMap
         {
             get { return this.tiles; }
         }
+
+        /// <summary>
+        /// Gets or sets the TMX Layer name
+        /// </summary>
+        [RenderPropertyAsSelector("LayerNames")]
+        public string TmxLayerName
+        {
+            get
+            {
+                return this.tmxLayerName;
+            }
+
+            set
+            {
+                this.tmxLayerName = value;
+                if (this.isInitialized)
+                {
+                    this.RefreshLayer();
+                }
+            }
+        }
         #endregion
 
         #region Initialization
         /// <summary>
         /// Initializes a new instance of the <see cref="TiledMapLayer" /> class.
         /// </summary>
-        /// <param name="tmxLayer">The tmx parsed layer.</param>
-        public TiledMapLayer(TmxLayer tmxLayer)
+        public TiledMapLayer()
         {
-            this.tmxLayer = tmxLayer;
-            this.tiles = new List<LayerTile>();
-            this.NeedRefresh = true;
+        }
+
+        /// <summary>
+        /// Sets the default values
+        /// </summary>
+        protected override void DefaultValues()
+        {
+            base.DefaultValues();
+            this.isLayerLoaded = false;
         }
 
         /// <summary>
@@ -80,117 +138,11 @@ namespace WaveEngine.TiledMap
         protected override void Initialize()
         {
             base.Initialize();
-            this.tiledMap = this.Owner.Parent.FindComponent<TiledMap>();
-
-            this.tileTable = new LayerTile[this.tiledMap.Width, this.tiledMap.Height];
-
-            for (int i = 0; i < this.tmxLayer.Tiles.Count; i++)
-            {
-                var tmxTile = this.tmxLayer.Tiles[i];
-
-                Tileset selectedTileset = null;
-
-                if (tmxTile.Gid > 0)
-                {
-                    foreach (var tileset in this.tiledMap.Tilesets)
-                    {
-                        if (tmxTile.Gid <= tileset.LastGid)
-                        {
-                            selectedTileset = tileset;
-                            break;
-                        }
-
-                    }
-                }
-
-                LayerTile tile = new LayerTile(tmxTile, selectedTileset);
-                this.tiles.Add(tile);
-
-                Vector2 tileLocalPosition;
-                this.GetTilePosition(tile, selectedTileset, out tileLocalPosition);
-                tile.LocalPosition = tileLocalPosition;
-
-                int x = i % this.tiledMap.Width;
-                int y = i / this.tiledMap.Width;
-                this.tileTable[x, y] = tile;
-            }
+            this.LoadLayer();
         }
         #endregion
 
         #region Public Methods
-        /// <summary>
-        /// Obtains the tile position
-        /// </summary>
-        /// <param name="tile">The tile</param>
-        /// <param name="tileset">The tileset</param>
-        /// <param name="position">The tile position</param>
-        internal void GetTilePosition(LayerTile tile, Tileset tileset, out Vector2 position)
-        {
-            switch (this.tiledMap.Orientation)
-            {
-                case TiledMapOrientationType.Orthogonal:
-                    position = new Vector2(
-                        tile.X * this.tiledMap.TileWidth,
-                        tile.Y * this.tiledMap.TileHeight);
-                    break;
-
-                case TiledMapOrientationType.Isometric:
-                    position = new Vector2(
-                        ((tile.X - tile.Y) * this.tiledMap.TileWidth * 0.5f) + (this.tiledMap.Height * this.tiledMap.TileWidth * 0.5f) - this.tiledMap.TileWidth * 0.5f,
-                        (tile.X + tile.Y) * this.tiledMap.TileHeight * 0.5f);
-                    break;
-
-                case TiledMapOrientationType.Staggered:
-                case TiledMapOrientationType.Hexagonal:
-
-                    int sideLengthX = 0;
-                    int sideLengthY = 0;
-
-                    float rowSize = 0;
-                    float columSize = 0;
-                    int staggerIndexSign = this.tiledMap.StaggerIndex == TiledMapStaggerIndexType.Odd ? 1 : -1;
-                    var staggerAxisOffset = this.tiledMap.StaggerIndex == TiledMapStaggerIndexType.Even ? 0.5f : 0;
-
-                    if (this.tiledMap.Orientation == TiledMapOrientationType.Hexagonal)
-                    {
-                        if (this.tiledMap.StaggerAxis == TiledMapStaggerAxisType.X)
-                        {
-                            sideLengthX = this.tiledMap.HexSideLength;
-                        }
-                        else
-                        {
-                            sideLengthY = this.tiledMap.HexSideLength;
-                        }
-                    }
-
-                    if (this.tiledMap.StaggerAxis == TiledMapStaggerAxisType.X)
-                    {
-                        rowSize = (tile.X / 2) + ((tile.X % 2) * 0.5f);
-                        columSize = staggerAxisOffset + tile.Y + ((tile.X % 2) * 0.5f * staggerIndexSign);
-                    }
-                    else
-                    {
-                        rowSize = staggerAxisOffset + tile.X + ((tile.Y % 2) * 0.5f * staggerIndexSign);
-                        columSize = tile.Y * 0.5f;
-                    }
-
-                    position = new Vector2(
-                            rowSize * (this.tiledMap.TileWidth + sideLengthX),
-                            columSize * (this.tiledMap.TileHeight + sideLengthY));
-                    break;
-
-                default:
-                    position = Vector2.Zero;
-                    break;
-            }
-
-            if (tileset != null)
-            {
-                position.X += tileset.XDrawingOffset;
-                position.Y += tileset.YDrawingOffset + this.tiledMap.TileHeight - tileset.TileHeight;
-            }
-        }
-
         /// <summary>
         /// Gets a <see cref="NeighboursCollection"/> that contains the neighbour of the spefied tile.
         /// </summary>
@@ -202,6 +154,11 @@ namespace WaveEngine.TiledMap
             if (tile == null)
             {
                 throw new ArgumentNullException("The tile argument can not be null");
+            }
+
+            if (!this.isLayerLoaded)
+            {
+                return null;
             }
 
             switch (tiledMap.Orientation)
@@ -229,6 +186,11 @@ namespace WaveEngine.TiledMap
         /// <param name="position">The world position</param>
         public LayerTile GetLayerTileByWorldPosition(Vector2 position)
         {
+            if (!this.isLayerLoaded)
+            {
+                return null;
+            }
+
             int tileX, tileY;
             this.tiledMap.GetTileCoordinatesByWorldPosition(position, out tileX, out tileY);
             return this.GetLayerTileByMapCoordinates(tileX, tileY);
@@ -244,7 +206,8 @@ namespace WaveEngine.TiledMap
         {
             LayerTile result = null;
 
-            if (x >= 0
+            if (this.isLayerLoaded
+             && x >= 0
              && x < this.tiledMap.Width
              && y >= 0
              && y < this.tiledMap.Height)
@@ -260,6 +223,84 @@ namespace WaveEngine.TiledMap
         /// </summary>
         public void Dispose()
         {
+            this.UnloadLayer();
+        }
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Refresh the layer
+        /// </summary>
+        private void RefreshLayer()
+        {
+            this.UnloadLayer();
+            this.LoadLayer();
+        }
+
+        /// <summary>
+        /// Unload layer
+        /// </summary>
+        private void UnloadLayer()
+        {
+            this.tiledMap = null;
+            this.tileTable = null;
+            this.tiles = null;
+            this.tmxLayer = null;            
+
+            this.isLayerLoaded = false;
+        }
+
+        /// <summary>
+        /// Initialize Layer
+        /// </summary>
+        private void LoadLayer()
+        {
+            this.tiles = new List<LayerTile>();
+
+            this.tiledMap = this.Owner.Parent.FindComponent<TiledMap>();
+
+            if (this.tiledMap != null && this.tiledMap.TmxMap != null)
+            {
+                this.tmxLayer = this.tiledMap.TmxMap.Layers.FirstOrDefault(l => l.Name == this.tmxLayerName);
+
+                if (this.tmxLayer != null)
+                {
+                    this.tileTable = new LayerTile[this.tiledMap.Width, this.tiledMap.Height];
+
+                    for (int i = 0; i < this.tmxLayer.Tiles.Count; i++)
+                    {
+                        var tmxTile = this.tmxLayer.Tiles[i];
+
+                        Tileset selectedTileset = null;
+
+                        if (tmxTile.Gid > 0)
+                        {
+                            foreach (var tileset in this.tiledMap.Tilesets)
+                            {
+                                if (tmxTile.Gid <= tileset.LastGid)
+                                {
+                                    selectedTileset = tileset;
+                                    break;
+                                }
+                            }
+                        }
+
+                        LayerTile tile = new LayerTile(tmxTile, selectedTileset);
+                        this.tiles.Add(tile);
+
+                        Vector2 tileLocalPosition;
+                        this.tiledMap.GetTilePosition(tile.X, tile.Y, selectedTileset, out tileLocalPosition);
+                        tile.LocalPosition = tileLocalPosition;
+
+                        int x = i % this.tiledMap.Width;
+                        int y = i / this.tiledMap.Width;
+                        this.tileTable[x, y] = tile;
+                    }
+
+                    this.isLayerLoaded = true;
+                    this.NeedRefresh = true;
+                }
+            }
         }
         #endregion
     }

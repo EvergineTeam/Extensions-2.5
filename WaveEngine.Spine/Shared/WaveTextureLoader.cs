@@ -12,6 +12,7 @@ using Spine;
 using System.IO;
 using WaveEngine.Framework.Graphics;
 using WaveEngine.Framework.Services;
+using WaveEngine.Materials;
 #endregion
 
 namespace WaveEngine.Spine
@@ -45,8 +46,16 @@ namespace WaveEngine.Spine
         /// <param name="path">The path.</param>
         public void Load(AtlasPage page, string path)
         {
-            Texture2D texture = this.assets.LoadAsset<Texture2D>(path);
-            page.rendererObject = texture;
+            var material = new StandardMaterial()
+            {
+                LightingEnabled = false,
+                DiffusePath = path
+            };
+
+            material.Initialize(this.assets);
+
+            var texture = material.Diffuse;
+            page.rendererObject = material;
             page.width = texture.Width;
             page.height = texture.Height;
         }
@@ -54,10 +63,11 @@ namespace WaveEngine.Spine
         /// <summary>
         /// Unloads the specified texture.
         /// </summary>
-        /// <param name="texture">The texture.</param>
-        public void Unload(object texture)
+        /// <param name="material">The texture.</param>
+        public void Unload(object material)
         {
-            this.assets.UnloadAsset(((Texture2D)texture).AssetPath);
+            var mat = material as StandardMaterial;
+            mat.DiffusePath = null;
         }
         #endregion
     }

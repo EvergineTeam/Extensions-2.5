@@ -47,11 +47,6 @@ namespace WaveEngine.Kinect.Drawables
         /// </summary>
         private Vector2 point0, point1;
 
-        /// <summary>
-        /// If viewport manager is actived or not
-        /// </summary>
-        private bool existsVM;
-
         #region Properties
 
         /// <summary>
@@ -107,8 +102,6 @@ namespace WaveEngine.Kinect.Drawables
         protected override void ResolveDependencies()
         {
             base.ResolveDependencies();
-
-            this.existsVM = (WaveServices.ViewportManager != null && WaveServices.ViewportManager.IsActivated) ? true : false;
         }
 
         /// <summary>
@@ -133,16 +126,16 @@ namespace WaveEngine.Kinect.Drawables
                 this.point0.X = p.X;
                 this.point0.Y = p.Y;
 
-                if (existsVM)
-                {
-                    this.layer.LineBatch2D.DrawCircleVM(ref this.point0, 10, ref this.lineColor, 0);
-                    this.layer.LineBatch2D.DrawPointVM(ref this.point0, 10, ref this.pointColor, 0);
-                }
-                else
-                {                                   
+                ////if (existsVM)
+                ////{
+                ////    this.layer.LineBatch2D.DrawCircleVM(ref this.point0, 10, ref this.lineColor, 0);
+                ////    this.layer.LineBatch2D.DrawPointVM(ref this.point0, 10, ref this.pointColor, 0);
+                ////}
+                ////else
+                ////{                                   
                     this.layer.LineBatch2D.DrawCircle(ref this.point0, 10, ref this.lineColor, 0);
                     this.layer.LineBatch2D.DrawPoint(ref this.point0, 10, ref this.pointColor, 0);
-                }
+                ////}
             }
 
             foreach (Line l in this.behavior.DrawLines)
@@ -152,14 +145,14 @@ namespace WaveEngine.Kinect.Drawables
                 this.point1.X = l.EndPoint.X;
                 this.point1.Y = l.EndPoint.Y;
 
-                if (existsVM)
-                {
-                    this.RenderManager.LineBatch2D.DrawLineVM(ref point0, ref point1, ref pointColor, 0);
-                }
-                else
-                {
+                ////if (existsVM)
+                ////{
+                ////    this.RenderManager.LineBatch2D.DrawLineVM(ref point0, ref point1, ref pointColor, 0);
+                ////}
+                ////else
+                ////{
                     this.RenderManager.LineBatch2D.DrawLine(ref point0, ref point1, ref pointColor, 0);
-                }
+                ////}
             }
         }
 

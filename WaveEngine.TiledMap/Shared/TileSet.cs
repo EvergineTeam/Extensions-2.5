@@ -205,9 +205,11 @@ namespace WaveEngine.TiledMap
 
                 this.tiles.Add(tilesetTile);
                 this.TilesTable[tilesetTile.ID] = tilesetTile;
-            }
+            }            
 
-            this.Image = this.tiledMap.Owner.Scene.Assets.LoadAsset<Texture2D>(tmxTileset.Image.Source);
+            string fullPath = tmxTileset.Image.Source;            
+            string relativePath = fullPath.Substring(fullPath.IndexOf("Content"));
+            this.Image = this.tiledMap.Owner.Scene.Assets.LoadAsset<Texture2D>(relativePath);            
         }
         #endregion
 

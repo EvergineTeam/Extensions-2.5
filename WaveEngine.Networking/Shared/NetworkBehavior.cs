@@ -110,7 +110,10 @@ namespace WaveEngine.Networking
         /// <param name="gameTime">The game time.</param>
         protected override void Update(TimeSpan gameTime)
         {
-            this.NetworkManager.UpdateBehavior(this);
+            if (this.NetworkManager != null)
+            {
+                this.NetworkManager.UpdateBehavior(this);
+            }
         }
 
         /// <summary>

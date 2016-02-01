@@ -17,53 +17,53 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\x86\Release\WaveEngine.OculusRift.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\x86\Release\WaveEngine.OculusRift.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OculusWrap">
-      <HintPath>.\OculusWrap.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX, Version=2.6.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Platforms\Windows\Libraries\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11, Version=2.6.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Platforms\Windows\Libraries\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>OculusWrap.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
       <HintPath>..\..\Platforms\Windows\Libraries\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.MediaFoundation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Platforms\Windows\Libraries\SharpDX.MediaFoundation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="SharpDX">
+      <HintPath>..\..\Platforms\Windows\Libraries\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11">
+      <HintPath>..\..\Platforms\Windows\Libraries\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OculusVRApplication.cs">
       <SubType>Code</SubType>
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="OculusVRCamera3D.cs">
       <SubType>Code</SubType>
@@ -96,19 +96,19 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\WaveEngine.Common\Projects\WaveEngine.Common.csproj">
-      <Project>{55b6b4f4-bce2-4ef7-836f-44f17332f924}</Project>
+      <Project>{55B6B4F4-BCE2-4EF7-836F-44F17332F924}</Project>
       <Name>WaveEngine.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Common\WaveEngine.Components\Projects\WaveEngine.Components.csproj">
-      <Project>{d32883f0-e199-48f7-bafb-ddc036ceb556}</Project>
+      <Project>{D32883F0-E199-48F7-BAFB-DDC036CEB556}</Project>
       <Name>WaveEngine.Components</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Common\WaveEngine.Framework\Projects\WaveEngine.Framework.csproj">
-      <Project>{75527125-5aa8-45d0-a801-f674ee689e78}</Project>
+      <Project>{75527125-5AA8-45D0-A801-F674EE689E78}</Project>
       <Name>WaveEngine.Framework</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Platforms\Windows\Adapter\WaveEngine.Adapter.csproj">
-      <Project>{d0d1320b-c32e-46cd-945b-ca6214b208a3}</Project>
+      <Project>{D0D1320B-C32E-46CD-945B-CA6214B208A3}</Project>
       <Name>WaveEngine.Adapter</Name>
     </ProjectReference>
   </ItemGroup>

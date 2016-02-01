@@ -181,23 +181,28 @@ namespace WaveEngine.Kinect.Behaviors
 
             this.kinectService = WaveServices.GetService<KinectService>();
 
-            if (this.kinectService != null)
-            {
-                if (WaveServices.ViewportManager != null && WaveServices.ViewportManager.IsActivated)
-                {
-                    this.colorFactorX = (float)WaveServices.ViewportManager.VirtualWidth / (float)this.kinectService.ColorTexture.Width;
-                    this.colorFactorY = (float)WaveServices.ViewportManager.VirtualHeight / (float)this.kinectService.ColorTexture.Height;
-                    this.depthFactorX = (float)WaveServices.ViewportManager.VirtualWidth / (float)this.kinectService.DepthTexture.Width;
-                    this.depthFactorY = (float)WaveServices.ViewportManager.VirtualHeight / (float)this.kinectService.DepthTexture.Height;
-                }
-                else
-                {
-                    this.colorFactorX = (float)WaveServices.Platform.ScreenWidth / (float)this.kinectService.ColorTexture.Width;
-                    this.colorFactorY = (float)WaveServices.Platform.ScreenHeight / (float)this.kinectService.ColorTexture.Height;
-                    this.depthFactorX = (float)WaveServices.Platform.ScreenWidth / (float)this.kinectService.DepthTexture.Width;
-                    this.depthFactorY = (float)WaveServices.Platform.ScreenHeight / (float)this.kinectService.DepthTexture.Height;
-                }
-            }
+            this.colorFactorX = 1;
+            this.colorFactorY = 1;
+            this.depthFactorX = 1;
+            this.depthFactorY = 1;
+
+            ////if (this.kinectService != null)
+            ////{
+            ////    if (WaveServices.ViewportManager != null && WaveServices.ViewportManager.IsActivated)
+            ////    {
+            ////        this.colorFactorX = (float)WaveServices.ViewportManager.VirtualWidth / (float)this.kinectService.ColorTexture.Width;
+            ////        this.colorFactorY = (float)WaveServices.ViewportManager.VirtualHeight / (float)this.kinectService.ColorTexture.Height;
+            ////        this.depthFactorX = (float)WaveServices.ViewportManager.VirtualWidth / (float)this.kinectService.DepthTexture.Width;
+            ////        this.depthFactorY = (float)WaveServices.ViewportManager.VirtualHeight / (float)this.kinectService.DepthTexture.Height;
+            ////    }
+            ////    else
+            ////    {
+            ////        this.colorFactorX = (float)WaveServices.Platform.ScreenWidth / (float)this.kinectService.ColorTexture.Width;
+            ////        this.colorFactorY = (float)WaveServices.Platform.ScreenHeight / (float)this.kinectService.ColorTexture.Height;
+            ////        this.depthFactorX = (float)WaveServices.Platform.ScreenWidth / (float)this.kinectService.DepthTexture.Width;
+            ////        this.depthFactorY = (float)WaveServices.Platform.ScreenHeight / (float)this.kinectService.DepthTexture.Height;
+            ////    }
+            ////}
 
             this.DrawPoints2DProjected = new List<Vector2>();
             this.DrawPoints3D = new List<Vector3>();

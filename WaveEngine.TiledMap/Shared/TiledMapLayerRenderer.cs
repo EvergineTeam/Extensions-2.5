@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using WaveEngine.Common.Graphics;
@@ -26,6 +27,7 @@ namespace WaveEngine.TiledMap
     /// <summary>
     /// Render a TiledMap Layer
     /// </summary>
+    [DataContract]
     public class TiledMapLayerRenderer : Drawable2D
     {
         /// <summary>
@@ -86,6 +88,16 @@ namespace WaveEngine.TiledMap
         private AddressMode samplerMode;
 
         /// <summary>
+        /// The cached origin
+        /// </summary>
+        private Vector2 cachedOrigin;
+
+        /// <summary>
+        /// A transform to apply the origin
+        /// </summary>
+        private Matrix originTranslation;
+
+        /// <summary>
         /// Gets the sampler mode
         /// </summary>
         public AddressMode SamplerMode
@@ -133,8 +145,18 @@ namespace WaveEngine.TiledMap
         public TiledMapLayerRenderer(Type layerType, AddressMode samplerMode)
             : base(layerType)
         {
-            this.meshes = new List<Tuple<StandardMaterial, Mesh>>();
             this.samplerMode = samplerMode;
+        }
+
+        /// <summary>
+        /// Sets the default values
+        /// </summary>
+        protected override void DefaultValues()
+        {
+            base.DefaultValues();
+            this.samplerMode = AddressMode.PointClamp;
+            this.meshes = new List<Tuple<StandardMaterial, Mesh>>();
+            this.originTranslation = Matrix.Identity;
         }
         #endregion
 
@@ -154,7 +176,7 @@ namespace WaveEngine.TiledMap
             int tileWidth = this.tiledMap.TileWidth;
             int tileHeight = this.tiledMap.TileHeight;
 
-            RenderManager.LineBatch2D.DrawPointVM(Vector2.Zero, 10, Color.Red, -10);
+            RenderManager.LineBatch2D.DrawPoint(Vector2.Zero, 10, Color.Red, -10);
 
             switch (this.tiledMap.Orientation)
             {
@@ -340,7 +362,17 @@ namespace WaveEngine.TiledMap
                 this.tiledMapLayer.NeedRefresh = false;
             }
 
-            Matrix worldTransform = this.transform2D.WorldTransform;
+            if (this.cachedOrigin != this.transform2D.Origin)
+            {
+                this.cachedOrigin = this.transform2D.Origin;
+                this.originTranslation = Matrix.CreateTranslation(new Vector3(
+                    -this.transform2D.Rectangle.Width * this.transform2D.Origin.X,
+                    -this.transform2D.Rectangle.Height * this.transform2D.Origin.Y,
+                    0
+                    ));
+            }
+
+            Matrix worldTransform = this.originTranslation * this.transform2D.WorldTransform;
             float drawOrder = this.transform2D.DrawOrder;
             float opacity = this.RenderManager.DebugLines ? DebugAlpha : this.transform2D.GlobalOpacity;
 
@@ -349,8 +381,10 @@ namespace WaveEngine.TiledMap
                 var tuple = this.meshes[i];
                 var material = tuple.Item1;
                 var mesh = tuple.Item2;
-
-                material.DiffuseColor = Color.White * opacity;
+                
+                material.Alpha = opacity;
+                material.LayerType = this.LayerType;
+                material.SamplerMode = this.samplerMode;
                 mesh.ZOrder = drawOrder;
                 this.RenderManager.DrawMesh(mesh, material, ref worldTransform);
             }
@@ -373,7 +407,7 @@ namespace WaveEngine.TiledMap
             Vector2.Transform(ref startPoint, ref worldTransform, out startPoint);
             Vector2.Transform(ref endPoint, ref worldTransform, out endPoint);
 
-            lineBatch.DrawLineVM(ref startPoint, ref endPoint, ref color, drawOrder);
+            lineBatch.DrawLine(ref startPoint, ref endPoint, ref color, drawOrder);
         }
 
         /// <summary>
@@ -400,7 +434,7 @@ namespace WaveEngine.TiledMap
                 this.RemoveBuffers();
                 this.nTiles = newNTiles;
 
-                // Vertices                
+                // Vertices
                 this.vertices = new VertexPositionColorTexture[this.nTiles * verticesPerTile];
                 this.vertexBuffer = new DynamicVertexBuffer(VertexPositionColorTexture.VertexFormat);
 
@@ -415,6 +449,7 @@ namespace WaveEngine.TiledMap
                     indices[(i * 6) + 4] = (ushort)((i * 4) + 3);
                     indices[(i * 6) + 5] = (ushort)(i * 4);
                 }
+
                 this.indexBuffer = new IndexBuffer(indices);
             }
 
@@ -467,6 +502,8 @@ namespace WaveEngine.TiledMap
 
                 this.NewMesh(startIndex, currentIndexCount, currentTileset.Image);
             }
+
+            this.transform2D.Rectangle = this.tiledMap.CalcRectangle();
         }
 
         /// <summary>
@@ -522,7 +559,7 @@ namespace WaveEngine.TiledMap
             int vertexId = tileIndex * verticesPerTile;
 
             Vector2 position;
-            this.tiledMapLayer.GetTilePosition(tile, tileset, out position);
+            this.tiledMap.GetTilePosition(tile.X, tile.Y, tileset, out position);
             tile.LocalPosition = position;
 
             var textCoord0 = new Vector2(tileRectangle.X, tileRectangle.Y);
@@ -641,6 +678,8 @@ namespace WaveEngine.TiledMap
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
+            // Delete buffers
+            this.RemoveBuffers();
         }
         #endregion
     }
