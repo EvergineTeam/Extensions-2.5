@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // LensFlareMaterial
 //
-// Copyright © 2015 Wave Engine S.L. All rights reserved.
+// Copyright © 2016 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -303,17 +303,17 @@ namespace WaveEngine.ImageEffects
             // LensColor
             var assembly = this.GetType().GetTypeInfo().Assembly;
             var currentNamespace = assembly.GetName().Name;
-            var textureResourcePath = currentNamespace + ".LensColor.wpk";
+            var textureResourcePath = currentNamespace + "LensFlare.LensColor.wpk";
             var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
             this.lensColorTexture = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);
 
             // LensDirt
-            textureResourcePath = currentNamespace + ".LensDirt.wpk";
+            textureResourcePath = currentNamespace + "LensFlare.LensDirt.wpk";
             textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
             this.lensDirtTexture = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);
 
             // LensStar
-            textureResourcePath = currentNamespace + ".LensStar.wpk";
+            textureResourcePath = currentNamespace + "LensFlare.LensStar.wpk";
             textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
             this.lensStarTexture = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);
         }

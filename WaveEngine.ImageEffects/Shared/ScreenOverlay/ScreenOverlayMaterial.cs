@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // ScreenOverlayMaterial
 //
-// Copyright © 2015 Wave Engine S.L. All rights reserved.
+// Copyright © 2016 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -263,7 +263,7 @@ namespace WaveEngine.ImageEffects
                 var assembly = this.GetType().GetTypeInfo().Assembly;
                 var currentNamespace = assembly.GetName().Name;
 
-                var textureResourcePath = currentNamespace + ".Gradient.wpk";
+                var textureResourcePath = currentNamespace + "ScreenOverlay.Gradient.wpk";
                 var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
 
                 this.overlayTexture = this.assetsContainer.LoadAsset<Texture2D>(textureResourcePath, textureStream);

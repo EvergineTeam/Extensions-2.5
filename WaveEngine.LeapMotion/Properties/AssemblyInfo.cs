@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitleAttribute("WaveEngine.LeapMotion Windows")]
 [assembly: AssemblyCompanyAttribute("Wave Engine")]
 [assembly: AssemblyDescriptionAttribute("Windows")]
-[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2015")]
+[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2016")]
 [assembly: GuidAttribute("a11c4c30-86e7-49c1-a8d5-a455a8623559")]
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyVersionAttribute("2.0.5.*")]
+[assembly: AssemblyVersionAttribute("2.0.6.*")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "2.0.5.*";
+        internal const string Version = "2.0.6.*";
     }
 }

@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // DistortionMaterial
 //
-// Copyright © 2015 Wave Engine S.L. All rights reserved.
+// Copyright © 2016 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -160,7 +160,7 @@ namespace WaveEngine.ImageEffects
                 var assembly = this.GetType().GetTypeInfo().Assembly;
                 var currentNamespace = assembly.GetName().Name;
 
-                var textureResourcePath = currentNamespace + ".DistortionNormals.wpk";
+                var textureResourcePath = currentNamespace + "Distortion.DistortionNormals.wpk";
                 var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
 
                 this.normal = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);

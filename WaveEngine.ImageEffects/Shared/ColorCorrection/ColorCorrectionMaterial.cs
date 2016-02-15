@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // ColorCorrectionMaterial
 //
-// Copyright © 2015 Wave Engine S.L. All rights reserved.
+// Copyright © 2016 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -23,7 +23,7 @@ namespace WaveEngine.ImageEffects
     /// <summary>
     /// ColorCorrectionMaterial effect.
     /// </summary>
-    public class ColorCorrectionMaterial : Material
+    internal class ColorCorrectionMaterial : Material
     {
         /// <summary>
         /// Color Space type
@@ -200,7 +200,7 @@ namespace WaveEngine.ImageEffects
                 var assembly = this.GetType().GetTypeInfo().Assembly;
                 var currentNamespace = assembly.GetName().Name;
 
-                var textureResourcePath = currentNamespace + ".RGBTable16x1.wpk";
+                var textureResourcePath = currentNamespace + "ColorCorrection.RGBTable16x1.wpk";
                 var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
 
                 this.lutTexture = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);

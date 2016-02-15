@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitleAttribute("WaveEngine.Kinect Windows")]
 [assembly: AssemblyCompanyAttribute("Wave Engine")]
 [assembly: AssemblyDescriptionAttribute("Windows")]
-[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2015")]
+[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2016")]
 [assembly: GuidAttribute("0c415f19-2e5d-4047-9ccc-149d269fd73f")]
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyVersionAttribute("2.0.5.*")]
+[assembly: AssemblyVersionAttribute("2.0.6.*")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "2.0.5.*";
+        internal const string Version = "2.0.6.*";
     }
 }

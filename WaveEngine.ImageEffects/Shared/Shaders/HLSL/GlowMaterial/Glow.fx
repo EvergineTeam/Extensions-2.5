@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Glow.fx
 //
-// Copyright © 2015 Wave Engine S.L. All rights reserved.
+// Copyright © 2016 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 // More info: http://http.developer.nvidia.com/GPUGems/gpugems_ch21.html
 //-----------------------------------------------------------------------------

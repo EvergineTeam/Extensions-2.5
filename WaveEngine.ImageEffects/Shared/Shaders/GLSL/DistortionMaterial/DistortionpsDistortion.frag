@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------------
 // Distortion.fx
 //
-// Copyright © 2015 Wave Corporation
+// Copyright © 2016 Wave Corporation
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 
