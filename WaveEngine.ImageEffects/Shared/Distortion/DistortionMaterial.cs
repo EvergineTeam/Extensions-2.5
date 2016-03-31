@@ -16,6 +16,7 @@ using WaveEngine.Common.Math;
 using WaveEngine.Framework.Graphics;
 using System.Reflection;
 using WaveEngine.Common.IO;
+using WaveEngine.Common.Helpers;
 #endregion
 
 namespace WaveEngine.ImageEffects
@@ -157,7 +158,7 @@ namespace WaveEngine.ImageEffects
             }
             else
             {
-                var assembly = this.GetType().GetTypeInfo().Assembly;
+                var assembly = ReflectionHelper.GetMemberAssembly(this);
                 var currentNamespace = assembly.GetName().Name;
 
                 var textureResourcePath = currentNamespace + "Distortion.DistortionNormals.wpk";

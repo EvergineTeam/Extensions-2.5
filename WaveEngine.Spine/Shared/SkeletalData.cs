@@ -161,7 +161,7 @@ namespace WaveEngine.Spine
 
             if (this.OnAtlasRefresh != null)
             {
-                this.OnAtlasRefresh(this, null);
+                this.OnAtlasRefresh(this, EventArgs.Empty);
             }
         }
         #endregion

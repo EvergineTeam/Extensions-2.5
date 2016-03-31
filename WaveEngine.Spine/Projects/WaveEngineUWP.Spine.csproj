@@ -75,6 +75,9 @@
       <HintPath>..\..\..\Libraries\spine-csharp_W8.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\WaveEngine.Spine.rd.xml" />
+  </ItemGroup>
   <Import Project="..\Shared\WaveEngine.Spine.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

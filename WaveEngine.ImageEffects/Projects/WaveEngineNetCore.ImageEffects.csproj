@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{4DC0F1F1-8026-4396-8E9D-CCAFCD6E7482}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WaveEngine.ImageEffects</RootNamespace>
+    <AssemblyName>WaveEngine.ImageEffects</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;PROFILE</DefineConstants>
+    <DocumentationFile>bin\x86\Debug\WaveEngine.ImageEffects.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>bin\x86\Release\WaveEngine.ImageEffects.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\WaveEngine.Common\Projects\WaveEngineNetCore.Common.csproj">
+      <Project>{55b6b4f4-bce2-4ef7-836f-44f17332f924}</Project>
+      <Name>WaveEngineNetCore.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Common\WaveEngine.Framework\Projects\WaveEngineNetCore.Framework.csproj">
+      <Project>{75527125-5aa8-45d0-a801-f674ee689e78}</Project>
+      <Name>WaveEngineNetCore.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfoExt.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+  <Import Project="..\Shared\WaveEngine.ImageEffects.Shared.projitems" Label="Shared" Condition="Exists('..\Shared\WaveEngine.ImageEffects.Shared.projitems')" />
+  <Import Project="..\..\..\Resources\CoreFX\WaveEngine.CoreCLR.CSharp.targets" />
+  <Import Project="..\..\..\Resources\PostBuildTargets\Windows.targets" />
+</Project>

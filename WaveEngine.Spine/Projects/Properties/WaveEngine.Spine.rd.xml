@@ -1,0 +1,5 @@
+<Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
+  <Library Name="WaveEngine.Spine">
+    <Namespace Name="WaveEngine.Spine" Dynamic="Required All" DataContractSerializer="Required All" />
+  </Library>
+</Directives>

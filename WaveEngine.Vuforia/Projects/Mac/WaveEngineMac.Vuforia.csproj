@@ -75,6 +75,14 @@
     <EnablePackageSigning>true</EnablePackageSigning>
     <DefineConstants>MAC</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NuGet|x86'">
+    <OutputPath>bin\x86\NuGet\</OutputPath>
+    <DefineConstants>MAC</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoMac">
       <HintPath>..\..\..\..\Platforms\Mac\Libraries\MonoMac.dll</HintPath>

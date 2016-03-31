@@ -77,6 +77,15 @@
     <EnablePackageSigning>true</EnablePackageSigning>
     <DefineConstants>MAC</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NuGet|x86'">
+    <OutputPath>bin\x86\NuGet\</OutputPath>
+    <DefineConstants>MAC</DefineConstants>
+    <DocumentationFile>bin\Mac\Release\WaveEngine.TiledMap.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MonoMac">
       <HintPath>..\..\..\Platforms\Mac\Libraries\MonoMac.dll</HintPath>
@@ -100,6 +109,10 @@
     <ProjectReference Include="..\..\..\Common\WaveEngine.Common\Projects\WaveEngineMac.Common.csproj">
       <Project>{A99DB6AE-45FA-4275-90F5-9B6F58808EC7}</Project>
       <Name>WaveEngineMac.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Common\WaveEngine.Components\Projects\WaveEngineMac.Components.csproj">
+      <Project>{84a91b8e-2c07-4480-93a0-1928a0f28ce7}</Project>
+      <Name>WaveEngineMac.Components</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Common\WaveEngine.Framework\Projects\WaveEngineMac.Framework.csproj">
       <Project>{8ED41698-D176-4732-9E96-D7F1ECB9D72B}</Project>

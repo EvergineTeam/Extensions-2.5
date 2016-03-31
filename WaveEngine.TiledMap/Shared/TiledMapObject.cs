@@ -87,7 +87,7 @@ namespace WaveEngine.TiledMap
         /// Initializes a new instance of the <see cref="TiledMapObject" /> class.
         /// </summary>
         /// <param name="tmxObject">The TMX parsed object</param>
-        public TiledMapObject(TiledSharp.TmxObjectGroup.TmxObject tmxObject)
+        public TiledMapObject(TmxObject tmxObject)
         {
             this.Name = tmxObject.Name;
             this.ObjectType = (TiledMapObjectType)((int)tmxObject.ObjectType);

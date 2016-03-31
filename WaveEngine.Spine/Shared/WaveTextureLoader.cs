@@ -49,7 +49,8 @@ namespace WaveEngine.Spine
             var material = new StandardMaterial()
             {
                 LightingEnabled = false,
-                DiffusePath = path
+                DiffusePath = path,
+                VertexColorEnable = true
             };
 
             material.Initialize(this.assets);

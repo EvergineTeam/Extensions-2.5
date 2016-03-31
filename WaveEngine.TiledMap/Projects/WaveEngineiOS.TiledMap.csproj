@@ -45,6 +45,12 @@
       <Project>{ca72b53e-7cb1-48fb-b38f-cf1f85c6dab3}</Project>
       <Name>WaveEngineiOS.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Common\WaveEngine.Components\Projects\WaveEngineiOS.Components.csproj">
+      <Project>{3efa8318-eb28-455d-b2a5-8c6189fff0a6}</Project>
+      <Name>WaveEngineiOS.Components</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Common\WaveEngine.Framework\Projects\WaveEngineiOS.Framework.csproj">
       <Project>{3534edae-dd3c-4d93-b7f5-9c5d7edf6679}</Project>
       <Name>WaveEngineiOS.Framework</Name>

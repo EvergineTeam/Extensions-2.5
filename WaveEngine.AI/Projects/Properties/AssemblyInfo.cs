@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2016")]
 [assembly: GuidAttribute("ef75e6a0-2662-4b1b-8013-0da03079e49a")]
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyVersionAttribute("2.0.6.*")]
+[assembly: AssemblyVersionAttribute("2.1.0.*")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "2.0.6.*";
+        internal const string Version = "2.1.0.*";
     }
 }

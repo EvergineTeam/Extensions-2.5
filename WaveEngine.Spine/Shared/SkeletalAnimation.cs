@@ -30,6 +30,11 @@ namespace WaveEngine.Spine
     public class SkeletalAnimation : Behavior
     {
         /// <summary>
+        /// Event raised when an animation raise a Spine event.
+        /// </summary>
+        public event EventHandler<SpineEvent> EventAnimation;
+
+        /// <summary>
         /// Event raised when an animation has finalized.
         /// </summary>
         public event AnimationState.StartEndDelegate EndAnimation;
@@ -61,6 +66,11 @@ namespace WaveEngine.Spine
         /// The current animation
         /// </summary>
         private string currentAnimation;
+
+        /// <summary>
+        /// Whether animation need a refresh.
+        /// </summary>
+        private bool animationRefreshFlag;
 
         #region Properties
 
@@ -122,6 +132,8 @@ namespace WaveEngine.Spine
             set
             {
                 this.animationPath = value;
+                this.animationRefreshFlag = true;
+
                 if (this.isInitialized)
                 {
                     this.RefreshAnimation();
@@ -248,6 +260,11 @@ namespace WaveEngine.Spine
         /// </value>
         [DataMember]
         public bool Loop { get; set; }
+
+        /// <summary>
+        /// A new atlas has been loaded
+        /// </summary>
+        internal event EventHandler OnAnimationRefresh;
         #endregion
 
         #region Initialize
@@ -278,6 +295,8 @@ namespace WaveEngine.Spine
             this.Speed = 1;
             this.PlayAutomatically = false;
             this.Loop = false;
+
+            this.animationRefreshFlag = true;
         }
         #endregion
 
@@ -351,6 +370,27 @@ namespace WaveEngine.Spine
         #region Private Methods
 
         /// <summary>
+        /// Resolves the dependencies.
+        /// </summary>
+        protected override void ResolveDependencies()
+        {
+            base.ResolveDependencies();
+
+            this.SkeletalData.OnAtlasRefresh -= this.OnAtlasRefresh;
+            this.SkeletalData.OnAtlasRefresh += this.OnAtlasRefresh;
+        }
+
+        /// <summary>
+        /// Deletes the dependencies.
+        /// </summary>
+        protected override void DeleteDependencies()
+        {
+            this.SkeletalData.OnAtlasRefresh -= this.OnAtlasRefresh;
+            
+            base.DeleteDependencies();
+        }
+
+        /// <summary>
         /// Performs further custom initialization for this instance.
         /// </summary>
         /// <remarks>
@@ -362,8 +402,20 @@ namespace WaveEngine.Spine
 
             this.RefreshAnimation();
             this.CurrentAnimation = this.currentAnimation;
+        }
 
-            this.SkeletalData.OnAtlasRefresh += OnAtlasRefresh;
+        /// <summary>
+        /// Event handler of the animation event.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        /// <param name="trackIndex">Index of the track.</param>
+        /// <param name="e">event data.</param>
+        private void OnEventAnimation(AnimationState state, int trackIndex, Event e)
+        {
+            if (this.EventAnimation != null)
+            {
+                this.EventAnimation(this, new SpineEvent(e));
+            }
         }
 
         /// <summary>
@@ -404,6 +456,7 @@ namespace WaveEngine.Spine
         /// <param name="e">The event args.</param>
         private void OnAtlasRefresh(object sender, EventArgs e)
         {
+            this.animationRefreshFlag = true;
             this.RefreshAnimation();
         }
 
@@ -412,6 +465,12 @@ namespace WaveEngine.Spine
         /// </summary>
         private void RefreshAnimation()
         {
+            if (this.SkeletalData.Atlas == null
+             || !this.animationRefreshFlag)
+            {
+                return;
+            }
+
             if (this.Skeleton != null)
             {
                 this.Skeleton = null;
@@ -419,42 +478,63 @@ namespace WaveEngine.Spine
 
             if (this.State != null)
             {
+                this.state.Event -= this.OnEventAnimation;
                 this.state.End -= this.OnEndAnimation;
                 this.state = null;
-            }
-
-            if (this.SkeletalData.Atlas == null)
-            {
-                return;
             }
 
             try
             {
                 if (!string.IsNullOrEmpty(this.animationPath))
                 {
-                    SkeletonJson json = new SkeletonJson(this.SkeletalData.Atlas);
-
-
                     using (var fileStream = WaveServices.Storage.OpenContentFile(this.animationPath))
                     {
-                        using (var streamReader = new StreamReader(fileStream))
+                        SkeletonData skeletonData = null;
+                        var pathExtension = Path.GetExtension(this.animationPath.ToLowerInvariant());
+
+                        if (pathExtension == ".skel")
                         {
-                            this.Skeleton = new Skeleton(json.ReadSkeletonData(streamReader));
+                            SkeletonBinary binary = new SkeletonBinary(this.SkeletalData.Atlas);
+                            skeletonData = binary.ReadSkeletonData(fileStream);
                         }
+                        else
+                        {
+                            using (var streamReader = new StreamReader(fileStream))
+                            {
+                                SkeletonJson json = new SkeletonJson(this.SkeletalData.Atlas);
+                                skeletonData = json.ReadSkeletonData(streamReader);
+                            }
+                        }
+
+                        this.Skeleton = new Skeleton(skeletonData);
                     }
 
-                    if (string.IsNullOrEmpty(this.currentSkin))
+                    if (string.IsNullOrEmpty(this.currentAnimation)
+                     || !this.AnimationNames.Any(animation => animation == this.currentAnimation))
+                    {
+                        this.currentAnimation = string.Empty;
+                    }
+
+                    if (string.IsNullOrEmpty(this.currentSkin)
+                     || !this.SkinNames.Any(skin => skin == this.currentSkin))
                     {
                         this.currentSkin = this.Skeleton.Data.DefaultSkin.Name;
                     }
 
                     this.Skeleton.SetSkin(this.currentSkin);
 
+                    if (this.OnAnimationRefresh != null)
+                    {
+                        this.OnAnimationRefresh(this, EventArgs.Empty);
+                    }
+
                     AnimationStateData stateData = new AnimationStateData(this.Skeleton.Data);
                     this.state = new AnimationState(stateData);
+                    this.state.Event += this.OnEventAnimation;
                     this.state.End += this.OnEndAnimation;
 
                     this.Update(TimeSpan.Zero);
+                    this.animationRefreshFlag = false;
                 }
             }
             catch (Exception e)

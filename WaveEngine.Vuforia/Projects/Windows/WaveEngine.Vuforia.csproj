@@ -19,7 +19,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Windows\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -27,9 +27,18 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Windows\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>bin\x86\Release\WaveEngine.Vuforia.XML</DocumentationFile>
+    <DocumentationFile>bin\Windows\Release\WaveEngine.Vuforia.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NuGet|AnyCPU'">
+    <OutputPath>bin\NuGet\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>bin\Windows\Release\WaveEngine.Vuforia.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{4BD1A7D5-DC33-4C61-AE55-4233B6375C36}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WaveEngine.Social</RootNamespace>
+    <AssemblyName>WaveEngine.Social</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>bin\x86\Debug\WaveEngine.Social.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>bin\x86\Release\WaveEngine.Social.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfoExt.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\WaveEngine.Common\Projects\WaveEngineNetCore.Common.csproj">
+      <Project>{55b6b4f4-bce2-4ef7-836f-44f17332f924}</Project>
+      <Name>WaveEngineNetCore.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Common\WaveEngine.Framework\Projects\WaveEngineNetCore.Framework.csproj">
+      <Project>{75527125-5aa8-45d0-a801-f674ee689e78}</Project>
+      <Name>WaveEngineNetCore.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\Shared\WaveEngine.Social.Shared.projitems" Label="Shared" Condition="Exists('..\Shared\WaveEngine.Social.Shared.projitems')" />
+  <Import Project="..\..\..\Resources\CoreFX\WaveEngine.CoreCLR.CSharp.targets" />
+  <Import Project="..\..\..\Resources\PostBuildTargets\Windows.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

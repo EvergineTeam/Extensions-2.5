@@ -222,7 +222,7 @@ namespace WaveEngine.TiledMap
                         this.DrawDebugLine(ref startPoint, ref endPoint);
                     }
 
-                    //// Horizontal lines
+                    // Horizontal lines
                     for (int i = 0; i <= height; i++)
                     {
                         startPoint.X = -(i * tileWidth * 0.5f) + (height * tileWidth * 0.5f);

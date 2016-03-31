@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SkeletalAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SkeletalData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SkeletalRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SpineEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WaveTextureLoader.cs" />
   </ItemGroup>
 </Project>

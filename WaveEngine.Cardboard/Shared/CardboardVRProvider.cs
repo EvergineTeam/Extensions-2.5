@@ -15,6 +15,7 @@ using System.Runtime.Serialization;
 using WaveEngine.Cardboard;
 using WaveEngine.Common.Attributes;
 using WaveEngine.Common.Graphics;
+using WaveEngine.Common.Helpers;
 using WaveEngine.Common.IO;
 using WaveEngine.Common.Math;
 using WaveEngine.Common.VR;
@@ -461,7 +462,7 @@ namespace WaveEngine.Cardboard
                 {
                     if (this.distortionMesh == null)
                     {
-                        var assembly = typeof(CardboardVRProvider).GetTypeInfo().Assembly;
+                        var assembly = ReflectionHelper.GetTypeAssembly(typeof(CardboardVRProvider));
 
                         using (var stream = ResourceLoader.GetEmbeddedResourceStream(assembly, "WaveEngine.Cardboard.BarrelDistortionMesh.wpk"))
                         {

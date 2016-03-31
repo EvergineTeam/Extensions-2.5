@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>4169df18-7755-4e00-9c52-2e783d1be36f</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WaveEngine.Dolby</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DolbyProfile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DolbyService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IDolbyService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfoExt.cs" />
+  </ItemGroup>
+</Project>

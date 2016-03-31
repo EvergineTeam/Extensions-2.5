@@ -53,7 +53,6 @@
     <Compile Include="Properties\AssemblyInfoExt.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="project.json" />
     <None Include="WaveEngineKeyMetro.snk" />
   </ItemGroup>
   <ItemGroup>

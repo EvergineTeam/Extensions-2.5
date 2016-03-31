@@ -14,18 +14,27 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Windows\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
-    <DocumentationFile>bin\x86\Debug\WaveEngine.Cardboard.XML</DocumentationFile>
+    <DocumentationFile>bin\Windows\Debug\WaveEngine.Cardboard.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Windows\Release\</OutputPath>
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
-    <DocumentationFile>bin\x86\Release\WaveEngine.Cardboard.XML</DocumentationFile>
+    <DocumentationFile>bin\Windows\Release\WaveEngine.Cardboard.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NuGet|AnyCPU'">
+    <OutputPath>bin\NuGet\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <DocumentationFile>bin\Windows\Release\WaveEngine.Cardboard.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>

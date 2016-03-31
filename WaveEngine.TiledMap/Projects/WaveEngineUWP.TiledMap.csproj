@@ -61,6 +61,10 @@
       <Project>{97d63324-2a19-4f8e-8990-68bff8cc3b8f}</Project>
       <Name>WaveEngineUWP.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Common\WaveEngine.Components\Projects\WaveEngineUWP.Components.csproj">
+      <Project>{2eb2a744-6554-4120-b705-429d322178a7}</Project>
+      <Name>WaveEngineUWP.Components</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Common\WaveEngine.Framework\Projects\WaveEngineUWP.Framework.csproj">
       <Project>{fb59f167-39c2-475d-8eb5-7ff9d4fad7de}</Project>
       <Name>WaveEngineUWP.Framework</Name>
@@ -74,6 +78,9 @@
     <Reference Include="TiledSharp">
       <HintPath>..\..\..\Libraries\TiledSharp.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\WaveEngine.TiledMap.rd.xml" />
   </ItemGroup>
   <Import Project="..\Shared\WaveEngine.TiledMap.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

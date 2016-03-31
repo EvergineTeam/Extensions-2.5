@@ -14,18 +14,28 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Windows\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>bin\x86\Debug\WaveEngine.Social.XML</DocumentationFile>
+    <DocumentationFile>bin\Windows\Debug\WaveEngine.Social.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Windows\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>bin\x86\Release\WaveEngine.Social.XML</DocumentationFile>
+    <DocumentationFile>bin\Windows\Release\WaveEngine.Social.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NuGet|AnyCPU'">
+    <OutputPath>bin\NuGet\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>bin\Windows\Release\WaveEngine.Social.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>

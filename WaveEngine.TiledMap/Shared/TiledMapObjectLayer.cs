@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TiledSharp;
 using WaveEngine.Common.Graphics;
+using WaveEngine.Common.Math;
 using WaveEngine.Framework;
 #endregion
 
@@ -46,6 +47,14 @@ namespace WaveEngine.TiledMap
         /// </summary>
         public bool Visible { get; private set; }
 
+        /// <summary>
+        /// Gets the object layer offset
+        /// </summary>
+        public Vector2 Offset { get; private set; }
+
+        /// <summary>
+        /// Gets the objects contained in the object layer.
+        /// </summary>
         public List<TiledMapObject> Objects { get; private set; }
 
         /// <summary>
@@ -62,9 +71,10 @@ namespace WaveEngine.TiledMap
         public TiledMapObjectLayer(TmxObjectGroup tmxObjectLayer)
         {
             this.ObjectLayerName = tmxObjectLayer.Name;
-            this.Color = new Color(tmxObjectLayer.Color.R, tmxObjectLayer.Color.G, tmxObjectLayer.Color.B);
+            this.Color = new Color(tmxObjectLayer.Color.R, tmxObjectLayer.Color.G, tmxObjectLayer.Color.B, tmxObjectLayer.Color.A);
             this.Opacity = tmxObjectLayer.Opacity;
             this.Visible = tmxObjectLayer.Visible;
+            this.Offset = new Vector2((float)tmxObjectLayer.OffsetX, (float)tmxObjectLayer.OffsetY);
 
             this.Objects = new List<TiledMapObject>();
             this.Properties = new Dictionary<string, string>(tmxObjectLayer.Properties);

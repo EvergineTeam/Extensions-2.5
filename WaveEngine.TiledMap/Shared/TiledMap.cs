@@ -21,6 +21,7 @@ using TiledSharp;
 using WaveEngine.Common.Attributes;
 using WaveEngine.Common.Graphics;
 using WaveEngine.Common.Math;
+using WaveEngine.Components.Graphics2D;
 using WaveEngine.Framework;
 using WaveEngine.Framework.Graphics;
 using WaveEngine.Framework.Services;
@@ -35,6 +36,8 @@ namespace WaveEngine.TiledMap
     [DataContract]
     public class TiledMap : Component
     {
+        private const string DefaultAssetsPath = @"Content\Assets\";
+
         /// <summary>
         /// The transform 2D
         /// </summary>
@@ -46,6 +49,16 @@ namespace WaveEngine.TiledMap
         /// </summary>
         [DataMember]
         private string tmxPath;
+
+        /// <summary>
+        /// The tmx stream
+        /// </summary>
+        private Stream tmxStream;
+
+        /// <summary>
+        /// The tmx stream assets path (used with tmxStream)
+        /// </summary>
+        private string tmxStreamAssetsPath;
 
         /// <summary>
         /// The tmx parsed instance
@@ -79,6 +92,11 @@ namespace WaveEngine.TiledMap
         /// </summary>
         private Dictionary<string, TiledMapObjectLayer> objectLayers;
 
+        /// <summary>
+        /// image layers dictionary
+        /// </summary>
+        private Dictionary<string, TiledMapImageLayer> imageLayers;
+
         #region Properties
         /// <summary>
         /// Gets or sets the Path of the Tiled Map TMX file
@@ -90,6 +108,10 @@ namespace WaveEngine.TiledMap
             set
             {
                 this.tmxPath = value;
+
+                // We reset the stream to null for clearness
+                this.tmxStream = null;
+                this.tmxStreamAssetsPath = null;
 
                 if (this.isInitialized)
                 {
@@ -143,12 +165,35 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Gets the tile layer dictionary
         /// </summary>
-        public ReadOnlyDictionary<string, TiledMapLayer> TileLayers { get; private set; }
+        public IReadOnlyDictionary<string, TiledMapLayer> TileLayers
+        {
+            get
+            {
+                return this.tileLayers;
+            }
+        }
 
         /// <summary>
         /// Gets the object layer dictionary
         /// </summary>
-        public ReadOnlyDictionary<string, TiledMapObjectLayer> ObjectLayers { get; private set; }
+        public IReadOnlyDictionary<string, TiledMapObjectLayer> ObjectLayers
+        {
+            get
+            {
+                return this.objectLayers;
+            }
+        }
+
+        /// <summary>
+        /// Gets the image layer dictionary
+        /// </summary>
+        public IReadOnlyDictionary<string, TiledMapImageLayer> ImageLayers
+        {
+            get
+            {
+                return this.imageLayers;
+            }
+        }
 
         /// <summary>
         /// Gets the TMX format version, generally 1.0.
@@ -233,6 +278,27 @@ namespace WaveEngine.TiledMap
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TiledMap" /> class.
+        /// </summary>
+        /// <param name="tmxStream">TMX stream.</param>
+        /// <param name="tmxStreamAssetsPath">TMX stream assets path.</param>
+        public TiledMap(Stream tmxStream, string tmxStreamAssetsPath = DefaultAssetsPath)
+        {
+            if (tmxStream == null)
+            {
+                throw new ArgumentNullException("tmxStream");
+            }
+
+            if (string.IsNullOrWhiteSpace(tmxStreamAssetsPath))
+            {
+                throw new ArgumentException("tmxStreamAssetsPath");
+            }
+
+            this.tmxStream = tmxStream;
+            this.tmxStreamAssetsPath = tmxStreamAssetsPath;
+        }
+
+        /// <summary>
         /// Sets default values
         /// </summary>
         protected override void DefaultValues()
@@ -244,9 +310,8 @@ namespace WaveEngine.TiledMap
 
             this.tilesets = new List<Tileset>();
             this.tileLayers = new Dictionary<string, TiledMapLayer>();
-            this.TileLayers = new ReadOnlyDictionary<string, TiledMapLayer>(this.tileLayers);
             this.objectLayers = new Dictionary<string, TiledMapObjectLayer>();
-            this.ObjectLayers = new ReadOnlyDictionary<string, TiledMapObjectLayer>(this.objectLayers);
+            this.imageLayers = new Dictionary<string, TiledMapImageLayer>();
         }
         #endregion
 
@@ -625,11 +690,15 @@ namespace WaveEngine.TiledMap
         {
             this.TmxMap = null;
 
+            foreach (var tileset in this.tilesets)
+            {
+                tileset.Dispose();
+            }
+
             this.tilesets.Clear();
             this.tileLayers.Clear();
-            this.TileLayers = null;
-            this.objectLayers = new Dictionary<string, TiledMapObjectLayer>();
-            this.ObjectLayers = new ReadOnlyDictionary<string, TiledMapObjectLayer>(this.objectLayers);
+            this.objectLayers.Clear();
+            this.imageLayers.Clear();
         }
 
         /// <summary>
@@ -637,14 +706,22 @@ namespace WaveEngine.TiledMap
         /// </summary>
         private void LoadTmxFile()
         {
-            if (string.IsNullOrEmpty(this.tmxPath))
+            if (string.IsNullOrEmpty(this.tmxPath) && this.tmxStream == null)
             {
                 return;
             }
 
             try
             {
-                this.TmxMap = new TmxMap(new WaveDocumentLoader(), this.tmxPath);
+                if (!string.IsNullOrEmpty(this.tmxPath))
+                {
+                    this.TmxMap = new TmxMap(new WaveDocumentLoader(), this.tmxPath);
+                }
+                else
+                {
+                    this.TmxMap = new TmxMap(new WaveDocumentLoader(), this.tmxStream, this.tmxStreamAssetsPath);
+                }
+
                 this.Version = this.TmxMap.Version;
 
                 this.Orientation = (TiledMapOrientationType)((int)this.TmxMap.Orientation);
@@ -655,7 +732,7 @@ namespace WaveEngine.TiledMap
                 this.Height = this.TmxMap.Height;
                 this.TileWidth = this.TmxMap.TileWidth;
                 this.TileHeight = this.TmxMap.TileHeight;
-                this.BackgroundColor = new Color(this.TmxMap.BackgroundColor.R, this.TmxMap.BackgroundColor.G, this.TmxMap.BackgroundColor.B);
+                this.BackgroundColor = new Color(this.TmxMap.BackgroundColor.R, this.TmxMap.BackgroundColor.G, this.TmxMap.BackgroundColor.B, this.TmxMap.BackgroundColor.A);
 
                 if (this.TmxMap.HexSideLength.HasValue)
                 {
@@ -666,7 +743,10 @@ namespace WaveEngine.TiledMap
                 this.CreateObjectLayers();
 
                 this.transform.Rectangle = this.CalcRectangle();
+                this.CreateImageLayers();
                 this.CreateTileLayers();
+
+                this.UpdateLayerDrawOrders();
             }
             catch (Exception ex)
             {
@@ -702,6 +782,19 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Create tile layers
         /// </summary>
+        private void CreateImageLayers()
+        {
+            // Create layers
+            for (int i = 0; i < this.TmxMap.ImageLayers.Count; i++)
+            {
+                var tmxImageLayer = this.TmxMap.ImageLayers[i];
+                this.CreateChildTileImageLayer(tmxImageLayer, i);
+            }
+        }
+
+        /// <summary>
+        /// Create tile layers
+        /// </summary>
         private void CreateTileLayers()
         {
             // Create layers
@@ -710,8 +803,61 @@ namespace WaveEngine.TiledMap
                 var tmxLayer = this.TmxMap.Layers[i];
                 this.CreateChildTileLayer(tmxLayer, i);
             }
+        }
+        
+        /// <summary>
+        /// Create the tile image layer as a child entity
+        /// </summary>
+        /// <param name="tmxImageLayer">The tmx image layer.</param>
+        /// <param name="layerIndex">The layer index</param>
+        private void CreateChildTileImageLayer(TmxImageLayer tmxImageLayer, int layerIndex)
+        {
+            var tag = "TileImageLayer_" + layerIndex;
+            var tmxLayerName = tmxImageLayer.Name;
+            
+            var tiledMapImageLayer = new TiledMapImageLayer(tmxImageLayer, this);
 
-            this.UpdateLayerDrawOrders();
+            Entity layerEntity = null;
+            layerEntity = this.Owner.FindChildrenByTag(tag).FirstOrDefault();
+            var tileLayerOffset = new Vector2((float)tmxImageLayer.OffsetX, (float)tmxImageLayer.OffsetY);
+
+            if (layerEntity != null)
+            {
+                var tileMapTransform = layerEntity.FindComponent<Transform2D>();
+                var sprite = layerEntity.FindComponent<Sprite>();
+
+                if (tileMapTransform != null
+                 && sprite != null)
+                {
+                    tileMapTransform.LocalPosition = tileLayerOffset;
+                    sprite.TexturePath = tiledMapImageLayer.ImagePath;
+                    layerEntity.Name = tmxLayerName;
+                }
+                else
+                {
+                    this.Owner.RemoveChild(layerEntity.Name);
+                    layerEntity = null;
+                }
+            }
+
+            if (layerEntity == null)
+            {
+                layerEntity = new Entity(tmxLayerName)
+                    {
+                        Tag = tag
+                    }
+                    .AddComponent(new Sprite(tiledMapImageLayer.ImagePath))
+                    .AddComponent(new Transform2D()
+                    {
+                        LocalPosition = tileLayerOffset,
+                        Origin = this.transform.Origin,
+                        Opacity = (float)tmxImageLayer.Opacity
+                    })
+                    .AddComponent(new SpriteRenderer());
+                this.Owner.AddChild(layerEntity);
+            }
+
+            this.imageLayers.Add(tmxLayerName, tiledMapImageLayer);
         }
 
         /// <summary>
@@ -727,12 +873,17 @@ namespace WaveEngine.TiledMap
             Entity layerEntity = null;
             TiledMapLayer tileMapLayer = null;
             layerEntity = this.Owner.FindChildrenByTag(tag).FirstOrDefault();
+            var tileLayerOffset = new Vector2((float)tmxLayer.OffsetX, (float)tmxLayer.OffsetY);
 
             if (layerEntity != null)
             {
+                var tileMapTransform = layerEntity.FindComponent<Transform2D>();
                 tileMapLayer = layerEntity.FindComponent<TiledMapLayer>();
-                if (tileMapLayer != null)
+
+                if (tileMapTransform != null 
+                 && tileMapLayer != null)
                 {
+                    tileMapTransform.LocalPosition = tileLayerOffset;
                     tileMapLayer.TmxLayerName = tmxLayerName;
                     layerEntity.Name = tmxLayerName;
                 }
@@ -750,9 +901,17 @@ namespace WaveEngine.TiledMap
                     TmxLayerName = tmxLayerName
                 };
 
-                layerEntity = new Entity(tmxLayerName) { Tag = "TileLayer_" + layerIndex }
+                layerEntity = new Entity(tmxLayerName)
+                    {
+                        Tag = tag
+                    }
                     .AddComponent(tileMapLayer)
-                    .AddComponent(new Transform2D() { Origin = this.transform.Origin, Opacity = (float)tmxLayer.Opacity })
+                    .AddComponent(new Transform2D()
+                    {
+                        LocalPosition = tileLayerOffset,
+                        Origin = this.transform.Origin,
+                        Opacity = (float)tmxLayer.Opacity
+                    })
                     .AddComponent(new TiledMapLayerRenderer());
                 this.Owner.AddChild(layerEntity);
             }
@@ -772,9 +931,15 @@ namespace WaveEngine.TiledMap
                 return;
             }
 
-            if (this.TmxMap.Layers.Count > 1)
+            var tmxLayers = this.TmxMap.Layers
+                                .Cast<ITmxLayer>()
+                                .Concat(this.TmxMap.ImageLayers)
+                                .OrderBy(l => l.OrderIndex)
+                                .Cast<ITmxElement>();
+            
+            if (tmxLayers.Count() > 1)
             {
-                drawOrderStep = (this.minLayerDrawOrder - this.maxLayerDrawOrder) / (this.TmxMap.Layers.Count - 1);
+                drawOrderStep = (this.minLayerDrawOrder - this.maxLayerDrawOrder) / (tmxLayers.Count() - 1);
             }
             else
             {
@@ -787,7 +952,7 @@ namespace WaveEngine.TiledMap
             }
 
             int i = 0;
-            foreach (var tmxLayer in this.TmxMap.Layers)
+            foreach (var tmxLayer in tmxLayers)
             {
                 Entity childLayer = this.Owner.FindChild(tmxLayer.Name);
                 Transform2D transform = childLayer.FindComponent<Transform2D>();

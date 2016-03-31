@@ -28,7 +28,7 @@
     <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Debug\WaveEngineLinux.Spine.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\WaveEngine.Spine.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>none</DebugType>
@@ -41,7 +41,16 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>LINUX</DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Release\WaveEngineLinux.Spine.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\WaveEngine.Spine.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NuGet|x86'">
+    <OutputPath>bin\x86\NuGet\</OutputPath>
+    <DefineConstants>LINUX</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\x86\NuGet\WaveEngine.Spine.XML</DocumentationFile>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="..\Shared\WaveEngine.Spine.Shared.projitems" Label="Shared" Condition="Exists('..\Shared\WaveEngine.Spine.Shared.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -45,6 +45,15 @@
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NuGet|AnyCPU'">
+    <OutputPath>bin\NuGet\</OutputPath>
+    <DefineConstants>TRACE;MAC</DefineConstants>
+    <DocumentationFile>bin\Mac\Release\WaveEngineMac.ImageEffects.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />

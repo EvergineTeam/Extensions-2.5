@@ -70,6 +70,9 @@
       <Name>WaveEngineUWP.Materials</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\WaveEngine.ImageEffects.rd.xml" />
+  </ItemGroup>
   <Import Project="..\Shared\WaveEngine.ImageEffects.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

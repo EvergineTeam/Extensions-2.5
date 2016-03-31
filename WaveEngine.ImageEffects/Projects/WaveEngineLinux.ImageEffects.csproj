@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;LINUX</DefineConstants>
-    <DocumentationFile>bin\Debug\WaveEngineLinux.ImageEffects.xml</DocumentationFile>
+    <DocumentationFile>bin\x86\Debug\WaveEngine.ImageEffects.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -30,13 +30,23 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE;LINUX</DefineConstants>
-    <DocumentationFile>bin\Release\WaveEngineLinux.ImageEffects.xml</DocumentationFile>
+    <DocumentationFile>bin\x86\Release\WaveEngine.ImageEffects.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NuGet|x86'">
+    <OutputPath>bin\x86\NuGet\</OutputPath>
+    <DefineConstants>TRACE;LINUX</DefineConstants>
+    <DocumentationFile>bin\x86\NuGet\WaveEngine.ImageEffects.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

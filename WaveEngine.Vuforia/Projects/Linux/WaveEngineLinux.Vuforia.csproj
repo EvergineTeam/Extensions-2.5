@@ -28,7 +28,7 @@
     <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Debug\WaveEngineLinux.Vuforia.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\WaveEngine.Vuforia.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>none</DebugType>
@@ -41,7 +41,16 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>LINUX</DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Release\WaveEngineLinux.Vuforia.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\WaveEngine.Vuforia.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NuGet|x86'">
+    <OutputPath>bin\x86\NuGet\</OutputPath>
+    <DefineConstants>LINUX</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\x86\NuGet\WaveEngine.Vuforia.XML</DocumentationFile>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="..\..\Shared\WaveEngine.Vuforia.Shared.projitems" Label="Shared" Condition="Exists('..\Shared\WaveEngine.Vuforia.Shared.projitems')" />
   <Import Project="..\..\Shared\WaveEngine.Vuforia.Shared.projitems" Label="Shared" Condition="Exists('..\..\Shared\WaveEngine.Vuforia.Shared.projitems')" />

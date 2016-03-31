@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapLayerRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TiledMapImageLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapObjectLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapObjectType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapOrientationType.cs" />

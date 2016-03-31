@@ -84,7 +84,6 @@ namespace WaveEngine.TiledMap
         /// </summary>
         public int LastGid
         {
-            //get { return tmxTileset.FirstGid + (this.XTilesCount * this.YTilesCount); }
             get;
             private set;
         }
@@ -144,6 +143,15 @@ namespace WaveEngine.TiledMap
         }
 
         /// <summary>
+        /// Gets the number of tile columns in the tileset.
+        /// </summary>
+        public int Colums
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Gets the tileset image texture.
         /// </summary>
         public Texture2D Image
@@ -186,6 +194,11 @@ namespace WaveEngine.TiledMap
             this.YTilesCount = (int)(tmxTileset.Image.Height - (2 * this.Margin) + this.Spacing) / (this.TileHeight + this.Spacing);
             this.XDrawingOffset = (int)tmxTileset.TileOffset.X;
             this.YDrawingOffset = (int)tmxTileset.TileOffset.Y;
+
+            if (tmxTileset.Colums.HasValue)
+            {
+                this.Colums = tmxTileset.Colums.Value;
+            }
 
             this.FirstGid = tmxTileset.FirstGid;
             this.LastGid = tmxTileset.FirstGid + (this.XTilesCount * this.YTilesCount) - 1;

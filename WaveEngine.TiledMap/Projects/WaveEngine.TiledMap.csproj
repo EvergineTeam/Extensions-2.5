@@ -19,18 +19,28 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Windows\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
-    <DocumentationFile>bin\x86\Debug\WaveEngine.TiledMap.XML</DocumentationFile>
+    <DocumentationFile>bin\Windows\Debug\WaveEngine.TiledMap.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Windows\Release\</OutputPath>
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
-    <DocumentationFile>bin\x86\Release\WaveEngine.TiledMap.XML</DocumentationFile>
+    <DocumentationFile>bin\Windows\Release\WaveEngine.TiledMap.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NuGet|AnyCPU'">
+    <OutputPath>bin\NuGet\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <DocumentationFile>bin\Windows\Release\WaveEngine.TiledMap.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -57,6 +67,10 @@
     <ProjectReference Include="..\..\..\Common\WaveEngine.Common\Projects\WaveEngine.Common.csproj">
       <Project>{55B6B4F4-BCE2-4EF7-836F-44F17332F924}</Project>
       <Name>WaveEngine.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Common\WaveEngine.Components\Projects\WaveEngine.Components.csproj">
+      <Project>{d32883f0-e199-48f7-bafb-ddc036ceb556}</Project>
+      <Name>WaveEngine.Components</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Common\WaveEngine.Framework\Projects\WaveEngine.Framework.csproj">
       <Project>{75527125-5AA8-45D0-A801-F674EE689E78}</Project>
