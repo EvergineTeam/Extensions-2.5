@@ -51,6 +51,8 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <Import Project="..\..\Shared\WaveEngine.Vuforia.Shared.projitems" Label="Shared" Condition="Exists('..\Shared\WaveEngine.Vuforia.Shared.projitems')" />
   <Import Project="..\..\Shared\WaveEngine.Vuforia.Shared.projitems" Label="Shared" Condition="Exists('..\..\Shared\WaveEngine.Vuforia.Shared.projitems')" />
@@ -62,15 +64,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Common\WaveEngine.Common\Projects\WaveEngineLinux.Common.csproj">
-      <Project>{9e18b809-4ae5-4e56-b5fa-3b4fe491c36f}</Project>
+      <Project>{9E18B809-4AE5-4E56-B5FA-3B4FE491C36F}</Project>
       <Name>WaveEngineLinux.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\Common\WaveEngine.Components\Projects\WaveEngineLinux.Components.csproj">
-      <Project>{9d8c19e9-50f0-48e8-a23a-d24953d81f78}</Project>
+      <Project>{9D8C19E9-50F0-48E8-A23A-D24953D81F78}</Project>
       <Name>WaveEngineLinux.Components</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\Common\WaveEngine.Framework\Projects\WaveEngineLinux.Framework.csproj">
-      <Project>{5cd60a7b-72a4-4dae-b5ab-e353f74a49a4}</Project>
+      <Project>{5CD60A7B-72A4-4DAE-B5AB-E353F74A49A4}</Project>
       <Name>WaveEngineLinux.Framework</Name>
     </ProjectReference>
   </ItemGroup>

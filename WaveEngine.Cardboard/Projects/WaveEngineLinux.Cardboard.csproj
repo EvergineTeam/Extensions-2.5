@@ -51,6 +51,8 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <Import Project="..\Shared\WaveEngine.Cardboard.Shared.projitems" Label="Shared" Condition="Exists('..\Shared\WaveEngine.Cardboard.Shared.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -65,7 +67,7 @@
       <Name>WaveEngineLinux.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Common\WaveEngine.Components\Projects\WaveEngineLinux.Components.csproj">
-      <Project>{9d8c19e9-50f0-48e8-a23a-d24953d81f78}</Project>
+      <Project>{9D8C19E9-50F0-48E8-A23A-D24953D81F78}</Project>
       <Name>WaveEngineLinux.Components</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Common\WaveEngine.Framework\Projects\WaveEngineLinux.Framework.csproj">

@@ -1,0 +1,8 @@
+D:\PlainConcepts\Engine\Extensions\WaveEngine.Dolby\Projects\Windows\WaveEngine.Dolby\bin\Windows\Debug\WaveEngine.Dolby.dll
+D:\PlainConcepts\Engine\Extensions\WaveEngine.Dolby\Projects\Windows\WaveEngine.Dolby\bin\Windows\Debug\WaveEngine.Dolby.pdb
+D:\PlainConcepts\Engine\Extensions\WaveEngine.Dolby\Projects\Windows\WaveEngine.Dolby\bin\Windows\Debug\WaveEngine.Common.dll
+D:\PlainConcepts\Engine\Extensions\WaveEngine.Dolby\Projects\Windows\WaveEngine.Dolby\bin\Windows\Debug\WaveEngine.Common.pdb
+D:\PlainConcepts\Engine\Extensions\WaveEngine.Dolby\Projects\Windows\WaveEngine.Dolby\bin\Windows\Debug\WaveEngine.Common.xml
+D:\PlainConcepts\Engine\Extensions\WaveEngine.Dolby\Projects\Windows\WaveEngine.Dolby\obj\Debug\WaveEngine.Dolby.csprojResolveAssemblyReference.cache
+D:\PlainConcepts\Engine\Extensions\WaveEngine.Dolby\Projects\Windows\WaveEngine.Dolby\obj\Debug\WaveEngine.Dolby.dll
+D:\PlainConcepts\Engine\Extensions\WaveEngine.Dolby\Projects\Windows\WaveEngine.Dolby\obj\Debug\WaveEngine.Dolby.pdb

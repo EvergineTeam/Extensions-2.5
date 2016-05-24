@@ -31,7 +31,7 @@ namespace WaveEngine.ImageEffects
 
         #region Properties
         /// <summary>
-        /// Gets or sets blur scale, default value is 8.
+        /// Gets or sets blur scale, default value is 4.0f.
         /// </summary>
         /// <value>
         /// Down up scale.

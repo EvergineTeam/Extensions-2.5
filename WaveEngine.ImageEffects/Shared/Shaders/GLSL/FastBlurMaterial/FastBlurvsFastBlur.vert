@@ -16,6 +16,7 @@ uniform mat4	WorldInverseTranspose;
 
 // Parameters
 uniform vec2 TexcoordOffset;
+uniform float BlurScale;
 uniform sampler2D Texture;
 
 // Input
@@ -36,7 +37,7 @@ void main()
 	gl_Position = WorldViewProj * vec4(Position0, 1.0);
 
 	float Start = 2.0 / 14.0;
-	vec2 Scale = 0.66 * 4.0 * 2.0 * TexcoordOffset.xy;
+	vec2 Scale = 0.66 * BlurScale * 2.0 * TexcoordOffset.xy;
 
 	OutUV[0].xy = TextureCoordinate0.xy;
 	OutUV[0].zw = TextureCoordinate0.xy + Circle(Start, 14.0, 0.0) * Scale; 

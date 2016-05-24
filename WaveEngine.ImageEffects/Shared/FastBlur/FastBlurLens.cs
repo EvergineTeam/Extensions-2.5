@@ -10,6 +10,7 @@
 #region Usings Statements
 using System;
 using System.Runtime.Serialization;
+using WaveEngine.Common.Attributes;
 using WaveEngine.Common.Math;
 using WaveEngine.Framework.Graphics;
 #endregion
@@ -38,6 +39,29 @@ namespace WaveEngine.ImageEffects
         {
             base.DefaultValues();
             this.material = new FastBlurMaterial();
+        }
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// Gets or sets blur scale, default value is 4.0f.
+        /// </summary>
+        /// <value>
+        /// Down up scale.
+        /// </value>
+        [DataMember]
+        [RenderPropertyAsSlider(0.0f, 20.0f, 0.1f)]
+        public float BlurScale
+        {
+            get
+            {
+                return (this.material as DepthOfFieldMaterial).BlurScale;
+            }
+
+            set
+            {
+                (this.material as DepthOfFieldMaterial).BlurScale = value;
+            }
         }
         #endregion
 

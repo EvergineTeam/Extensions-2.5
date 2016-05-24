@@ -13,6 +13,7 @@ cbuffer Matrices : register(b0)
 cbuffer Parameters : register(b1)
 {
 	float2 TexcoordOffset		: packoffset(c0.x);
+	float  BlurScale			: packoffset(c0.z);
 };
 
 Texture2D DiffuseTexture : register(t0);
@@ -48,7 +49,7 @@ VS_OUT_TEXTURE vsFastBlur(VS_IN_TEXTURE input)
 	output.Position = mul(input.Position, WorldViewProj);
 
 	float Start = 2.0 / 14.0;
-	float2 Scale = 0.66 * 4.0 * 2.0 * TexcoordOffset.xy;
+	float2 Scale = 0.66 * BlurScale * 2.0 * TexcoordOffset.xy;
 
 	output.OutUV[0].xy = input.TexCoord.xy;
 	output.OutUV[0].zw = input.TexCoord.xy + Circle(Start, 14.0, 0.0) * Scale; 

@@ -30,6 +30,11 @@ namespace WaveEngine.ImageEffects
         public Vector2 TexcoordOffset;
 
         /// <summary>
+        /// The blur scale
+        /// </summary>
+        public float BlurScale;
+
+        /// <summary>
         /// The texture
         /// </summary>
         private Texture texture;
@@ -51,6 +56,9 @@ namespace WaveEngine.ImageEffects
         {
             [FieldOffset(0)]
             public Vector2 TexcoordOffset;
+
+            [FieldOffset(8)]
+            public float BlurScale;
         }
         #endregion
 
@@ -102,6 +110,13 @@ namespace WaveEngine.ImageEffects
         public FastBlurMaterial()
             : base(DefaultLayers.Opaque)
         {
+        }
+
+        protected override void DefaultValues()
+        {
+            base.DefaultValues();
+            this.BlurScale = 4.0f;
+
             this.SamplerMode = AddressMode.LinearClamp;
             this.TexcoordOffset = Vector2.Zero;
 
@@ -132,6 +147,7 @@ namespace WaveEngine.ImageEffects
             if (!cached)
             {
                 this.shaderParameters.TexcoordOffset = this.TexcoordOffset;
+                this.shaderParameters.BlurScale = this.BlurScale;
                 this.Parameters = this.shaderParameters;
 
                 if (this.Texture != null)
