@@ -257,6 +257,11 @@ namespace WaveEngine.TiledMap
         {
             this.tiles = new List<LayerTile>();
 
+            if(this.Owner.Parent == null)
+            {
+                return;
+            }
+
             this.tiledMap = this.Owner.Parent.FindComponent<TiledMap>();
 
             if (this.tiledMap != null && this.tiledMap.TmxMap != null)

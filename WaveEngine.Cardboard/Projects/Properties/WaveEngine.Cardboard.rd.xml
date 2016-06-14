@@ -1,5 +1,4 @@
 <Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
   <Library Name="WaveEngine.Cardboard">
-    <Namespace Name="WaveEngine.Cardboard" Dynamic="Required All" DataContractSerializer="Required All" />
   </Library>
 </Directives>

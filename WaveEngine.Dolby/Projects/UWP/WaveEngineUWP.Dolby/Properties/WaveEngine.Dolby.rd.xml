@@ -1,5 +1,4 @@
 <Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
   <Library Name="WaveEngine.Dolby">
-    <Namespace Name="WaveEngine.Dolby" Dynamic="Required All" DataContractSerializer="Required All" />
   </Library>
 </Directives>

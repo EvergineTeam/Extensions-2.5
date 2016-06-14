@@ -10,6 +10,7 @@
 #region Using Statements
 using System;
 using System.Runtime.InteropServices;
+using WaveEngine.Common.Attributes;
 using WaveEngine.Common.Graphics;
 using WaveEngine.Common.Graphics.VertexFormats;
 using WaveEngine.Common.Math;
@@ -27,14 +28,15 @@ namespace WaveEngine.ImageEffects
         /// <summary>
         /// The nsamples
         /// </summary>
-        public int Nsamples 
+        [RenderPropertyAsInput(MinLimit = 0, MaxLimit = 30)]
+        public int Nsamples
         {
-            get 
-            { 
-                return this.nsamples; 
+            get
+            {
+                return this.nsamples;
             }
 
-            set 
+            set
             {
                 if (value < 0 || value > 30)
                 {

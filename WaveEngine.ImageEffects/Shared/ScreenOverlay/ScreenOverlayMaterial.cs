@@ -264,7 +264,7 @@ namespace WaveEngine.ImageEffects
                 var assembly = ReflectionHelper.GetMemberAssembly(this);
                 var currentNamespace = assembly.GetName().Name;
 
-                var textureResourcePath = currentNamespace + "ScreenOverlay.Gradient.wpk";
+                var textureResourcePath = currentNamespace + ".ScreenOverlay.Gradient.wpk";
                 var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
 
                 this.overlayTexture = this.assetsContainer.LoadAsset<Texture2D>(textureResourcePath, textureStream);

@@ -304,17 +304,17 @@ namespace WaveEngine.ImageEffects
             // LensColor
             var assembly = ReflectionHelper.GetMemberAssembly(this);
             var currentNamespace = assembly.GetName().Name;
-            var textureResourcePath = currentNamespace + "LensFlare.LensColor.wpk";
+            var textureResourcePath = currentNamespace + ".LensFlare.LensColor.wpk";
             var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
             this.lensColorTexture = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);
 
             // LensDirt
-            textureResourcePath = currentNamespace + "LensFlare.LensDirt.wpk";
+            textureResourcePath = currentNamespace + ".LensFlare.LensDirt.wpk";
             textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
             this.lensDirtTexture = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);
 
             // LensStar
-            textureResourcePath = currentNamespace + "LensFlare.LensStar.wpk";
+            textureResourcePath = currentNamespace + ".LensFlare.LensStar.wpk";
             textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
             this.lensStarTexture = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);
         }

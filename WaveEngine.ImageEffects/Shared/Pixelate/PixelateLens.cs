@@ -12,6 +12,7 @@ using System;
 using System.Runtime.Serialization;
 using WaveEngine.Common.Math;
 using WaveEngine.Framework.Graphics;
+using WaveEngine.Common.Attributes;
 #endregion
 
 namespace WaveEngine.ImageEffects
@@ -32,6 +33,7 @@ namespace WaveEngine.ImageEffects
         /// Gets or sets the image tone, default value is Vector2(10).
         /// </summary>
         [DataMember]
+        [RenderPropertyAsVector2Input(0, 0)]
         public Vector2 PixelSize
         {
             get

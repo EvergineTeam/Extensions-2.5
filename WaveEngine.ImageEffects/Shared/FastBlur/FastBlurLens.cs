@@ -55,12 +55,12 @@ namespace WaveEngine.ImageEffects
         {
             get
             {
-                return (this.material as DepthOfFieldMaterial).BlurScale;
+                return (this.material as FastBlurMaterial).BlurScale;
             }
 
             set
             {
-                (this.material as DepthOfFieldMaterial).BlurScale = value;
+                (this.material as FastBlurMaterial).BlurScale = value;
             }
         }
         #endregion

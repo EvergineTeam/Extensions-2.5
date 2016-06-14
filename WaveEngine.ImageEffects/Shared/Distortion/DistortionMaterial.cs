@@ -161,7 +161,7 @@ namespace WaveEngine.ImageEffects
                 var assembly = ReflectionHelper.GetMemberAssembly(this);
                 var currentNamespace = assembly.GetName().Name;
 
-                var textureResourcePath = currentNamespace + "Distortion.DistortionNormals.wpk";
+                var textureResourcePath = currentNamespace + ".Distortion.DistortionNormals.wpk";
                 var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
 
                 this.normal = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);

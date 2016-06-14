@@ -201,7 +201,7 @@ namespace WaveEngine.ImageEffects
                 var assembly = ReflectionHelper.GetMemberAssembly(this);
                 var currentNamespace = assembly.GetName().Name;
 
-                var textureResourcePath = currentNamespace + "ColorCorrection.RGBTable16x1.wpk";
+                var textureResourcePath = currentNamespace + ".ColorCorrection.RGBTable16x1.wpk";
                 var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
 
                 this.lutTexture = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);
