@@ -196,6 +196,17 @@ namespace WaveEngine.TiledMap
         }
 
         /// <summary>
+        /// Gets the map file properties.
+        /// </summary>
+        public IReadOnlyDictionary<string, string> Properties
+        {
+            get
+            {
+                return this.TmxMap.Properties;
+            }
+        }
+
+        /// <summary>
         /// Gets the TMX format version, generally 1.0.
         /// </summary>
         public string Version { get; private set; }
