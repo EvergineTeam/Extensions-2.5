@@ -37,7 +37,7 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Gets the tileset tile properties
         /// </summary>
-        public Dictionary<string, string> Properties { get; private set; }
+        public IReadOnlyDictionary<string, string> Properties { get; private set; }
 
         /// <summary>
         /// Gets the terrain associated edges

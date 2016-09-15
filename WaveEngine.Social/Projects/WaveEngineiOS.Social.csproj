@@ -41,7 +41,8 @@
     <Compile Include="Properties\AssemblyInfoExt.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="Social\GameCenterUtils.cs" />
+    <Compile Include="Social\GameCenterService.cs" />
+    <Compile Include="Social\IOSMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\WaveEngine.Common\Projects\WaveEngineiOS.Common.csproj">

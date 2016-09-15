@@ -1,0 +1,18 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Add Vuforia libraries to the project -->
+  <ItemGroup>
+  	<None Include="$(MSBuildThisFileDirectory)\Vuforia\libVuforiaAdapter.a">
+		<Link>libVuforiaAdapter.a</Link>
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</None>
+	<None Include="$(MSBuildThisFileDirectory)\Vuforia\libVuforia.a">
+		<Link>libVuforia.a</Link>
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</None>
+  </ItemGroup>  
+  
+  <!-- Link Vuforia libraries -->
+  <PropertyGroup>
+    <MtouchExtraArgs>$(MtouchExtraArgs) -cxx -gcc_flags "-lc++ -L${ProjectDir} -lVuforia -lVuforiaAdapter -force_load ${ProjectDir}/libVuforiaAdapter.a -force_load ${ProjectDir}/libVuforia.a -framework CoreMotion -framework UIKit -framework Foundation -framework CoreGraphics -framework QuartzCore -framework OpenGLES -framework CoreMedia -framework SystemConfiguration -framework AVFoundation -framework CoreVideo -framework Security"</MtouchExtraArgs>
+  </PropertyGroup>
+</Project>

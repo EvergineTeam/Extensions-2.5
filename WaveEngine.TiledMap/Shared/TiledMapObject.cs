@@ -79,7 +79,7 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Gets the object property list
         /// </summary>
-        public Dictionary<string, string> Properties { get; private set; }
+        public IReadOnlyDictionary<string, string> Properties { get; private set; }
         #endregion
 
         #region Initialization

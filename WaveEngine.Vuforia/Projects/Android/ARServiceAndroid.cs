@@ -8,7 +8,6 @@
 #endregion
 
 #region Using Statements
-using Android.App;
 using System;
 using System.Runtime.InteropServices;
 using WaveEngine.Common.Math;
@@ -125,8 +124,8 @@ namespace WaveEngine.Vuforia
             var adapter = (Game.Current).Application.Adapter as WaveEngine.Adapter.Adapter;
             var activity = adapter.Activity;
 
-            Com.Qualcomm.Vuforia.Vuforia.SetInitParameters(activity, Com.Qualcomm.Vuforia.Vuforia.Gl20, licenseKey);
-            Com.Qualcomm.Vuforia.Vuforia.Init();
+            Com.Vuforia.Vuforia.SetInitParameters(activity, Com.Vuforia.Vuforia.Gl20, licenseKey);
+            Com.Vuforia.Vuforia.Init();
             QCAR_setInitState();
         }
 

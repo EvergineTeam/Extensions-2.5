@@ -8,9 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		442E1DD317A92C74009CC380 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442E1DD217A92C74009CC380 /* Foundation.framework */; };
-		442E1DFF17A93857009CC380 /* VuforiaAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 442E1DFE17A93857009CC380 /* VuforiaAdapter.cpp */; };
 		44AEA36817B26AE2003A21C7 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AEA36717B26AE2003A21C7 /* OpenGLES.framework */; };
-		CE63EAE61BD67AF500B2423E /* QCAR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE63EAE51BD67AF500B2423E /* QCAR.framework */; };
+		CEE1586A1D816AEE008CDBED /* Vuforia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE158691D816AEE008CDBED /* Vuforia.framework */; };
+		CEE1586E1D816CE5008CDBED /* VuforiaAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEE1586C1D816CE5008CDBED /* VuforiaAdapter.cpp */; };
+		CEE1586F1D819B55008CDBED /* VuforiaAdapter.h in Sources */ = {isa = PBXBuildFile; fileRef = CEE1586D1D816CE5008CDBED /* VuforiaAdapter.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,10 +29,10 @@
 /* Begin PBXFileReference section */
 		442E1DCF17A92C74009CC380 /* libVuforiaAdapter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libVuforiaAdapter.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		442E1DD217A92C74009CC380 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		442E1DFD17A93857009CC380 /* VuforiaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VuforiaAdapter.h; path = ../../VuforiaAdapter.Shared/VuforiaAdapter.h; sourceTree = "<group>"; };
-		442E1DFE17A93857009CC380 /* VuforiaAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VuforiaAdapter.cpp; path = ../../VuforiaAdapter.Shared/VuforiaAdapter.cpp; sourceTree = "<group>"; };
 		44AEA36717B26AE2003A21C7 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		CE63EAE51BD67AF500B2423E /* QCAR.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QCAR.framework; path = sdk/QCAR.framework; sourceTree = "<group>"; };
+		CEE158691D816AEE008CDBED /* Vuforia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vuforia.framework; path = sdk/Vuforia.framework; sourceTree = "<group>"; };
+		CEE1586C1D816CE5008CDBED /* VuforiaAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VuforiaAdapter.cpp; path = ../VuforiaAdapter.Shared/VuforiaAdapter.cpp; sourceTree = "<group>"; };
+		CEE1586D1D816CE5008CDBED /* VuforiaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VuforiaAdapter.h; path = ../VuforiaAdapter.Shared/VuforiaAdapter.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,9 +40,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE63EAE61BD67AF500B2423E /* QCAR.framework in Frameworks */,
 				44AEA36817B26AE2003A21C7 /* OpenGLES.framework in Frameworks */,
 				442E1DD317A92C74009CC380 /* Foundation.framework in Frameworks */,
+				CEE1586A1D816AEE008CDBED /* Vuforia.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -51,7 +52,8 @@
 		442E1DC617A92C74009CC380 = {
 			isa = PBXGroup;
 			children = (
-				442E1DD417A92C74009CC380 /* VuforiaAdapter */,
+				CEE1586C1D816CE5008CDBED /* VuforiaAdapter.cpp */,
+				CEE1586D1D816CE5008CDBED /* VuforiaAdapter.h */,
 				442E1DD117A92C74009CC380 /* Frameworks */,
 				442E1DD017A92C74009CC380 /* Products */,
 			);
@@ -68,20 +70,11 @@
 		442E1DD117A92C74009CC380 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CE63EAE51BD67AF500B2423E /* QCAR.framework */,
+				CEE158691D816AEE008CDBED /* Vuforia.framework */,
 				44AEA36717B26AE2003A21C7 /* OpenGLES.framework */,
 				442E1DD217A92C74009CC380 /* Foundation.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		442E1DD417A92C74009CC380 /* VuforiaAdapter */ = {
-			isa = PBXGroup;
-			children = (
-				442E1DFD17A93857009CC380 /* VuforiaAdapter.h */,
-				442E1DFE17A93857009CC380 /* VuforiaAdapter.cpp */,
-			);
-			path = VuforiaAdapter;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -110,7 +103,7 @@
 		442E1DC717A92C74009CC380 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Plain Concepts";
 			};
 			buildConfigurationList = 442E1DCA17A92C74009CC380 /* Build configuration list for PBXProject "VuforiaAdapter" */;
@@ -135,7 +128,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				442E1DFF17A93857009CC380 /* VuforiaAdapter.cpp in Sources */,
+				CEE1586F1D819B55008CDBED /* VuforiaAdapter.h in Sources */,
+				CEE1586E1D816CE5008CDBED /* VuforiaAdapter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,6 +149,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -209,9 +204,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
-					armv7,
+					"$(ARCHS_STANDARD)",
 					armv7s,
-					arm64,
 				);
 				DSTROOT = /tmp/VuforiaAdapter.dst;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -243,9 +237,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
-					armv7,
+					"$(ARCHS_STANDARD)",
 					armv7s,
-					arm64,
 				);
 				DSTROOT = /tmp/VuforiaAdapter.dst;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -257,7 +250,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = "IOS=1";
-				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "";
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = IOS;
 				HEADER_SEARCH_PATHS = ../../;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

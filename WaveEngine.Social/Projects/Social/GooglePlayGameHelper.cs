@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region Using Statements
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.App;
@@ -7,9 +9,12 @@ using Android.Gms.Common;
 using Android.Gms.Common.Apis;
 using Android.Gms.Games;
 using Android.Gms.Games.Achievement;
-using Android.Gms.Games.LeaderBoard;
 using Android.OS;
 using Android.Views;
+using WaveEngine.Social;
+using Android.Gms.Games.LeaderBoard;
+
+#endregion
 
 namespace WaveEngineAndroid.Social.Social
 {
@@ -24,10 +29,6 @@ namespace WaveEngineAndroid.Social.Social
         private bool signedOut = true;
         private bool signingin = false;
         private bool resolving = false;
-        private List<IAchievement> achievments = new List<IAchievement>();
-        private Dictionary<string, List<ILeaderboardScore>> scores = new Dictionary<string, List<ILeaderboardScore>>();
-        private AchievementsCallback achievmentsCallback;
-        private LeaderBoardsCallback leaderboardsCallback;
 
         private const int REQUEST_LEADERBOARD = 9002;
         private const int REQUEST_ALL_LEADERBOARDS = 9003;
@@ -107,30 +108,26 @@ namespace WaveEngineAndroid.Social.Social
         /// This event is fired when the user Signs out
         /// </summary>
         public event EventHandler OnSignedOut;
-
+        
         /// <summary>
-        /// List of Achievements. Populated by LoadAchievements
+        /// Initializes a new instance of the <see cref="GooglePlayGameHelper"/> class.
         /// </summary>
-        /// <value>The achievements.</value>
-        public List<IAchievement> Achievements
-        {
-            get { return achievments; }
-        }
-
+        /// <param name="activity">The activity.</param>
+        /// <param name="adapter">The adapter.</param>
         public GooglePlayGameHelper(Activity activity, WaveEngine.Adapter.Adapter adapter)
         {
             this.adapter = adapter;
             this.activity = activity;
-            this.GravityForPopups = GravityFlags.Bottom | GravityFlags.Center;
-            achievmentsCallback = new AchievementsCallback(this);
-            leaderboardsCallback = new LeaderBoardsCallback(this);
+            this.GravityForPopups = GravityFlags.Top | GravityFlags.Center;
 
             this.adapter.OnActivityResult += this.OnGooglePlayPanelActivityResult;
         }
 
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
         public void Initialize()
         {
-
             var settings = this.activity.GetSharedPreferences("googleplayservicessettings", FileCreationMode.Private);
             signedOut = settings.GetBoolean("SignedOut", true);
 
@@ -140,7 +137,6 @@ namespace WaveEngineAndroid.Social.Social
 
         private void CreateClient()
         {
-
             // did we log in with a player id already? If so we don't want to ask which account to use
             var settings = this.activity.GetSharedPreferences("googleplayservicessettings", FileCreationMode.Private);
             var id = settings.GetString("playerid", String.Empty);
@@ -148,14 +144,19 @@ namespace WaveEngineAndroid.Social.Social
             var builder = new GoogleApiClientBuilder(activity, this, this);
             builder.AddApi(GamesClass.Api);
             builder.AddScope(GamesClass.ScopeGames);
-            builder.SetGravityForPopups((int)GravityForPopups);
-            if (ViewForPopups != null)
-                builder.SetViewForPopups(ViewForPopups);
+            builder.SetGravityForPopups((int)this.GravityForPopups);
+
+            if (this.ViewForPopups != null)
+            {
+                builder.SetViewForPopups(this.ViewForPopups);
+            }
+
             if (!string.IsNullOrEmpty(id))
             {
                 builder.SetAccountName(id);
             }
-            client = builder.Build();
+
+            this.client = builder.Build();
         }
 
         /// <summary>
@@ -163,13 +164,14 @@ namespace WaveEngineAndroid.Social.Social
         /// </summary>
         public void Start()
         {
-
-            if (SignedOut && !signingin)
-                return;
-
-            if (client != null && !client.IsConnected)
+            if (this.SignedOut && !this.signingin)
             {
-                client.Connect();
+                return;
+            }
+
+            if (this.client != null && !this.client.IsConnected)
+            {
+                this.client.Connect();
             }
         }
 
@@ -178,10 +180,9 @@ namespace WaveEngineAndroid.Social.Social
         /// </summary>
         public void Stop()
         {
-
-            if (client != null && client.IsConnected)
+            if (this.client != null && this.client.IsConnected)
             {
-                client.Disconnect();
+                this.client.Disconnect();
             }
         }
 
@@ -190,8 +191,10 @@ namespace WaveEngineAndroid.Social.Social
         /// </summary>
         public void Reconnect()
         {
-            if (client != null)
-                client.Reconnect();
+            if (this.client != null)
+            {
+                this.client.Reconnect();
+            }
         }
 
         /// <summary>
@@ -199,12 +202,13 @@ namespace WaveEngineAndroid.Social.Social
         /// </summary>
         public void SignOut()
         {
+            this.SignedOut = true;
 
-            SignedOut = true;
-            if (client.IsConnected)
+            if (this.client.IsConnected)
             {
-                GamesClass.SignOut(client);
-                Stop();
+                GamesClass.SignOut(this.client);
+                this.Stop();
+
                 using (var settings = this.activity.GetSharedPreferences("googleplayservicessettings", FileCreationMode.Private))
                 {
                     using (var e = settings.Edit())
@@ -213,10 +217,14 @@ namespace WaveEngineAndroid.Social.Social
                         e.Commit();
                     }
                 }
-                client.Dispose();
-                client = null;
-                if (OnSignedOut != null)
-                    OnSignedOut(this, EventArgs.Empty);
+
+                this.client.Dispose();
+                this.client = null;
+
+                if (this.OnSignedOut != null)
+                {
+                    this.OnSignedOut(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -225,16 +233,18 @@ namespace WaveEngineAndroid.Social.Social
         /// </summary>
         public void SignIn()
         {
+            this.signingin = true;
 
-            signingin = true;
-            if (client == null)
-                CreateClient();
+            if (this.client == null)
+            {
+                this.CreateClient();
+            }
 
-            if (client.IsConnected)
+            if (this.client.IsConnected ||
+                this.client.IsConnecting)
+            {
                 return;
-
-            if (client.IsConnecting)
-                return;
+            }
 
             var result = GooglePlayServicesUtil.IsGooglePlayServicesAvailable(activity);
             if (result != ConnectionResult.Success)
@@ -242,22 +252,50 @@ namespace WaveEngineAndroid.Social.Social
                 return;
             }
 
-            Start();
+            this.Start();
 
+        }
+
+        /// <summary>
+        /// Gets the local player.
+        /// </summary>
+        /// <returns>The local player.</returns>
+        public Player GetLocalPlayer()
+        {
+            Player result = null;
+
+            if (this.client != null)
+            {
+                var localPlayer = GamesClass.Players.GetCurrentPlayer(this.client);
+                result = AndroidMapper.MapPlayer(localPlayer);
+            }
+
+            return result;
         }
 
         /// <summary>
         /// Unlocks the achievement.
         /// </summary>
         /// <param name="achievementCode">Achievement code from you applications Google Play Game Services Achievements Page</param>
+        /// <returns>
+        /// <c>true</c> if the achievement has been unlocked; otherwise, <c>false</c>.
+        /// </returns>
         public void UnlockAchievement(string achievementCode)
         {
-            GamesClass.Achievements.Unlock(client, achievementCode);
+            GamesClass.Achievements.Unlock(this.client, achievementCode);
         }
 
+        /// <summary>
+        /// Increments the achievement progress.
+        /// </summary>
+        /// <param name="achievementCode">Achievement code from you applications Google Play Game Services Achievements Page</param>
+        /// <param name="progress">The progress.</param>
+        /// <returns>
+        /// <c>true</c> if the achievement has been incremented; otherwise, <c>false</c>.
+        /// </returns>
         public void IncrementAchievement(string achievementCode, int progress)
         {
-            GamesClass.Achievements.Increment(client, achievementCode, progress);
+            GamesClass.Achievements.Increment(this.client, achievementCode, progress);
         }
 
         /// <summary>
@@ -266,8 +304,8 @@ namespace WaveEngineAndroid.Social.Social
         /// <param name="tcs">The task completion source</param>
         public void ShowAchievements(TaskCompletionSource<bool> tcs)
         {
-            var intent = GamesClass.Achievements.GetAchievementsIntent(client);
-            activity.StartActivityForResult(intent, REQUEST_ACHIEVEMENTS);
+            var intent = GamesClass.Achievements.GetAchievementsIntent(this.client);
+            this.activity.StartActivityForResult(intent, REQUEST_ACHIEVEMENTS);
         }
 
         /// <summary>
@@ -278,7 +316,7 @@ namespace WaveEngineAndroid.Social.Social
         /// <param name="value">The value of the score</param>
         public void SubmitScore(string leaderboardCode, long value)
         {
-            GamesClass.Leaderboards.SubmitScore(client, leaderboardCode, value);
+            GamesClass.Leaderboards.SubmitScore(this.client, leaderboardCode, value);
         }
 
         /// <summary>
@@ -290,7 +328,7 @@ namespace WaveEngineAndroid.Social.Social
         /// <param name="metadata">Additional MetaData to attach. Must be a URI safe string with a max length of 64 characters</param>
         public void SubmitScore(string leaderboardCode, long value, string metadata)
         {
-            GamesClass.Leaderboards.SubmitScore(client, leaderboardCode, value, metadata);
+            GamesClass.Leaderboards.SubmitScore(this.client, leaderboardCode, value, metadata);
         }
 
         /// <summary>
@@ -300,10 +338,10 @@ namespace WaveEngineAndroid.Social.Social
         /// <param name="tcs">The task completion source</param>
         public void ShowLeaderBoardIntentForLeaderboard(string leaderboardCode, TaskCompletionSource<bool> tcs)
         {
-            var intent = GamesClass.Leaderboards.GetLeaderboardIntent(client, leaderboardCode);
+            var intent = GamesClass.Leaderboards.GetLeaderboardIntent(this.client, leaderboardCode);
             this.CurrentGPlayPanelTCS = tcs;
 
-            activity.StartActivityForResult(intent, REQUEST_LEADERBOARD);            
+            this.activity.StartActivityForResult(intent, REQUEST_LEADERBOARD);
         }
 
         /// <summary>
@@ -312,81 +350,129 @@ namespace WaveEngineAndroid.Social.Social
         /// <param name="tcs">The task completion source</param>
         public void ShowAllLeaderBoardsIntent(TaskCompletionSource<bool> tcs)
         {
-            var intent = GamesClass.Leaderboards.GetAllLeaderboardsIntent(client);
+            var intent = GamesClass.Leaderboards.GetAllLeaderboardsIntent(this.client);
             this.CurrentGPlayPanelTCS = tcs;
 
-            activity.StartActivityForResult(intent, REQUEST_ALL_LEADERBOARDS);            
+            this.activity.StartActivityForResult(intent, REQUEST_ALL_LEADERBOARDS);
         }
 
-        public void LoadAchievements(TaskCompletionSource<List<WaveEngine.Social.Achievement>> tcs)
+        /// <summary>
+        /// Loads the achievements.
+        /// </summary>
+        /// <param name="tcs">The TCS.</param>
+        public void LoadAchievements(TaskCompletionSource<IEnumerable<WaveEngine.Social.Achievement>> tcs)
         {
             var customAchievementsCallback = new CustomAchievementsCallback(tcs);
 
-            var pendingResult = GamesClass.Achievements.Load(client, false);
+            var pendingResult = GamesClass.Achievements.Load(this.client, false);
             pendingResult.SetResultCallback(customAchievementsCallback);
         }
 
-        public void LoadTopScores(string leaderboardCode, TaskCompletionSource<Dictionary<string, List<WaveEngine.Social.LeaderboardScore>>> tcs)
+        /// <summary>
+        /// Loads the top page of scores for a given leaderboard.
+        /// </summary>
+        /// <param name="leaderboardCode">The leaderboard code.</param>
+        /// <param name="count">The maximum number of scores. Must be between 1 and 25.</param>
+        /// <param name="socialOnly">If <c>true</c>, the result will only contain the scores of players in the viewing player's circles.</param>
+        /// <param name="forceReload">If <c>true</c>, this call will clear any locally cached data and attempt to fetch the latest data from the server. This would commonly be used for something like a user-initiated refresh. Normally, this should be set to false to gain advantages of data caching.</param>
+        /// <param name="tcs">The TCS.</param>
+        public void LoadTopScores(string leaderboardCode, int count, bool socialOnly, bool forceReload, TaskCompletionSource<IEnumerable<WaveEngine.Social.LeaderboardScore>> tcs)
         {
-            var customLeaderboardsCallback = new CustomLeaderBoardsCallback(tcs);
+            var leaderboardCollection = socialOnly ? LeaderboardVariant.CollectionSocial : LeaderboardVariant.CollectionPublic; 
 
-            var pendingResult = GamesClass.Leaderboards.LoadTopScores(client, leaderboardCode, 2, 0, 25);
+            var customLeaderboardsCallback = new CustomLeaderBoardsCallback(tcs);
+            var pendingResult = GamesClass.Leaderboards.LoadTopScores(this.client, leaderboardCode, LeaderboardVariant.TimeSpanAllTime, leaderboardCollection, count, forceReload);
+            pendingResult.SetResultCallback(customLeaderboardsCallback);
+        }
+
+        /// <summary>
+        /// Loads the player-centered page of scores for a given leaderboard. If the player does not have a score on this leaderboard, this call will return the top page instead.
+        /// </summary>
+        /// <param name="leaderboardCode">The leaderboard code.</param>
+        /// <param name="count">The maximum number of scores. Must be between 1 and 25.</param>
+        /// <param name="socialOnly">If <c>true</c>, the result will only contain the scores of players in the viewing player's circles.</param>
+        /// <param name="forceReload">If <c>true</c>, this call will clear any locally cached data and attempt to fetch the latest data from the server. This would commonly be used for something like a user-initiated refresh. Normally, this should be set to false to gain advantages of data caching.</param>
+        /// <param name="tcs">The TCS.</param>
+        public void LoadPlayerCenteredScores(string leaderboardCode, int count, bool socialOnly, bool forceReload, TaskCompletionSource<IEnumerable<WaveEngine.Social.LeaderboardScore>> tcs)
+        {
+            var leaderboardCollection = socialOnly ? LeaderboardVariant.CollectionSocial : LeaderboardVariant.CollectionPublic;
+
+            var customLeaderboardsCallback = new CustomLeaderBoardsCallback(tcs);
+            var pendingResult = GamesClass.Leaderboards.LoadPlayerCenteredScores(this.client, leaderboardCode, LeaderboardVariant.TimeSpanAllTime, leaderboardCollection, count, forceReload);
             pendingResult.SetResultCallback(customLeaderboardsCallback);
         }
 
         #region IGoogleApiClientConnectionCallbacks implementation
 
+        /// <summary>
+        /// Called when [connected].
+        /// </summary>
+        /// <param name="connectionHint">The connection hint.</param>
         public void OnConnected(Bundle connectionHint)
         {
-            resolving = false;
-            SignedOut = false;
-            signingin = false;
+            this.resolving = false;
+            this.SignedOut = false;
+            this.signingin = false;
 
             using (var settings = this.activity.GetSharedPreferences("googleplayservicessettings", FileCreationMode.Private))
             {
                 using (var e = settings.Edit())
                 {
-                    e.PutString("playerid", GamesClass.GetCurrentAccountName(client));
+                    e.PutString("playerid", GamesClass.GetCurrentAccountName(this.client));
                     e.Commit();
                 }
             }
 
-            if (OnSignedIn != null)
+            if (this.OnSignedIn != null)
             {
-                OnSignedIn(this, EventArgs.Empty);
+                this.OnSignedIn(this, EventArgs.Empty);
             }
         }
 
+        /// <summary>
+        /// Called when [connection suspended].
+        /// </summary>
+        /// <param name="resultCode">The result code.</param>
         public void OnConnectionSuspended(int resultCode)
         {
-            resolving = false;
-            SignedOut = false;
-            signingin = false;
-            client.Disconnect();
+            this.resolving = false;
+            this.SignedOut = false;
+            this.signingin = false;
+            this.client.Disconnect();
+
             if (this.OnSignInFailed != null)
             {
                 this.OnSignInFailed(this, EventArgs.Empty);
             }
         }
 
+        /// <summary>
+        /// Called when [connection failed].
+        /// </summary>
+        /// <param name="result">The result.</param>
         public void OnConnectionFailed(ConnectionResult result)
         {
-            if (resolving)
+            if (this.resolving)
+            {
                 return;
+            }
 
             if (result.HasResolution)
             {
-                resolving = true;
-                result.StartResolutionForResult(activity, RC_RESOLVE);
+                this.resolving = true;
+                result.StartResolutionForResult(this.activity, RC_RESOLVE);
                 this.adapter.OnActivityResult += this.OnConnectionFailedActivityResult;
                 return;
             }
 
-            resolving = false;
-            SignedOut = false;
-            signingin = false;
+            this.resolving = false;
+            this.SignedOut = false;
+            this.signingin = false;
+
             if (this.OnSignInFailed != null)
+            {
                 this.OnSignInFailed(this, EventArgs.Empty);
+            }
         }
 
         #endregion
@@ -399,18 +485,17 @@ namespace WaveEngineAndroid.Social.Social
         /// <param name="data">Data.</param>
         public void OnConnectionFailedActivityResult(int requestCode, Result resultCode, Intent data)
         {
-            this.adapter.OnActivityResult -= OnConnectionFailedActivityResult;
+            this.adapter.OnActivityResult -= this.OnConnectionFailedActivityResult;
 
             if (requestCode == RC_RESOLVE)
             {
                 if (resultCode == Result.Ok)
                 {
-                    Start();
+                    this.Start();
                 }
-                else
+                else if (this.OnSignInFailed != null)
                 {
-                    if (this.OnSignInFailed != null)
-                        this.OnSignInFailed(this, EventArgs.Empty);
+                    this.OnSignInFailed(this, EventArgs.Empty);
                 }
             }
         }
@@ -423,252 +508,13 @@ namespace WaveEngineAndroid.Social.Social
         /// <param name="data">Data.</param>
         public void OnGooglePlayPanelActivityResult(int requestCode, Result resultCode, Intent data)
         {
-            this.adapter.OnActivityResult -= OnConnectionFailedActivityResult;
+            this.adapter.OnActivityResult -= this.OnConnectionFailedActivityResult;
 
-            if (requestCode == REQUEST_ALL_LEADERBOARDS
-                || requestCode == REQUEST_ACHIEVEMENTS)
+            if (requestCode == REQUEST_ALL_LEADERBOARDS ||
+                requestCode == REQUEST_ACHIEVEMENTS)
             {
                 this.currentGPlayPanelTCS.TrySetResult(true);
             }
         }
-
-        internal class AchievementsCallback : Java.Lang.Object, IResultCallback
-        {
-            GooglePlayGameHelper helper;
-
-            public AchievementsCallback(GooglePlayGameHelper helper)
-                : base()
-            {
-                this.helper = helper;
-            }
-
-            #region IResultCallback implementation
-            public void OnResult(Java.Lang.Object result)
-            {
-                var ar = Java.Interop.JavaObjectExtensions.JavaCast<IAchievementsLoadAchievementsResult>(result);
-                if (ar != null)
-                {
-                    helper.achievments.Clear();
-                    var count = ar.Achievements.Count;
-                    for (int i = 0; i < count; i++)
-                    {
-                        var item = ar.Achievements.Get(i);
-                        var a = Java.Interop.JavaObjectExtensions.JavaCast<IAchievement>(item);
-                        helper.achievments.Add(a);
-                    }
-                }
-            }
-            #endregion
-        }
-
-        internal class LeaderBoardsCallback : Java.Lang.Object, IResultCallback
-        {
-            GooglePlayGameHelper helper;
-
-            public LeaderBoardsCallback(GooglePlayGameHelper helper)
-                : base()
-            {
-                this.helper = helper;
-            }
-
-            #region IResultCallback implementation
-            public void OnResult(Java.Lang.Object result)
-            {
-                var ar = Java.Interop.JavaObjectExtensions.JavaCast<ILeaderboardsLoadScoresResult>(result);
-                if (ar != null)
-                {
-                    var id = ar.Leaderboard.LeaderboardId;
-                    if (!helper.scores.ContainsKey(id))
-                    {
-                        helper.scores.Add(id, new List<ILeaderboardScore>());
-                    }
-                    helper.scores[id].Clear();
-                    var count = ar.Scores.Count;
-                    for (int i = 0; i < count; i++)
-                    {
-                        var item = ar.Scores.Get(i);
-
-                        var score = Java.Interop.JavaObjectExtensions.JavaCast<ILeaderboardScore>(item);
-                        helper.scores[id].Add(score);
-                    }
-                }
-            }
-            #endregion
-        }
-
-        internal class CustomAchievementsCallback : Java.Lang.Object, IResultCallback
-        {
-            TaskCompletionSource<List<WaveEngine.Social.Achievement>> tcs;
-
-            List<IAchievement> achievements;
-
-            public CustomAchievementsCallback(TaskCompletionSource<List<WaveEngine.Social.Achievement>> tcs)
-                : base()
-            {
-                this.tcs = tcs;
-            }
-
-            #region IResultCallback implementation
-            public void OnResult(Java.Lang.Object result)
-            {
-                var ar = Java.Interop.JavaObjectExtensions.JavaCast<IAchievementsLoadAchievementsResult>(result);
-                if (ar != null)
-                {
-                    achievements = new List<IAchievement>();
-
-                    achievements.Clear();
-                    var count = ar.Achievements.Count;
-                    for (int i = 0; i < count; i++)
-                    {
-                        var item = ar.Achievements.Get(i);
-                        var a = Java.Interop.JavaObjectExtensions.JavaCast<IAchievement>(item);
-                        achievements.Add(a);
-                    }
-                }
-
-                var waveAchievements = Mapper.MapAchievements(achievements);
-
-                tcs.TrySetResult(waveAchievements);
-            }
-
-            
-            #endregion
-        }
-
-        internal class CustomLeaderBoardsCallback : Java.Lang.Object, IResultCallback
-        {
-            TaskCompletionSource<Dictionary<string, List<WaveEngine.Social.LeaderboardScore>>> tcs;
-
-            Dictionary<string, List<ILeaderboardScore>> scores;
-
-            public CustomLeaderBoardsCallback(TaskCompletionSource<Dictionary<string, List<WaveEngine.Social.LeaderboardScore>>> tcs)
-                : base()
-            {
-                this.tcs = tcs;
-            }
-
-            #region IResultCallback implementation
-            public void OnResult(Java.Lang.Object result)
-            {
-                var ar = Java.Interop.JavaObjectExtensions.JavaCast<ILeaderboardsLoadScoresResult>(result);
-                if (ar != null)
-                {
-                    scores = new Dictionary<string, List<ILeaderboardScore>>();
-
-                    var id = ar.Leaderboard.LeaderboardId;
-                    if (!scores.ContainsKey(id))
-                    {
-                        scores.Add(id, new List<ILeaderboardScore>());
-                    }
-                    scores[id].Clear();
-                    var count = ar.Scores.Count;
-                    for (int i = 0; i < count; i++)
-                    {
-                        var item = ar.Scores.Get(i);
-
-                        var score = Java.Interop.JavaObjectExtensions.JavaCast<ILeaderboardScore>(item);
-                        scores[id].Add(score);
-                    }
-                }
-
-                var waveScores = Mapper.MapLeaderBoards(scores);
-
-                tcs.TrySetResult(waveScores);
-            }
-            #endregion
-        }
-
-        internal static class Mapper
-        {
-            internal static WaveEngine.Social.Player MapPlayer(IPlayer player)
-            {
-                WaveEngine.Social.Player wavePlayer = null;
-
-                if (player != null)
-                {
-                    wavePlayer = new WaveEngine.Social.Player()
-                    {
-                        DisplayName = player.DisplayName,
-                        HasHiResImage = player.HasHiResImage,
-                        HasIconImage = player.HasIconImage,
-                        HiResImageUrl = player.HiResImageUrl,
-                        IconImageUrl = player.IconImageUrl,
-                        PlayerId = player.PlayerId,
-                        RetrievedTimestamp = player.RetrievedTimestamp,
-                    };
-                }
-
-                return wavePlayer;
-            }
-
-            internal static List<WaveEngine.Social.Achievement> MapAchievements(List<IAchievement> achievements)
-            {
-                List<WaveEngine.Social.Achievement> waveAchievements = null;
-
-                if (achievements != null)
-                {
-                    waveAchievements = new List<WaveEngine.Social.Achievement>();
-
-                    foreach (var achievement in achievements)
-                    {
-                        var waveAchievement = new WaveEngine.Social.Achievement()
-                        {
-                            AchievementCode = achievement.AchievementId,
-                            Description = achievement.Description,
-                            Name = achievement.Name,
-                            State = achievement.State,
-                            Type = achievement.Type,
-                            Player = Mapper.MapPlayer(achievement.Player),
-                        };
-                        waveAchievements.Add(waveAchievement);
-                    }
-                }
-
-                return waveAchievements;
-            }
-
-            internal static Dictionary<string, List<WaveEngine.Social.LeaderboardScore>> MapLeaderBoards(Dictionary<string, List<ILeaderboardScore>> scores)
-            {
-                Dictionary<string, List<WaveEngine.Social.LeaderboardScore>> waveScores = null;
-
-                if (scores != null)
-                {
-                    waveScores = new Dictionary<string, List<WaveEngine.Social.LeaderboardScore>>();
-
-                    foreach (var item in scores)
-                    {
-                        var leaderboardScoreId = item.Key;
-                        var leaderboardScores = item.Value;
-
-                        var waveLeaderBoardScores = new List<WaveEngine.Social.LeaderboardScore>();
-
-                        foreach (var leaderboardScore in leaderboardScores)
-                        {
-                            var waveLeaderBoardScore = new WaveEngine.Social.LeaderboardScore()
-                            {
-                                DisplayRank = leaderboardScore.DisplayRank,
-                                DisplayScore = leaderboardScore.DisplayScore,
-                                Rank = leaderboardScore.Rank,
-                                RawScore = leaderboardScore.RawScore,
-                                ScoreHolder = Mapper.MapPlayer(leaderboardScore.ScoreHolder),
-                                ScoreHolderDisplayName = leaderboardScore.ScoreHolderDisplayName,
-                                ScoreHolderHiResImageUrl = leaderboardScore.ScoreHolderHiResImageUrl,
-                                ScoreHolderIconImageUrl = leaderboardScore.ScoreHolderIconImageUrl,
-                                ScoreTag = leaderboardScore.ScoreTag,
-                                TimestampMillis = leaderboardScore.TimestampMillis,
-                            };
-
-                            waveLeaderBoardScores.Add(waveLeaderBoardScore);
-                        }
-
-                        waveScores.Add(leaderboardScoreId, waveLeaderBoardScores);
-                    }
-                }
-
-                return waveScores;
-            }
-        }
-
-
     }
 }

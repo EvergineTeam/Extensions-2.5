@@ -29,7 +29,7 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Gets the terrain properties
         /// </summary>
-        public Dictionary<string, string> Properties { get; private set; }
+        public IReadOnlyDictionary<string, string> Properties { get; private set; }
 
         /// <summary>
         /// Gets the tile ID

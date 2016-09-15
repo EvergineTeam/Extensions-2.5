@@ -37,6 +37,15 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
+        /// Gets a new <see cref="BokehLens"/>.
+        /// </summary>
+        /// <returns>A instance of BokehLens.</returns>
+        public static BokehLens Bokeh()
+        {
+            return new BokehLens();
+        }
+
+        /// <summary>
         /// Gets a new <see cref="ChromaticAberrationLens"/>.
         /// </summary>
         /// <returns>A instance of ChromaticAberrationLens.</returns>

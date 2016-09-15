@@ -56,7 +56,13 @@ namespace WaveEngine.Social
         /// <value>
         /// <c>true</c> if this instance has hi resource image; otherwise, <c>false</c>.
         /// </value>
-        public bool HasHiResImage { get; set; }
+        public bool HasHiResImage
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(this.HiResImageUrl);
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance has icon image.
@@ -64,7 +70,13 @@ namespace WaveEngine.Social
         /// <value>
         /// <c>true</c> if this instance has icon image; otherwise, <c>false</c>.
         /// </value>
-        public bool HasIconImage { get; set; }
+        public bool HasIconImage
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(this.IconImageUrl);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the hi resource image URL.

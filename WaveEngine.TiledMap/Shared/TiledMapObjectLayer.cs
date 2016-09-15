@@ -60,7 +60,7 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Gets the object layer properties
         /// </summary>
-        public Dictionary<string, string> Properties { get; private set; } 
+        public IReadOnlyDictionary<string, string> Properties { get; private set; } 
         #endregion
 
         #region Initialziation

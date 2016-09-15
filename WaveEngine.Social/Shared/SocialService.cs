@@ -10,12 +10,7 @@
 #region Using Statements
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
 using WaveEngine.Common;
 using WaveEngine.Social;
 
@@ -38,45 +33,106 @@ namespace WaveEngine.Framework.Services
     public class SocialService : Service
     {
         /// <summary>
-        /// The maximum progress in simulation
+        /// The platform specific Social Service implementation
         /// </summary>
-        private readonly long maxProgressInSimulation = 100;
+        private readonly ISocial platformSocial;
 
         /// <summary>
-        /// The simulated achievements
+        /// The simulation Social Service
         /// </summary>
-        private readonly List<WaveEngine.Social.Achievement> fakeAchievements = new List<Achievement>();
+        private readonly SocialSimulationHelper simulationSocial;
 
         /// <summary>
-        /// The simulated leaderboards
+        /// The current Social Service
         /// </summary>
-        private readonly Dictionary<string, List<WaveEngine.Social.LeaderboardScore>> simulatedLeaderboards = new Dictionary<string, List<WaveEngine.Social.LeaderboardScore>>();
+        private ISocial currentSocial;
 
         /// <summary>
-        /// Gets or sets a value indicating whether [simulation mode].
+        /// Gets or sets a value indicating whether simulation mode is active.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if [simulation mode]; otherwise, <c>false</c>.
+        ///   <c>true</c> if simulation mode is active; otherwise, <c>false</c>.
         /// </value>
-        public bool SimulationMode { get; set; }
+        private bool simulationMode;
 
         /// <summary>
-        /// The community
+        /// Gets or sets a value indicating whether simulation mode is active.
         /// </summary>
-        private readonly ISocial social;
+        /// <value>
+        ///   <c>true</c> if simulation mode is active; otherwise, <c>false</c>.
+        /// </value>
+        public bool SimulationMode
+        {
+            get
+            {
+                return this.simulationMode;
+            }
+
+            set
+            {
+                this.simulationMode = value;
+                this.currentSocial = this.simulationMode ? this.simulationSocial : this.platformSocial;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the local user is authenticated.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the local user is authenticated; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsAuthenticated
+        {
+            get
+            {
+                return this.currentSocial.IsAuthenticated;
+            }
+        }
+
+        /// <summary>
+        /// Gets the local player.
+        /// </summary>
+        /// <remarks>
+        /// Until the user logs in or authenticates themself, it will return <c>null</c>.
+        /// </remarks>
+        /// <value>
+        /// The local player.
+        /// </value>
+        public Player LocalUser { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SocialService"/> class.
         /// </summary>
         public SocialService()
         {
+            this.simulationSocial = new SocialSimulationHelper();
+
 #if ANDROID
-            this.social = new GooglePlayGameServiceUtils();
+            this.platformSocial = new GooglePlayGameService();
 #elif IOS
-            this.social = new GameCenterUtils();
+            this.platformSocial = new GameCenterService();
 #else
-            this.social = new SocialFakeHelper();
+            this.platformSocial = new SocialFakeHelper();
 #endif
+
+            this.currentSocial = this.platformSocial;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SocialService"/> class.
+        /// </summary>
+        /// <param name="socialService">The platform specific social service implementation.</param>
+        /// <exception cref="System.ArgumentNullException">socialService</exception>
+        public SocialService(ISocial socialService)
+        {
+            if (socialService == null)
+            {
+                throw new ArgumentNullException("socialService");
+            }
+
+            this.platformSocial = socialService;
+            this.currentSocial = socialService;
+
         }
 
         /// <summary>
@@ -84,6 +140,7 @@ namespace WaveEngine.Framework.Services
         /// </summary>
         protected override void Initialize()
         {
+            this.platformSocial.Init();
         }
 
         /// <summary>
@@ -94,253 +151,149 @@ namespace WaveEngine.Framework.Services
         }
 
         /// <summary>
-        /// Initializes this instance.
+        /// Logins local user.
         /// </summary>
-        /// <param name="properties">The properties.</param>
-        public void Initialize(Dictionary<string, string> properties)
+        /// <returns>
+        /// <c>true</c> if login was successful; otherwise, <c>false</c>.
+        /// </returns>
+        public async Task<bool> Login()
         {
-            if (!this.SimulationMode)
-            {
-                this.social.Init();
-            }
+            this.LocalUser = await this.currentSocial.Login().ConfigureAwait(false);
+
+            return this.LocalUser != null;
         }
 
         /// <summary>
-        /// Logouts this instance.
+        /// Logouts local user.
         /// </summary>
-        /// <returns>Task task</returns>
+        /// <returns>
+        /// <c>true</c> if logout was successful; otherwise, <c>false</c>.
+        /// </returns>
         public Task<bool> Logout()
         {
-            if (!this.SimulationMode)
-            {
-                return this.social.Logout();
-            }
-
-            return System.Threading.Tasks.Task.FromResult(true);
+            this.LocalUser = null;
+            return this.currentSocial.Logout();
         }
 
         /// <summary>
-        /// Logins this instance.
-        /// </summary>
-        /// <returns>Task task</returns>
-        public Task<bool> Login()
-        {
-            if (!this.SimulationMode)
-            {
-                return this.social.Login();
-            }
-
-            return System.Threading.Tasks.Task.FromResult(true);
-        }
-
-        /// <summary>
-        /// Shows the leaderboard.
+        /// Shows a default/system view of the given game leaderboard.
         /// </summary>
         /// <param name="leaderboardCode">The leaderboard code.</param>
+        /// <returns>
+        /// <c>true</c> if the view has been shown; otherwise, <c>false</c>.
+        /// </returns>
         public Task<bool> ShowLeaderboard(string leaderboardCode)
         {
-            if (!this.SimulationMode)
-            {
-                return this.social.ShowLeaderboard(leaderboardCode);
-            }
-            else
-            {
-                List<LeaderboardScore> scoreLists;
-                var leaderBoardFound = this.simulatedLeaderboards.TryGetValue(leaderboardCode, out scoreLists);
-                if (!leaderBoardFound)
-                {
-                    throw new ArgumentException("leaderboardCode not found");
-                }
-
-                var xml = scoreLists.Count > 0 ? "Leaderboard Content: " + this.Serialize(scoreLists) : string.Empty;
-
-                return WaveServices.Platform.ShowMessageBoxAsync("ShowLeaderboard Simulation Mode", xml);
-            }
+            return this.currentSocial.ShowLeaderboard(leaderboardCode);
         }
 
         /// <summary>
-        /// Shows the leaderboards.
+        /// Shows a default/system view of the games leaderboards.
         /// </summary>
+        /// <returns>
+        /// <c>true</c> if the view has been shown; otherwise, <c>false</c>.
+        /// </returns>
         public Task<bool> ShowAllLeaderboards()
         {
-            if (!this.SimulationMode)
-            {
-                return this.social.ShowAllLeaderboards();
-            }
-            else
-            {
-                var sb = new StringBuilder();
-                foreach (var leaderboardKeyPair in this.simulatedLeaderboards)
-                {
-                    sb.AppendLine();
-                    sb.AppendLine("Leaderboard Code: " + leaderboardKeyPair.Key);
-                    var xml = this.Serialize(leaderboardKeyPair.Value);
-                    sb.AppendLine("Leaderboard Content: " + xml);
-                }
-
-                var result = sb.ToString();
-                
-                return WaveServices.Platform.ShowMessageBoxAsync("ShowAllLeaderboards Simulation Mode", result);                
-            }
+            return this.currentSocial.ShowAllLeaderboards();
         }
 
         /// <summary>
-        /// Adds the new score.
+        /// Submit a score to a leaderboard for the currently signed in player.
         /// </summary>
         /// <param name="leaderboardCode">The leaderboard code.</param>
         /// <param name="score">The score.</param>
+        /// <returns>
+        /// <c>true</c> if the score has been added; otherwise, <c>false</c>.
+        /// </returns>
         public Task<bool> AddNewScore(string leaderboardCode, long score)
         {
-            if (!this.SimulationMode)
-            {
-                return this.social.AddNewScore(leaderboardCode, score);
-            }
-            else
-            {
-                List<LeaderboardScore> scoreLists;
-                var leaderBoardFound = this.simulatedLeaderboards.TryGetValue(leaderboardCode, out scoreLists);
-                if (!leaderBoardFound)
-                {
-                    scoreLists = new List<LeaderboardScore>();
-                    this.simulatedLeaderboards[leaderboardCode] = scoreLists;
-                }
-
-                scoreLists.Add(new LeaderboardScore()
-                {
-                    RawScore = score
-                });
-
-                return System.Threading.Tasks.Task.FromResult(true);
-            }
+            return this.currentSocial.AddNewScore(leaderboardCode, score);
         }
 
         /// <summary>
-        /// Shows the archievements.
+        /// Gets the top page of scores for a given leaderboard.
         /// </summary>
+        /// <param name="leaderboardCode">The leaderboard code.</param>
+        /// <param name="count">The maximum number of scores. Must be between 1 and 25.</param>
+        /// <param name="socialOnly">If <c>true</c>, the result will only contain the scores of players in the viewing player's circles.</param>
+        /// <param name="forceReload">If <c>true</c>, this call will clear any locally cached data and attempt to fetch the latest data from the server. This would commonly be used for something like a user-initiated refresh. Normally, this should be set to false to gain advantages of data caching.</param>
+        /// <returns>
+        /// The scores.
+        /// </returns>
+        public Task<IEnumerable<LeaderboardScore>> GetTopScores(string leaderboardCode, int count, bool socialOnly = false, bool forceReload = false)
+        {
+            if (count < 1 || count > 25)
+            {
+                throw new ArgumentOutOfRangeException("count");
+            }
+
+            return this.currentSocial.GetTopScores(leaderboardCode, count, socialOnly, forceReload);
+        }
+
+        /// <summary>
+        /// Gets the the player-centered page of scores for a given leaderboard.
+        /// </summary>
+        /// <param name="leaderboardCode">The leaderboard code.</param>
+        /// <param name="count">The maximum number of scores. Must be between 1 and 25.</param>
+        /// <param name="socialOnly">If <c>true</c>, the result will only contain the scores of players in the viewing player's circles.</param>
+        /// <param name="forceReload">If <c>true</c>, this call will clear any locally cached data and attempt to fetch the latest data from the server. This would commonly be used for something like a user-initiated refresh. Normally, this should be set to false to gain advantages of data caching.</param>
+        /// <returns>
+        /// The scores.
+        /// </returns>
+        public Task<IEnumerable<LeaderboardScore>> GetPlayerCenteredScores(string leaderboardCode, int count, bool socialOnly = false, bool forceReload = false)
+        {
+            if (count < 1 || count > 25)
+            {
+                throw new ArgumentOutOfRangeException("count");
+            }
+
+            return this.currentSocial.GetPlayerCenteredScores(leaderboardCode, count, socialOnly, forceReload);
+        }
+
+        /// <summary>
+        /// Shows a default/system view of the games achievements.
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if the view has been shown; otherwise, <c>false</c>.
+        /// </returns>
         public Task<bool> ShowAchievements()
         {
-            if (!this.SimulationMode)
-            {
-                return this.social.ShowAchievements();
-            }
-            else
-            {
-                var xml = this.fakeAchievements.Count > 0 ? "Achievements Content: " + this.Serialize(this.fakeAchievements) : string.Empty;
-
-                return WaveServices.Platform.ShowMessageBoxAsync("ShowAchievements Simulation Mode", xml);
-            }
+            return this.currentSocial.ShowAchievements();
         }
 
         /// <summary>
-        /// Unlocks the archievement.
+        /// Unlocks the achievement.
         /// </summary>
         /// <param name="achievementCode">The achievement code.</param>
-        /// <returns>Task task</returns>
+        /// <returns>
+        /// <c>true</c> if the achievement has been unlocked; otherwise, <c>false</c>.
+        /// </returns>
         public Task<bool> UnlockAchievement(string achievementCode)
         {
-            if (!this.SimulationMode)
-            {
-                return this.social.UnlockAchievement(achievementCode);
-            }
-
-            var achievement = this.fakeAchievements.FirstOrDefault(a => a.AchievementCode == achievementCode);
-            if (achievement != null)
-            {
-                achievement.TotalSteps = this.maxProgressInSimulation;
-            }
-            else
-            {
-                this.fakeAchievements.Add(new Achievement()
-                {
-                    AchievementCode = achievementCode,
-                    TotalSteps = this.maxProgressInSimulation,
-                });
-            }
-
-            return System.Threading.Tasks.Task.FromResult(true);
+            return this.currentSocial.UnlockAchievement(achievementCode);
         }
 
         /// <summary>
-        /// Increments the achievement.
+        /// Increments the achievement progress.
         /// </summary>
         /// <param name="achievementCode">The achievement code.</param>
         /// <param name="progress">The progress.</param>
-        /// <returns>Task task</returns>
+        /// <returns>
+        /// <c>true</c> if the achievement has been incremented; otherwise, <c>false</c>.
+        /// </returns>
         public Task<bool> IncrementAchievement(string achievementCode, int progress)
         {
-            if (!this.SimulationMode)
-            {
-                return this.social.IncrementAchievement(achievementCode, progress);
-            }
-
-            var achievement = this.fakeAchievements.FirstOrDefault(a => a.AchievementCode == achievementCode);
-            if (achievement == null)
-            {
-                throw new ArgumentException("achievementCode not found");
-            }
-
-            achievement.TotalSteps = Math.Min(this.maxProgressInSimulation, achievement.TotalSteps + progress);
-
-            return System.Threading.Tasks.Task.FromResult(true);
+            return this.currentSocial.IncrementAchievement(achievementCode, progress);
         }
 
         /// <summary>
         /// Gets the achievements.
         /// </summary>
-        /// <returns>Task task</returns>
-        public Task<List<WaveEngine.Social.Achievement>> GetAchievements()
+        /// <returns>The achievements.</returns>
+        public Task<IEnumerable<Achievement>> GetAchievements()
         {
-            if (!this.SimulationMode)
-            {
-                return this.social.GetAchievements();
-            }
-
-            return System.Threading.Tasks.Task.FromResult(this.fakeAchievements);
-        }
-
-        /// <summary>
-        /// Gets the top scores from leaderboard.
-        /// </summary>
-        /// <param name="leaderboardCode">The leaderboard code.</param>
-        /// <returns>Task task</returns>
-        public Task<Dictionary<string, List<WaveEngine.Social.LeaderboardScore>>> GetTopScoresFromLeaderboard(string leaderboardCode)
-        {
-            if (!this.SimulationMode)
-            {
-                return this.social.GetTopScoresFromLeaderboard(leaderboardCode);
-            }
-
-            return System.Threading.Tasks.Task.FromResult(this.simulatedLeaderboards);
-        }
-
-        /// <summary>
-        /// Serializes the specified value.
-        /// </summary>
-        /// <typeparam name="T">T param</typeparam>
-        /// <param name="value">The value.</param>
-        /// <returns>string s</returns>
-        /// <exception cref="System.Exception">An error occurred</exception>
-        private string Serialize<T>(T value)
-        {
-            if (value == null)
-            {
-                return string.Empty;
-            }
-
-            try
-            {
-                var xmlserializer = new XmlSerializer(typeof(T));
-                var stringWriter = new StringWriter();
-                using (var writer = XmlWriter.Create(stringWriter, new XmlWriterSettings { Indent = true }))
-                {
-                    xmlserializer.Serialize(writer, value);
-                    return stringWriter.ToString();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred in Serialize method", ex);
-            }
+            return this.currentSocial.GetAchievements();
         }
     }
 }

@@ -6,13 +6,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompanyAttribute("Wave Engine")]
 [assembly: AssemblyDescriptionAttribute("linux")]
 [assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2016")]
-[assembly: GuidAttribute("07921225-5d9b-4cb6-80c5-95cb0550d7d9")]
+[assembly: GuidAttribute("E210DB9F-8AA2-4CD7-BDB8-CF78A871B236")]
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyVersionAttribute("2.2.1.*")]
-namespace System
-{
-    internal static class AssemblyVersionInformation
-    {
-        internal const string Version = "2.2.1.*";
+[assembly: AssemblyVersionAttribute("2.3.0.0000")]
+namespace System {
+    internal static class AssemblyVersionInformation {
+        internal const string Version = "2.3.0.0000";
     }
 }

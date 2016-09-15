@@ -2,15 +2,15 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitleAttribute("WaveEngine.Cardboard Windows")]
+[assembly: AssemblyTitleAttribute("WaveEngine.Cardboard linux")]
 [assembly: AssemblyCompanyAttribute("Wave Engine")]
-[assembly: AssemblyDescriptionAttribute("Windows")]
+[assembly: AssemblyDescriptionAttribute("linux")]
 [assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2016")]
-[assembly: GuidAttribute("82619f73-a53c-443a-b88f-ae906c4622e7")]
+[assembly: GuidAttribute("7DEB59EF-C3F0-48FB-A1BF-765616ED1913")]
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyVersionAttribute("2.2.1.*")]
+[assembly: AssemblyVersionAttribute("2.3.0.0000")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "2.2.1.*";
+        internal const string Version = "2.3.0.0000";
     }
 }

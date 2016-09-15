@@ -1,0 +1,8 @@
+C:\VO\Engine\Extensions\WaveEngine.Analytics\Projects\bin\Windows\Debug\WaveEngine.Analytics.dll
+C:\VO\Engine\Extensions\WaveEngine.Analytics\Projects\bin\Windows\Debug\WaveEngine.Analytics.pdb
+C:\VO\Engine\Extensions\WaveEngine.Analytics\Projects\bin\Windows\Debug\WaveEngine.Common.dll
+C:\VO\Engine\Extensions\WaveEngine.Analytics\Projects\bin\Windows\Debug\WaveEngine.Common.pdb
+C:\VO\Engine\Extensions\WaveEngine.Analytics\Projects\bin\Windows\Debug\WaveEngine.Common.xml
+C:\VO\Engine\Extensions\WaveEngine.Analytics\Projects\obj\Debug\WaveEngine.Analytics.csprojResolveAssemblyReference.cache
+C:\VO\Engine\Extensions\WaveEngine.Analytics\Projects\obj\Debug\WaveEngine.Analytics.dll
+C:\VO\Engine\Extensions\WaveEngine.Analytics\Projects\obj\Debug\WaveEngine.Analytics.pdb

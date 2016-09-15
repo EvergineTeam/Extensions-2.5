@@ -7,23 +7,23 @@
 
 #include "VuforiaAdapter.h"
 #include <string.h>
-#include <QCAR/QCAR.h>
-#include <QCAR/TrackerManager.h>
-#include <QCAR/Tracker.h>
-#include <QCAR/TrackableResult.h>
-#include <QCAR/DataSet.h>
-#include <QCAR/CameraDevice.h>
-#include <QCAR/Renderer.h>
-#include <QCAR/Tool.h>
-#include <QCAR/VideoBackgroundConfig.h>
-#include <QCAR/ObjectTracker.h>
+#include <Vuforia/Vuforia.h>
+#include <Vuforia/TrackerManager.h>
+#include <Vuforia/Tracker.h>
+#include <Vuforia/TrackableResult.h>
+#include <Vuforia/DataSet.h>
+#include <Vuforia/CameraDevice.h>
+#include <Vuforia/Renderer.h>
+#include <Vuforia/Tool.h>
+#include <Vuforia/VideoBackgroundConfig.h>
+#include <Vuforia/ObjectTracker.h>
 
 #if __APPLE__
-#include <QCAR/QCAR_iOS.h>
+#include <Vuforia/Vuforia_iOS.h>
 #include <OpenGLES/ES2/gl.h>
 #elif ANDROID
-#include <EGL/egl.h>
-#include <GLES/gl.h>
+#include <EGL\egl.h>
+#include <GLES\gl.h>
 #endif
 
 int gFrameWidth;
@@ -41,17 +41,16 @@ QCAR_State QCAR_getState()
 }
 
 // Init QCAR
-#if __APPLE__
+#if IOS
 bool QCAR_init(const char* licenseKey)
 {
-	QCAR::setInitParameters(QCAR::GL_20, licenseKey);
-
-	
+    Vuforia::setInitParameters(Vuforia::GL_20, licenseKey);
+    
 	// QCAR::init() will return positive numbers up to 100 as it progresses towards success
 	// and negative numbers for error indicators
 	int initSuccess = 0;
 	do {
-		initSuccess = QCAR::init();
+		initSuccess = Vuforia::init();
 	} while (0 <= initSuccess && 100 > initSuccess);
 
 	if (initSuccess != 100)
@@ -83,7 +82,7 @@ bool QCAR_shutDown()
 	}
 
 	// shutdown QCAR
-	QCAR::deinit();
+	Vuforia::deinit();
 
 	gState = QCAR_State::QCAR_STOPPED;
 	return true;
@@ -98,27 +97,27 @@ void QCAR_setOrientation(QCAR_Orientation orientation)
 		return;
 	}
 
-	QCAR::onSurfaceChanged(gFrameWidth, gFrameHeight);
+	Vuforia::onSurfaceChanged(gFrameWidth, gFrameHeight);
 
 #if __APPLE__
-	QCAR::IOS_INIT_FLAGS orientationFlag;
+	Vuforia::IOS_INIT_FLAGS orientationFlag;
 
 	switch (orientation) {
 	case QCAR_ORIENTATION_PORTRAIT:
-		orientationFlag = QCAR::ROTATE_IOS_90;
+		orientationFlag = Vuforia::ROTATE_IOS_90;
 		break;
 	case QCAR_ORIENTATION_PORTRAIT_UPSIDEDOWN:
-		orientationFlag = QCAR::ROTATE_IOS_270;
+		orientationFlag = Vuforia::ROTATE_IOS_270;
 		break;
 	case QCAR_ORIENTATION_LANDSCAPE_LEFT:
-		orientationFlag = QCAR::ROTATE_IOS_180;
+		orientationFlag = Vuforia::ROTATE_IOS_180;
 		break;
 	default:
-		orientationFlag = QCAR::ROTATE_IOS_0;
+		orientationFlag = Vuforia::ROTATE_IOS_0;
 		break;
 	}
 
-	QCAR::setRotation(orientationFlag);
+	Vuforia::setRotation(orientationFlag);
 #endif
 }
 
@@ -132,8 +131,8 @@ int QCAR_initialize(const char* dataSetPath, bool extendedTracking)
 	}
 
 	// Get the image tracker:
-	QCAR::TrackerManager& trackerManager = QCAR::TrackerManager::getInstance();
-	QCAR::ObjectTracker* tracker = static_cast<QCAR::ObjectTracker*> (trackerManager.initTracker(QCAR::ObjectTracker::getClassType()));
+	Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+	Vuforia::ObjectTracker* tracker = static_cast<Vuforia::ObjectTracker*> (trackerManager.initTracker(Vuforia::ObjectTracker::getClassType()));
 
 	if (tracker == NULL)
 	{
@@ -143,7 +142,7 @@ int QCAR_initialize(const char* dataSetPath, bool extendedTracking)
 	}
 
 	// Create the data sets:
-	QCAR::DataSet* dataSet = tracker->createDataSet();
+	Vuforia::DataSet* dataSet = tracker->createDataSet();
 	if (dataSet == 0)
 	{
 		printf("Failed to create a new tracking data.");
@@ -151,7 +150,7 @@ int QCAR_initialize(const char* dataSetPath, bool extendedTracking)
 	}
 
 	// Load the data sets:
-	if (!dataSet->load(dataSetPath, QCAR::DataSet::STORAGE_APPRESOURCE))
+	if (!dataSet->load(dataSetPath, Vuforia::STORAGE_APPRESOURCE))
 	{
 		printf("Failed to load data set.");
 		return 102;
@@ -166,7 +165,7 @@ int QCAR_initialize(const char* dataSetPath, bool extendedTracking)
 
 	for (int i = 0; i < dataSet->getNumTrackables(); i++)
 	{
-		QCAR::Trackable* trackable = dataSet->getTrackable(i);
+		Vuforia::Trackable* trackable = dataSet->getTrackable(i);
 		if (extendedTracking)
 		{
 			trackable->startExtendedTracking();
@@ -192,22 +191,22 @@ bool QCAR_startTrack(int frameWidth, int frameHeight)
 		return false;
 	}
 
-	QCAR::onSurfaceChanged(frameWidth, frameHeight);
+	Vuforia::onSurfaceChanged(frameWidth, frameHeight);
 
 	// Initialise the camera
-	if (QCAR::CameraDevice::getInstance().init())
+	if (Vuforia::CameraDevice::getInstance().init())
 	{
 		// Configure video background
 		QCAR_configureVideoBackground(frameWidth, frameHeight);
-		QCAR::CameraDevice::getInstance().setFocusMode(QCAR::CameraDevice::FOCUS_MODE_CONTINUOUSAUTO);
+		Vuforia::CameraDevice::getInstance().setFocusMode(Vuforia::CameraDevice::FOCUS_MODE_CONTINUOUSAUTO);
 
 
 		// Start camera capturing
-		if (QCAR::CameraDevice::getInstance().start())
+		if (Vuforia::CameraDevice::getInstance().start())
 		{
 			// Start the tracker
-			QCAR::TrackerManager& trackerManager = QCAR::TrackerManager::getInstance();
-			QCAR::Tracker* tracker = trackerManager.getTracker(QCAR::ObjectTracker::getClassType());
+			Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+			Vuforia::Tracker* tracker = trackerManager.getTracker(Vuforia::ObjectTracker::getClassType());
 
 			if (tracker != 0)
 			{
@@ -233,15 +232,15 @@ bool QCAR_stopTrack()
 	}
 
 	// Stop the tracker:
-	QCAR::TrackerManager& trackerManager = QCAR::TrackerManager::getInstance();
-	QCAR::Tracker* tracker = trackerManager.getTracker(QCAR::ObjectTracker::getClassType());
+	Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+	Vuforia::Tracker* tracker = trackerManager.getTracker(Vuforia::ObjectTracker::getClassType());
 
 	if (tracker != 0)
 	{
 		tracker->stop();
 	}
 
-	QCAR::CameraDevice::getInstance().stop();
+	Vuforia::CameraDevice::getInstance().stop();
 
 	gState = QCAR_State::QCAR_INITIALIZED;
 
@@ -257,23 +256,23 @@ TrackResult QCAR_update()
 	{
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-		QCAR::State state = QCAR::Renderer::getInstance().begin();
-		QCAR::Renderer::getInstance().drawVideoBackground();
+		Vuforia::State state = Vuforia::Renderer::getInstance().begin();
+		Vuforia::Renderer::getInstance().drawVideoBackground();
 
 		trackResult.isTracking = state.getNumTrackableResults() > 0;
 
 		if (trackResult.isTracking)
 		{
 			// Get the trackable
-			const QCAR::TrackableResult* result = state.getTrackableResult(0);
-			const QCAR::Trackable& trackable = result->getTrackable();
-			QCAR::Matrix44F modelViewMatrix = QCAR::Tool::convertPose2GLMatrix(result->getPose());
+			const Vuforia::TrackableResult* result = state.getTrackableResult(0);
+			const Vuforia::Trackable& trackable = result->getTrackable();
+			Vuforia::Matrix44F modelViewMatrix = Vuforia::Tool::convertPose2GLMatrix(result->getPose());
 
 			strcpy(trackResult.trackName, trackable.getName());
-			memcpy(&trackResult.trackPose, &modelViewMatrix, sizeof(QCAR::Matrix44F));
+			memcpy(&trackResult.trackPose, &modelViewMatrix, sizeof(Vuforia::Matrix44F));
 		}
 
-		QCAR::Renderer::getInstance().end();
+		Vuforia::Renderer::getInstance().end();
 	}
 
 	return trackResult;
@@ -288,12 +287,12 @@ Matrix4x4 QCAR_getCameraProjection(float nearPlane, float farPlane)
 	}
 
 	// Cache the projection matrix:
-	const QCAR::CameraCalibration& cameraCalibration = QCAR::CameraDevice::getInstance().getCameraCalibration();
+	const Vuforia::CameraCalibration& cameraCalibration = Vuforia::CameraDevice::getInstance().getCameraCalibration();
 
-	QCAR::Matrix44F projection = QCAR::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
+	Vuforia::Matrix44F projection = Vuforia::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
 
 	Matrix4x4 result;
-	memcpy(&result, &projection, sizeof(QCAR::Matrix44F));
+	memcpy(&result, &projection, sizeof(Vuforia::Matrix44F));
 	result.data[0] *= gWidthScale;
 	result.data[5] *= gHeightScale;
 
@@ -308,11 +307,11 @@ void QCAR_configureVideoBackground(int frameWidth, int frameHeight)
 	gFrameHeight = frameHeight;
 
 	// Get the default video mode
-	QCAR::CameraDevice& cameraDevice = QCAR::CameraDevice::getInstance();
-	QCAR::VideoMode videoMode = cameraDevice.getVideoMode(QCAR::CameraDevice::MODE_DEFAULT);
+	Vuforia::CameraDevice& cameraDevice = Vuforia::CameraDevice::getInstance();
+	Vuforia::VideoMode videoMode = cameraDevice.getVideoMode(Vuforia::CameraDevice::MODE_DEFAULT);
 
 	// Configure the video background
-	QCAR::VideoBackgroundConfig config;
+	Vuforia::VideoBackgroundConfig config;
 	config.mEnabled = true;
 	config.mPosition.data[0] = 0.0f;
 	config.mPosition.data[1] = 0.0f;
@@ -342,7 +341,7 @@ void QCAR_configureVideoBackground(int frameWidth, int frameHeight)
 	}
 
 	// Set the config
-	QCAR::Renderer::getInstance().setVideoBackgroundConfig(config);
+	Vuforia::Renderer::getInstance().setVideoBackgroundConfig(config);
 }
 
 

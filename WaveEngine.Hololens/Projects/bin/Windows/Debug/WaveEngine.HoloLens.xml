@@ -1,0 +1,1807 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WaveEngine.HoloLens</name>
+    </assembly>
+    <members>
+        <member name="T:WaveEngine.Hololens.HololensProvider">
+            <summary>
+            Wave Engine service to make it easy to connect with the OVR framework.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.HololensProvider.hololensService">
+            <summary>
+            The application
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.HololensProvider.IsConnected">
+            <summary>
+            Gets a value indicating whether this instance is connected.
+            </summary>
+            <value>
+            <c>true</c> if this instance is connected; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:WaveEngine.Hololens.HololensProvider.EyePoses">
+            <summary>
+            Gets the eye poses
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.HololensProvider.TrackerCameraPose">
+            <summary>
+            Gets the tracker camera pose
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.HololensProvider.EyeTextures">
+            <summary>
+            Gets the eye textures information.
+            </summary>
+            <value>
+            The render target.
+            </value>
+        </member>
+        <member name="M:WaveEngine.Hololens.HololensProvider.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WaveEngine.Hololens.HololensProvider"/> class.
+            </summary>        
+        </member>
+        <member name="M:WaveEngine.Hololens.HololensProvider.DefaultValues">
+            <summary>
+            Sets default values
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.HololensProvider.Update(System.TimeSpan)">
+            <summary>
+            Update the provider
+            </summary>
+            <param name="gameTime">The game time.</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.HololensProvider.Initialize">
+            <summary>
+            Allows to execute custom logic during the initialization of this instance.
+            </summary>
+            <exception cref="T:System.Exception">Invalid configure rendering</exception>
+        </member>
+        <member name="T:WaveEngine.Hololens.HololensService">
+            <summary>
+            Wave Engine service to make it easy to connect with the OVR framework.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.HololensService.HololensApplication">
+            <summary>
+            The holo application
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.HololensService.WorldToTrackingSpace">
+            <summary>
+            The world to tracking space transform
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.HololensService.IsConnected">
+            <summary>
+            Gets a value indicating whether this instance is connected.
+            </summary>
+            <value>
+            <c>true</c> if this instance is connected; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:WaveEngine.Hololens.HololensService.EyePoses">
+            <summary>
+            Gets the eye poses
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.HololensService.TrackerCameraPose">
+            <summary>
+            Gets the tracker camera pose
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.HololensService.EyeTextures">
+            <summary>
+            Gets the eye textures information.
+            </summary>
+            <value>
+            The render target.
+            </value>
+        </member>
+        <member name="P:WaveEngine.Hololens.HololensService.FocusPosition">
+            <summary>
+            Gets or sets the focus position of the stabilization plane
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.HololensService.FocusNormal">
+            <summary>
+            Gets or sets the focus normal of the stabilization plane
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.HololensService.FocusVelocity">
+            <summary>
+            Gets or sets the focus velocity of the stabilization plane
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.HololensService.#ctor(WaveEngine.Hololens.IHololensApplication)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WaveEngine.Hololens.HololensService"/> class.
+            </summary>
+            <param name="hololensApplication">The Hololens application.</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.HololensService.SetStabilizationPlane(WaveEngine.Common.Math.Vector3)">
+            <summary>
+            Sets the stabilization plane
+            </summary>
+            <param name="focusPosition">The focus position</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.HololensService.SetStabilizationPlane(WaveEngine.Common.Math.Vector3,WaveEngine.Common.Math.Vector3)">
+            <summary>
+            Sets the stabilization plane
+            </summary>
+            <param name="focusPosition">The focus position</param>
+            <param name="focusNormal">The focus normal</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.HololensService.SetStabilizationPlane(WaveEngine.Common.Math.Vector3,WaveEngine.Common.Math.Vector3,WaveEngine.Common.Math.Vector3)">
+            <summary>
+            Sets the stabilization plane
+            </summary>
+            <param name="focusPosition">The focus position</param>
+            <param name="focusNormal">The focus normal</param>
+            <param name="focusVelocity">The focus velocity</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.HololensService.SetDefaultStabilizationPlane">
+            <summary>
+            Sets the default stabilization plane
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.IHololensApplication">
+            <summary>
+            Interface that represents an hololens application. This class is used in HololensService
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.IHololensApplication.EyePoses">
+            <summary>
+            Gets the eye poses for VR Camera
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.IHololensApplication.EyeTextures">
+            <summary>
+            Gets the eye texture information for VR Camera
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.IHololensApplication.HeadRay">
+            <summary>
+            Gets the head ray
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.ISpatialInputManager">
+            <summary>
+            Interface for the spatial input manager implementation
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.SourceDetected">
+            <summary>
+            Occurs when a new hand, controller, or source of voice commands has been detected.
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.SourceLost">
+            <summary>
+            Occurs when a hand, controller, or source of voice commands is no longer available.
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.SourcePressed">
+            <summary>
+            Occurs when a hand or controller has entered the pressed state.
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.SourceReleased">
+            <summary>
+            Occurs when a hand or controller has exited the pressed state.
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.SourceUpdated">
+            <summary>
+            Occurs when a hand or controller has experienced a change to its SpatialInteractionSourceState.
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.GestureErrorEvent">
+            <summary>
+            Gesture error event
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.HoldCanceledEvent">
+            <summary>
+            The hold gesture is canceled
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.HoldCompletedEvent">
+            <summary>
+            The hold gesture is completed
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.HoldStartedEvent">
+            <summary>
+            The hold gesture is started
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.ManipulationCanceledEvent">
+            <summary>
+            The manipulation gesture is canceled
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.ManipulationCompletedEvent">
+            <summary>
+            The manipulation gesture is completed
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.ManipulationStartedEvent">
+            <summary>
+            The manipulation gesture is started
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.ManipulationUpdatedEvent">
+            <summary>
+            The manipulation gesture is updated
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.NavigationCanceledEvent">
+            <summary>
+            The navigation gesture is canceled
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.NavigationCompletedEvent">
+            <summary>
+            The navigation gesture is completed
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.NavigationStartedEvent">
+            <summary>
+            The navigation gesture is started
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.NavigationUpdatedEvent">
+            <summary>
+            The navigation gesture is updated
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.RecognitionEndedEvent">
+            <summary>
+            The recognition gesture is ended
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.RecognitionStartedEvent">
+            <summary>
+            The recognition gesture is started
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.ISpatialInputManager.TappedEvent">
+            <summary>
+            Occurs when there is a tap gesture
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Interaction.ISpatialInputManager.SpatialState">
+            <summary>
+            Gets the spatial state
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Interaction.ISpatialInputManager.EnabledGestures">
+            <summary>
+            Gets or sets the enabled gestures
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Interaction.ISpatialInputManager.Initialize">
+            <summary>
+            Initialize all resources used by this instance.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Interaction.ISpatialInputManager.Terminate">
+            <summary>
+            Clean all the resources used by this instance.
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialGestures">
+            <summary>
+            Spatial input enabled gestures
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialGestures.None">
+            <summary>
+            Disable support for gestures.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialGestures.Tap">
+            <summary>
+            Enable support for the tap gesture.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialGestures.DoubleTap">
+            <summary>
+            Enable support for the double-tap gesture.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialGestures.Hold">
+            <summary>
+            Enable support for the hold gesture.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialGestures.ManipulationTranslate">
+            <summary>
+            Enable support for the manipulation gesture, tracking changes to the hand's position.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialGestures.NavigationX">
+            <summary>
+            Enable support for the navigation gesture, in the horizontal axis.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialGestures.NavigationY">
+            <summary>
+            Enable support for the navigation gesture, in the vertical axis.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialGestures.NavigationZ">
+            <summary>
+            Enable support for the navigation gesture, in the depth axis.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialGestures.NavigationRailsX">
+            <summary>
+            Enable support for the navigation gesture, in the horizontal axis using rails (guides).
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialGestures.NavigationRailsY">
+            <summary>
+            Enable support for the navigation gesture, in the vertical axis using rails (guides).
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialGestures.NavigationRailsZ">
+            <summary>
+            Enable support for the navigation gesture, in the depth axis using rails (guides).
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialSource">
+            <summary>
+            Specifies the kind of an interaction source.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialSource.Other">
+            <summary>
+            Unknow source.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialSource.Hand">
+            <summary>
+            Gesture from the user's hand.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialSource.Voice">
+            <summary>
+            Recognize from the user's voice.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialSource.Controller">
+            <summary>
+            Recognize from the clicker's button.
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialState">
+            <summary>
+            This class represent the current state of the input system.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Interaction.SpatialState.IsDetected">
+            <summary>
+            Gets a value indicating whether the input source is detected
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Interaction.SpatialState.IsSelected">
+            <summary>
+            Gest a value indicating whether user is making the air tap gesture.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Interaction.SpatialState.Source">
+            <summary>
+            Gets the kind of an interaction source.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Interaction.SpatialState.SourceLossRisk">
+            <summary>
+            Gets the recognition confident as a value from 0.0 to 1.0.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialState.Position">
+            <summary>
+             Gets the position of a hand or controller. 
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialState.Velocity">
+            <summary>
+             Gets the velocity of a hand or controller.
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService">
+            <summary>
+            Handler all the input event.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialInputService.spatialInputManager">
+            <summary>
+            Instance of SpatialInteractionManager.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Interaction.SpatialInputService.disposed">
+            <summary>
+            Wether this instance has been disposed.
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.SourceDetected">
+            <summary>
+            Occurs when a new hand, controller, or source of voice commands has been detected.
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.SourceLost">
+            <summary>
+            Occurs when a hand, controller, or source of voice commands is no longer available.
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.SourcePressed">
+            <summary>
+            Occurs when a hand or controller has entered the pressed state.
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.SourceReleased">
+            <summary>
+            Occurs when a hand or controller has exited the pressed state.
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.SourceUpdated">
+            <summary>
+            Occurs when a hand or controller has experienced a change to its SpatialInteractionSourceState.
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.GestureError">
+            <summary>
+            Gesture error event
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.HoldCanceled">
+            <summary>
+            The hold gesture is canceled
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.HoldCompleted">
+            <summary>
+            The hold gesture is completed
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.HoldStarted">
+            <summary>
+            The hold gesture is started
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.ManipulationCanceled">
+            <summary>
+            The manipulation gesture is canceled
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.ManipulationCompleted">
+            <summary>
+            The manipulation gesture is completed
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.ManipulationStarted">
+            <summary>
+            The manipulation gesture is started
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.ManipulationUpdated">
+            <summary>
+            The manipulation gesture is updated
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.NavigationCanceled">
+            <summary>
+            The navigation gesture is canceled
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.NavigationCompleted">
+            <summary>
+            The navigation gesture is completed
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.NavigationStarted">
+            <summary>
+            The navigation gesture is started
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.NavigationUpdated">
+            <summary>
+            The navigation gesture is updated
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.RecognitionEnded">
+            <summary>
+            The recognition gesture is ended
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.RecognitionStarted">
+            <summary>
+            The recognition gesture is started
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Interaction.SpatialInputService.TappedEvent">
+            <summary>
+            Occurs when there is a tap gesture
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.InputSourceDelegate">
+            <summary>
+            The input source delegate
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="state">The state</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.GestureErrorDelegate">
+            <summary>
+            Gesture error delegate
+            </summary>
+            <param name="error">The error message</param>
+            <param name="hresult">The hresult handler</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.HoldCanceledEventDelegate">
+            <summary>
+            The hold gesture is canceled
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>
+            <param name="headRay">The head ray which can be used to determine what the user was looking at when the event occurred since it can be from a previous frame</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.HoldCompletedEventDelegate">
+            <summary>
+            The hold gesture is completed
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>
+            <param name="headRay">The head ray which can be used to determine what the user was looking at when the event occurred since it can be from a previous frame</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.HoldStartedEventDelegate">
+            <summary>
+            The hold gesture is started
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>
+            <param name="headRay">The head ray which can be used to determine what the user was looking at when the event occurred since it can be from a previous frame</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.ManipulationCanceledEventDelegate">
+            <summary>
+            The manipulation gesture is canceled
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>
+            <param name="headRay">The head ray which can be used to determine what the user was looking at when the event occurred since it can be from a previous frame</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.ManipulationCompletedEventDelegate">
+            <summary>
+            The manipulation gesture is completed
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>
+            <param name="cumulativeDelta">The cumulative delta</param>
+            <param name="headRay">The head ray which can be used to determine what the user was looking at when the event occurred since it can be from a previous frame</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.ManipulationStartedEventDelegate">
+            <summary>
+            The manipulation gesture is started
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>
+            <param name="headRay">The head ray which can be used to determine what the user was looking at when the event occurred since it can be from a previous frame</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.ManipulationUpdatedEventDelegate">
+            <summary>
+            The manipulation gesture is updated
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>
+            <param name="cumulativeDelta">The cumulative delta</param>
+            <param name="headRay">The head ray which can be used to determine what the user was looking at when the event occurred since it can be from a previous frame</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.NavigationCanceledEventDelegate">
+            <summary>
+            The manipulation gesture is updated
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>        
+            <param name="headRay">The head ray which can be used to determine what the user was looking at when the event occurred since it can be from a previous frame</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.NavigationCompletedEventDelegate">
+            <summary>
+            The navigation gesture is completed
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>
+            <param name="normalizedOffset">The normalized offset</param>
+            <param name="headRay">The head ray which can be used to determine what the user was looking at when the event occurred since it can be from a previous frame</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.NavigationStartedEventDelegate">
+            <summary>
+            The navigation gesture is started
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>
+            <param name="isNavigatingX">Navigating in X axis</param>
+            <param name="isNavigatingY">Navigating in Y axis</param>
+            <param name="isNavigatingZ">Navigating in Z axis</param>
+            <param name="headRay">The head ray which can be used to determine what the user was looking at when the event occurred since it can be from a previous frame</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.NavigationUpdatedEventDelegate">
+            <summary>
+            The navigation gesture is updated
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>
+            <param name="normalizedOffset">The normalized offset</param>
+            <param name="headRay">The head ray which can be used to determine what the user was looking at when the event occurred since it can be from a previous frame</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.RecognitionEndedEventDelegate">
+            <summary>
+            A gesture recognition is ended
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>        
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.RecognitionStartedEventDelegate">
+            <summary>
+            A gesture recognition is started
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>        
+        </member>
+        <member name="T:WaveEngine.Hololens.Interaction.SpatialInputService.TappedEventDelegate">
+            <summary>
+            A tap gesture is detected
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="source">The source of the event</param>
+            <param name="tapCount">The number of taps detected</param>
+            <param name="headRay">The head ray which can be used to determine what the user was looking at when the event occurred since it can be from a previous frame</param>
+        </member>
+        <member name="P:WaveEngine.Hololens.Interaction.SpatialInputService.IsConnected">
+            <summary>
+            Gets a value indicating whether this instance is connected.
+            </summary>
+            <value>
+            <c>true</c> if this instance is connected; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:WaveEngine.Hololens.Interaction.SpatialInputService.IsDisposed">
+            <summary>
+            Gets a value indicating whether this <see cref="T:WaveEngine.Hololens.Interaction.SpatialInputService" /> is disposed.
+            </summary>
+            <value>
+              <c>true</c> if disposed; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:WaveEngine.Hololens.Interaction.SpatialInputService.SpatialState">
+            <summary>
+            Gets the current Spatial State.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Interaction.SpatialInputService.EnabledGestures">
+            <summary>
+            Gets or sets the enabled gestures
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Interaction.SpatialInputService.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WaveEngine.Hololens.Interaction.SpatialInputService"/> class.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Interaction.SpatialInputService.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:WaveEngine.Hololens.Interaction.SpatialInputService"/> class.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Interaction.SpatialInputService.Initialize">
+            <summary>
+            Initialize all resources used by this instance.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Interaction.SpatialInputService.Terminate">
+            <summary>
+            Clean all the resources used by this instance.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Interaction.SpatialInputService.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Interaction.SpatialInputService.Dispose(System.Boolean)">
+            <summary>
+            Releases unmanaged and - optionally - managed resources
+            </summary>
+            <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Media.ICameraResolution">
+            <summary>
+            This interface represent the camera properties.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.ICameraResolution.Height">
+            <summary>
+            The height resolution.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.ICameraResolution.Width">
+            <summary>
+            The width resolution.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.ICameraResolution.RefreshRate">
+            <summary>
+             The refresh rate.
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.Media.IVideoCapture">
+            <summary>
+            This interface contains all methods and properties to define a videocapture manager.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.IVideoCapture.SupportedResolutions">
+            <summary>
+            Gets the supported resolutions.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.IVideoCapture.IsRecording">
+            <summary>
+            Whether the videocapture is recording or not.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.IVideoCapture.InitializeCameraAsync">
+            <summary>
+            Initializes this camera instance asynchronous.
+            </summary>
+            <returns>Whether the camera was initialized or not.</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.IVideoCapture.TakePhotoToStreamAsync(WaveEngine.Hololens.Media.ICameraResolution,WaveEngine.Hololens.Media.PhotoCaptureFormat)">
+            <summary>
+            Take a new photo and hold it as stream.
+            </summary>
+            <param name="parameters">The set of parameters used to take the photo, <see cref="T:WaveEngine.Hololens.Media.ICameraResolution"/> class.</param>
+            <param name="format">The image format. <see cref="T:WaveEngine.Hololens.Media.PhotoCaptureFormat"/> enum. </param>
+            <returns>The <see cref="T:WaveEngine.Hololens.Media.PhotoCaptureStreamResult"/> struct.</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.IVideoCapture.TakePhotoAsync(System.String,WaveEngine.Hololens.Media.ICameraResolution,WaveEngine.Hololens.Media.PhotoCaptureFormat)">
+            <summary>
+            Take a new photo.
+            </summary>
+            <param name="filename">The output file name.</param>
+            <param name="parameters">The set of parameters used to take the photo, <see cref="T:WaveEngine.Hololens.Media.ICameraResolution"/> class.</param>
+            <param name="format">The image format. <see cref="T:WaveEngine.Hololens.Media.PhotoCaptureFormat"/> enum. </param>
+            <returns>The <see cref="T:WaveEngine.Hololens.Media.VideoCaptureResult"/> struct.</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.IVideoCapture.StartRecordingAsync(System.String,WaveEngine.Hololens.Media.VideoEncoding)">
+            <summary>
+            Start recording a new video.
+            </summary>
+            <param name="filename">The file path.</param>
+            <param name="encoding">The video encoding. Mp4 by default.</param>
+            <returns>The <see cref="T:WaveEngine.Hololens.Media.VideoCaptureResult"/> struct.</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.IVideoCapture.StartRecordingToStreamAsync(WaveEngine.Hololens.Media.VideoEncoding)">
+            <summary>
+            Start recording a new video and save it as stream.
+            </summary>
+            <param name="encoding">The video encoding. Mp4 by default.</param>
+            <returns>The <see cref="T:WaveEngine.Hololens.Media.VideoCaptureStreamResult"/> struct.</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.IVideoCapture.StopRecordingAsync">
+            <summary>
+            Stop recording the current video.
+            </summary>
+            <returns>Whether the operation was executed or not.</returns>
+        </member>
+        <member name="T:WaveEngine.Hololens.Media.PhotoCaptureFormat">
+            <summary>
+            This enum represent differents types of photo output file formats.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Media.PhotoCaptureFormat.PNG">
+            <summary>
+            PNG file format.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Media.PhotoCaptureFormat.JPG">
+            <summary>
+            JPG file format.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Media.PhotoCaptureFormat.BMP">
+            <summary>
+            BMP file format.
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.Media.PhotoCaptureStreamResult">
+            <summary>
+            This class represent the result of a Take a photo using the Photo capture.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.PhotoCaptureStreamResult.OutputStream">
+            <summary>
+            Gets the output stream.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.PhotoCaptureStreamResult.Success">
+            <summary>
+            Whether the photo was saved or not.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.PhotoCaptureStreamResult.#ctor(System.Boolean,System.IO.Stream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WaveEngine.Hololens.Media.PhotoCaptureResult"/> class.
+            </summary>
+            <param name="success">Whether the photo was saved or not.</param>
+            <param name="outputStream">The output stream.</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Media.PhotoCaptureResult">
+            <summary>
+            This class represent the result of a Take a photo using the Photo capture.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.PhotoCaptureResult.OutputPath">
+            <summary>
+            Gets the output file path.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.PhotoCaptureResult.Success">
+            <summary>
+            Whether the photo was saved or not.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.PhotoCaptureResult.#ctor(System.Boolean,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WaveEngine.Hololens.Media.PhotoCaptureResult"/> class.
+            </summary>
+            <param name="success">Whether the photo was saved or not.</param>
+            <param name="outputPath">The file output path.</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Media.MediaCaptureService">
+            <summary>
+            Media capture service.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Media.MediaCaptureService.isConnected">
+            <summary>
+            The is connected
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Media.MediaCaptureService.videoCaptureManager">
+            <summary>
+            Instance of videocapturemanager.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.MediaCaptureService.IsConnected">
+            <summary>
+            Gets a value indicating whether this instance is connected.
+            </summary>
+            <value>
+            <c>true</c> if this instance is connected; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.MediaCaptureService.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WaveEngine.Hololens.Media.MediaCaptureService"/> class.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.MediaCaptureService.Initialize">
+            <summary>
+            Initialize all resources used by this instance.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.MediaCaptureService.Terminate">
+            <summary>
+            Clean all the resources used by this instance.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.MediaCaptureService.TakePhotoInStreamAsync(WaveEngine.Hololens.Media.ICameraResolution,WaveEngine.Hololens.Media.PhotoCaptureFormat)">
+            <summary>
+            Take a new photo and hold it in the output stream.
+            </summary>
+            <param name="parameters">The set of parameters used to take the photo, <see cref="T:WaveEngine.Hololens.Media.ICameraResolution"/> class.</param>
+            <param name="format">The image format. <see cref="T:WaveEngine.Hololens.Media.PhotoCaptureFormat"/> enum. </param>
+            <returns>The <see cref="T:WaveEngine.Hololens.Media.PhotoCaptureStreamResult"/> struct.</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.MediaCaptureService.TakePhotoAsync(System.String,WaveEngine.Hololens.Media.ICameraResolution,WaveEngine.Hololens.Media.PhotoCaptureFormat)">
+            <summary>
+            Take a new photo.
+            </summary>
+            <param name="filename">The output file name.</param>
+            <param name="parameters">The set of parameters used to take the photo, <see cref="T:WaveEngine.Hololens.Media.ICameraResolution"/> class.</param>
+            <param name="format">The image format. <see cref="T:WaveEngine.Hololens.Media.PhotoCaptureFormat"/> enum. </param>
+            <returns>The <see cref="T:WaveEngine.Hololens.Media.VideoCaptureResult"/> struct.</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.MediaCaptureService.StartRecordingAsync(System.String,WaveEngine.Hololens.Media.VideoEncoding)">
+            <summary>
+            Start recording a new video.
+            </summary>
+            <param name="filename">The file path.</param>
+            <param name="encoding">The video encoding. Mp4 by default.</param>
+            <returns>The <see cref="T:WaveEngine.Hololens.Media.VideoCaptureResult"/> struct.</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.MediaCaptureService.StartRecordingInStreamAsync(WaveEngine.Hololens.Media.VideoEncoding)">
+            <summary>
+            Start recording a new video and save it as stream.
+            </summary>
+            <param name="encoding">The video encoding. Mp4 by default.</param>
+            <returns>The <see cref="T:WaveEngine.Hololens.Media.VideoCaptureStreamResult"/> struct.</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.MediaCaptureService.StopRecordingAsync">
+            <summary>
+            Stop recording the current video.
+            </summary>
+            <returns>Whether the operation was executed or not.</returns>
+        </member>
+        <member name="T:WaveEngine.Hololens.Media.VideoCaptureStreamResult">
+            <summary>
+            This class represent the result in some videocapture callbacks.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.VideoCaptureStreamResult.OutputStream">
+            <summary>
+            Gets the output stream.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.VideoCaptureStreamResult.Success">
+            <summary>
+            Whether the video was saved or not.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.VideoCaptureStreamResult.#ctor(System.Boolean,System.IO.Stream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WaveEngine.Hololens.Media.VideoCaptureStreamResult"/> class.
+            </summary>
+            <param name="success">Whether the video was saved or not.</param>
+            <param name="outputStream">The output stream.</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Media.VideoCaptureResult">
+            <summary>
+            This class represent the result in some videocapture callbacks.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.VideoCaptureResult.OutputPath">
+            <summary>
+            Gets the output file path.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Media.VideoCaptureResult.Success">
+            <summary>
+            Whether the video was saved or not.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Media.VideoCaptureResult.#ctor(System.Boolean,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WaveEngine.Hololens.Media.VideoCaptureResult"/> class.
+            </summary>
+            <param name="success">Whether the video was saved or not.</param>
+            <param name="outputPath">The file output path.</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Media.VideoEncoding">
+            <summary>
+            This enum represent differents types of video output encodding.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Media.VideoEncoding.MP4">
+            <summary>
+            MP4 video format.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Media.VideoEncoding.AVI">
+            <summary>
+            AVI video format.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Media.VideoEncoding.WMV">
+            <summary>
+            WMV video format.
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.SpatialMapping.SpatialMapping">
+            <summary>
+            The SpatialMappingObserver class encapsulates the SurfaceObserver into an easy to use
+            object that handles managing the observed surfaces and the rendering of surface geometry.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMapping.UseMaterialCopy">
+            <summary>
+            Gets or sets a value indicating whether the component will use an individual copy of the material file, instead of sharing the material instance.
+            </summary>
+            <value>
+              <c>true</c> if the material file will be copied otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMapping.MaterialPath">
+            <summary>
+            Gets or sets the material path.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMapping.IsVisible">
+            <summary>
+            Indicate whether the mesh will shown or not.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMapping.DefaultValues">
+            <summary>
+            Default values method
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMapping.Initialize">
+            <summary>
+            Initializes the component
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMapping.GetEntityNameFromSurfaceId(System.Guid)">
+            <summary>
+            Gets a surface entity from its surface Id
+            </summary>
+            <param name="id">The surface Id</param>
+            <returns>The entity</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMapping.CreateNewSurfaceEntity(System.String,WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface)">
+            <summary>
+            Creates a new entity from a surface
+            </summary>
+            <param name="entityName">The entity Name</param>
+            <param name="surface">The hololens surface information</param>
+            <returns>The new entity</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMapping.UpdateSurfaceEntity(WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface,WaveEngine.Framework.Entity)">
+            <summary>
+            Updates a surface entity
+            </summary>        
+            <param name="surface">The hololens surface information</param>
+            <param name="surfaceEntity">The entity to update</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMapping.RefreshModel(WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface,WaveEngine.Framework.Entity)">
+            <summary>
+            Refresh the surface mesh
+            </summary>
+            <param name="surface">The hololens surface information</param>
+            <param name="surfaceEntity">The entity to update</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMapping.RefreshCollider(WaveEngine.Framework.Entity)">
+            <summary>
+            Refresh the collider of a surface entity
+            </summary>
+            <param name="surfaceEntity">The entity to update</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.SpatialMapping.ISpatialMapping">
+            <summary>
+            Interface for the spatial input manager implementation
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.ISpatialMapping.Extents">
+            <summary>
+            Gets or sets the extents of the observation volume
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.ISpatialMapping.TrianglesPerCubicMeter">
+            <summary>
+            Gets or sets the number of triangles to calculate per cubic meter.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.ISpatialMapping.ObtainNormals">
+            <summary>
+            Gets or sets a value indicating whether the normal information must be captured.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.ISpatialMapping.Surfaces">
+            <summary>
+            Gets the surfaces dictionary
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.ISpatialMapping.UpdateSurfaces(WaveEngine.Hololens.SpatialMapping.SpatialMappingService.OnSurfaceChangedHandler,System.Boolean)">
+            <summary>
+            Process all spatial surfaces
+            </summary>
+            <param name="handler">The handler to receive the surface information</param>
+            <param name="ignorePrevious">Ignore previous surfaces</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.ISpatialMapping.Initialize">
+            <summary>
+            Initialize all resources used by this instance.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.ISpatialMapping.Terminate">
+            <summary>
+            Clean all the resources used by this instance.
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.SpatialMapping.ObserverStates">
+            <summary>
+            Spatial Mapping Observer states.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.SpatialMapping.ObserverStates.Running">
+            <summary>
+            The SurfaceObserver is currently running.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.SpatialMapping.ObserverStates.Stopped">
+            <summary>
+            The SurfaceObserver is currently idle.
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.SpatialMapping.SurfaceChange">
+            <summary>
+            Spatial mapping surface changes
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.SpatialMapping.SurfaceChange.Added">
+            <summary>
+            The surface is just added
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.SpatialMapping.SurfaceChange.Updated">
+            <summary>
+            The surface has been updated
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.SpatialMapping.SurfaceChange.Removed">
+            <summary>
+            The surface has been removed
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.SpatialMapping.SpatialMappingService">
+            <summary>
+            The spatial mapping manager service
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.spatialMappingManager">
+            <summary>
+            Instance of SpatialInteractionManager.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.disposed">
+            <summary>
+            Wether this instance has been disposed.
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.OnSurfaceChangedHandler">
+            <summary>
+            Handles the SurfaceObserver's OnSurfaceChanged event. 
+            </summary>
+            <param name="id">The identifier assigned to the surface which has changed.</param>
+            <param name="surface">The surface</param>
+            <param name="changeType">The type of change that occurred on the surface.</param>
+            <param name="updateTime">The date and time at which the change occurred.</param>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.IsConnected">
+            <summary>
+            Gets a value indicating whether this instance is connected.
+            </summary>
+            <value>
+            <c>true</c> if this instance is connected; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.IsDisposed">
+            <summary>
+            Gets a value indicating whether this <see cref="T:WaveEngine.Hololens.SpatialMapping.SpatialMappingService" /> is disposed.
+            </summary>
+            <value>
+              <c>true</c> if disposed; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.Extents">
+            <summary>
+            Gets or sets the extents of the observation volume
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.TrianglesPerCubicMeter">
+            <summary>
+            Gets or sets the number of triangles to calculate per cubic meter.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.Surfaces">
+            <summary>
+            Gets the spatial mapping surface meshes
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WaveEngine.Hololens.SpatialMapping.SpatialMappingService"/> class.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:WaveEngine.Hololens.SpatialMapping.SpatialMappingService"/> class.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.UpdateSurfaces(WaveEngine.Hololens.SpatialMapping.SpatialMappingService.OnSurfaceChangedHandler,System.Boolean)">
+            <summary>
+            Process all spatial surfaces
+            </summary>
+            <param name="handler">The handler to receive the surface information</param>
+            <param name="ignorePrevious">Ignore previous surfaces</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.Initialize">
+            <summary>
+            Initialize all resources used by this instance.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.Terminate">
+            <summary>
+            Clean all the resources used by this instance.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMappingService.Dispose(System.Boolean)">
+            <summary>
+            Releases unmanaged and - optionally - managed resources
+            </summary>
+            <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping">
+            <summary>
+            The SpatialMappingObserver class encapsulates the SurfaceObserver into an easy to use
+            object that handles managing the observed surfaces and the rendering of surface geometry.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.SurfaceEntityTag">
+            <summary>
+            The surface entity tag
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.spatialMappingService">
+            <summary>
+            The spatial mapping service
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.updateInterval">
+            <summary>
+            The update interval
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.updateTimer">
+            <summary>
+            The update surface timer
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.generateColliders">
+            <summary>
+            Generate colliders for the surfaces
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.IsConnected">
+            <summary>
+            Gets a value indicating whether the spatial mapping is available
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.UpdateInterval">
+            <summary>
+            Gets or sets the spatial mapping update interval
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.GenerateColliders">
+            <summary>
+            public 
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.DefaultValues">
+            <summary>
+            Sets the default values
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.Initialize">
+            <summary>
+            Initialize the component
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.StartTimer">
+            <summary>
+            Start the update timer
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.StopTimer">
+            <summary>
+            Stop the update timer
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.RefreshTimer">
+            <summary>
+            Refresh the timer
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.UpdateSurfaces">
+            <summary>
+            Update surfaces
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.OnSurfaceChanged(System.Guid,WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface,WaveEngine.Hololens.SpatialMapping.SurfaceChange,System.DateTimeOffset)">
+            <summary>
+            Handles the SurfaceObserver's OnSurfaceChanged event. 
+            </summary>
+            <param name="id">The identifier assigned to the surface which has changed.</param>
+            <param name="surface">The surface</param>
+            <param name="changeType">The type of change that occurred on the surface.</param>
+            <param name="updateTime">The date and time at which the change occurred.</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.GetEntityNameFromSurfaceId(System.Guid)">
+            <summary>
+            Gets a surface entity from its surface Id
+            </summary>
+            <param name="id">The surface Id</param>
+            <returns>The entity</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.CreateNewSurfaceEntity(System.String,WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface)">
+            <summary>
+            Creates a new entity from a surface
+            </summary>
+            <param name="entityName">The entity Name</param>
+            <param name="surface">The hololens surface information</param>
+            <returns>The new entity</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.UpdateSurfaceEntity(WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface,WaveEngine.Framework.Entity)">
+            <summary>
+            Updates a surface entity
+            </summary>        
+            <param name="surface">The hololens surface information</param>
+            <param name="surfaceEntity">The entity to update</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.RefreshCollider(WaveEngine.Framework.Entity)">
+            <summary>
+            Refresh the collider of a surface entity
+            </summary>
+            <param name="surfaceEntity">The surface entity</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.RefreshModel(WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface,WaveEngine.Framework.Entity)">
+            <summary>
+            Refresh the surface mesh
+            </summary>
+            <param name="surface">The hololens surface information</param>
+            <param name="surfaceEntity">The entity to update</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.BaseSpatialMapping.RefreshColliders">
+            <summary>
+            Refresh the collider generation
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface">
+            <summary>
+            The SpatialMappingObserver class encapsulates the SurfaceObserver into an easy to use
+            object that handles managing the observed surfaces and the rendering of surface geometry.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface.IsProcessing">
+            <summary>
+            The surface is processing at this moment
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface.UpdateTime">
+            <summary>
+            The updated time
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface.Id">
+            <summary>
+            Gets or sets the mesh Id
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface.Mesh">
+            <summary>
+            Gets or sets the surface mesh
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface.Bounds">
+            <summary>
+            Gets or sets the Bounds of the model
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface.Position">
+            <summary>
+            Gets or sets the Mesh position
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface.Scale">
+            <summary>
+            Gets or sets the Mesh scale
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface.Orientation">
+            <summary>
+            Gets or sets the Mesh orientation
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface.ResetMesh">
+            <summary>
+            Reset the VertexBuffer and IndexBuffer of the mesh
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.SpatialMapping.SpatialMappingSurface.Dispose">
+            <summary>
+            Dispose all unmanaged resources
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:WaveEngine.Hololens.Speech.ConfidenceLevel" -->
+        <member name="F:WaveEngine.Hololens.Speech.ConfidenceLevel.High">
+            <summary>
+            The confidence level is high.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Speech.ConfidenceLevel.Medium">
+            <summary>
+            The confidence level is medium.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Speech.ConfidenceLevel.Low">
+            <summary>
+            The confidence level is low.
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Speech.ConfidenceLevel.Rejected">
+            <summary>
+            The spoken phrase was not matched to any phrase in any active grammar.
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.Speech.IKeywordRecognizer">
+            <summary>
+            Interface that encapsulates the keyword recognizer
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Speech.IKeywordRecognizer.Keywords">
+            <summary>
+            The current grammar.
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Speech.IKeywordRecognizer.OnKeywordRecognized">
+            <summary>
+            Occurs when a keyword has been recognized.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Speech.IKeywordRecognizer.Initialize">
+            <summary>
+            Initialize all resources used by this instance.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Speech.IKeywordRecognizer.Terminate">
+            <summary>
+            Clean all the resources used by this instance.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Speech.IKeywordRecognizer.Start">
+            <summary>
+            Make sure the keyword recognizer is off, then start it.
+            Otherwise, leave it alone because it's already in the desired state.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Speech.IKeywordRecognizer.Stop">
+            <summary>
+            Make sure the keyword recognizer is on, then stop it.
+            Otherwise, leave it alone because it's already in the desired state.
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.Speech.KeywordRecognizerService">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Speech.KeywordRecognizerService.keywordRecognizer">
+            <summary>
+            The platform keyword recognizer
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Speech.KeywordRecognizerService.disposed">
+            <summary>
+            Wether this instance has been disposed.
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.Speech.KeywordRecognizerService.KeywordResult">
+            <summary>
+            Custom delegate used in OnkeywordRecognized event.
+            </summary>
+            <param name="result"></param>
+        </member>
+        <member name="E:WaveEngine.Hololens.Speech.KeywordRecognizerService.OnKeywordRecognized">
+            <summary>
+            Occurs when a keyword has been recognized.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Speech.KeywordRecognizerService.IsConnected">
+            <summary>
+            Gets a value indicating whether this instance is connected.
+            </summary>
+            <value>
+            <c>true</c> if this instance is connected; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:WaveEngine.Hololens.Speech.KeywordRecognizerService.IsRunning">
+            <summary>
+            Where the keywordRecognizer is running or not.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Speech.KeywordRecognizerService.IsDisposed">
+            <summary>
+            Gets a value indicating whether this <see cref="T:WaveEngine.Hololens.Speech.KeywordRecognizerService" /> is disposed.
+            </summary>
+            <value>
+              <c>true</c> if disposed; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:WaveEngine.Hololens.Speech.KeywordRecognizerService.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WaveEngine.Hololens.Speech.KeywordRecognizerService"/> class.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Speech.KeywordRecognizerService.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:WaveEngine.Hololens.Speech.KeywordRecognizerService"/> class.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Speech.KeywordRecognizerService.Initialize">
+            <summary>
+            Initialize all resources used by this instance.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Speech.KeywordRecognizerService.Terminate">
+            <summary>
+            Clean all the resources used by this instance.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Speech.KeywordRecognizerService.Start">
+            <summary>
+            Make sure the keyword recognizer is off, then start it.
+            Otherwise, leave it alone because it's already in the desired state.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Speech.KeywordRecognizerService.Stop">
+            <summary>
+            Make sure the keyword recognizer is on, then stop it.
+            Otherwise, leave it alone because it's already in the desired state.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Speech.KeywordRecognizerService.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Speech.KeywordRecognizerService.Dispose(System.Boolean)">
+            <summary>
+            Releases unmanaged and - optionally - managed resources
+            </summary>
+            <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        </member>
+        <member name="P:WaveEngine.Hololens.Speech.KeywordRecognizerResult.Text">
+            <summary>
+            The text.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Speech.KeywordRecognizerResult.Confidence">
+            <summary>
+            The confidence.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Speech.KeywordRecognizerResult.#ctor(System.String,WaveEngine.Hololens.Speech.ConfidenceLevel)">
+            <summary>
+            Initilizes a new instance of the <see cref="T:WaveEngine.Hololens.Speech.KeywordRecognizerResult"/> class.
+            </summary>
+            <param name="text">The text.</param>
+            <param name="confidence">The simplified confidence.</param>
+        </member>
+        <member name="T:WaveEngine.Hololens.Toolkit.GazeBehavior">
+            <summary>
+            Gaze behavior class.
+            </summary>
+        </member>
+        <member name="T:WaveEngine.Hololens.Toolkit.GazeBehavior.States">
+            <summary>
+            Gaze states
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Toolkit.GazeBehavior.States.Undetected">
+            <summary>
+            Undetected state
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Toolkit.GazeBehavior.States.Ready">
+            <summary>
+            Ready state
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Toolkit.GazeBehavior.States.AirTap">
+            <summary>
+            Airtap state
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Toolkit.GazeBehavior.UndetectedEvent">
+            <summary>
+            Undetected state event
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Toolkit.GazeBehavior.ReadyEvent">
+            <summary>
+            Ready state event
+            </summary>
+        </member>
+        <member name="E:WaveEngine.Hololens.Toolkit.GazeBehavior.AirTapEvent">
+            <summary>
+            AirTap state event
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.GazeBehavior.UndetectedPrefab">
+            <summary>
+            Gets or sets Undetected prefab
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.GazeBehavior.ReadyPrefab">
+            <summary>
+            Gets or sets Ready prefab
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.GazeBehavior.AirTapPrefab">
+            <summary>
+            Gets or sets AirTap prefab
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.GazeBehavior.Distance">
+            <summary>
+            Gets or sets cursor distance (meters).
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.GazeBehavior.keepScale">
+            <summary>
+            Gets or sets cursor keep scale behavior
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.GazeBehavior.UndetectedEntity">
+            <summary>
+            Gets undetected prefab instance
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.GazeBehavior.ReadyEntity">
+            <summary>
+            Gets ready prefab instance
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.GazeBehavior.AirTapEntity">
+            <summary>
+            Gets AirTap prefab instance
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.GazeBehavior.CurrentState">
+            <summary>
+            Gets cursor current state
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.GazeBehavior.GazeRay">
+            <summary>
+            Gets gaze ray
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.GazeBehavior.DefaultValues">
+            <summary>
+             Default values
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.GazeBehavior.ResolveDependencies">
+            <summary>
+            Resolved dependencies method
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.GazeBehavior.Update(System.TimeSpan)">
+            <summary>
+            Update method
+            </summary>
+            <param name="gameTime">game time</param>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.GazeCollision.DefaultValues">
+            <summary>
+            Default Values method
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.GazeCollision.ResolveDependencies">
+            <summary>
+            Resolve dependencies method
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.GazeCollision.CheckCursorCollision(WaveEngine.Common.Math.Ray@)">
+            <summary>
+            Check cursor collision
+            </summary>
+            <param name="ray">ray cast</param>
+            <returns>Cursor hit</returns>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.GazeIndicator.DefaultValues">
+            <summary>
+            Default values method
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.GazeIndicator.ResolveDependencies">
+            <summary>
+            Resolve dependencies method
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.GazeIndicator.UpdateIndicator(WaveEngine.Common.Math.Vector3,WaveEngine.Common.Math.Vector3)">
+            <summary>
+            Update Indicator method
+            </summary>        
+        </member>
+        <member name="F:WaveEngine.Hololens.Toolkit.GazeStabilizer.stabilitySamples">
+            <summary>
+            Positions samples queue.
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.GazeStabilizer.DefaultValues">
+            <summary>
+            Default values method
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.GazeStabilizer.UpdateSmoothCursorPosition(WaveEngine.Common.Math.Vector3)">
+            <summary>
+            Update Cu
+            </summary>
+            <param name="cursorPosition">Cursor position</param>
+            <returns>Smooth cursor position</returns>
+        </member>
+        <member name="T:WaveEngine.Hololens.Toolkit.Tagalong">
+            <summary>
+            Behavior for an entity that follows the camera
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Toolkit.Tagalong.transform">
+            <summary>
+            The transform component
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Toolkit.Tagalong.desiredPosition">
+            <summary>
+            The desired position
+            </summary>
+        </member>
+        <member name="F:WaveEngine.Hololens.Toolkit.Tagalong.desiredDistance">
+            <summary>
+            The desired distance
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.Tagalong.MaxAngle">
+            <summary>
+            Gets or sets the max angle of the panel
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.Tagalong.MinDistance">
+            <summary>
+            Gets or sets the minimum distance
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.Tagalong.MaxDistance">
+            <summary>
+            Gets or sets the maximum distance
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.Tagalong.SmoothPositionFactor">
+            <summary>
+            Gets or sets the smooth factor for the position
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Hololens.Toolkit.Tagalong.SmoothDistanceFactor">
+            <summary>
+            Gets or sets the smooth factor for the distance
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.Tagalong.DefaultValues">
+            <summary>
+            The default values of the behavior
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.Tagalong.Initialize">
+            <summary>
+            Initializes the behavior
+            </summary>
+        </member>
+        <member name="M:WaveEngine.Hololens.Toolkit.Tagalong.Update(System.TimeSpan)">
+            <summary>
+            Updates the behavior
+            </summary>
+            <param name="gameTime">The ellapsed game time.</param>
+        </member>
+    </members>
+</doc>

@@ -20,6 +20,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Antialiasing\AntialiasingMaterial.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Bloom\BloomLens.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Bloom\BloomMaterial.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Bokeh\bokehLens.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Bokeh\BokehMaterial.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ChromaticAberration\ChromaticAberrationLens.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ChromaticAberration\ChromaticAberrationMaterial.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColorCorrection\ColorCorrectionLens.cs" />
@@ -88,6 +90,9 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\BloomMaterial\BloompsBloomDown.frag" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\BloomMaterial\BloompsUpCombine.frag" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\BloomMaterial\BloomvsBloom.vert" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\BokehMaterial\psCoCMap.frag" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\BokehMaterial\psHorizontalBlur.frag" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\BokehMaterial\psDiagonalBlurCombine.frag" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\ChromaticAberrationMaterial\ChromaticAberrationpsSimple.frag" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\ConvolutionMaterial\ConvolutionpsBlur3x3.frag" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\ConvolutionMaterial\ConvolutionpsBlur5x5.frag" />
@@ -169,6 +174,15 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\HLSL\BloomMaterial\BloompsUpCombine.fxo" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\HLSL\BloomMaterial\BloomvsBloom.fxo" />
     <None Include="$(MSBuildThisFileDirectory)Shaders\HLSL\BloomMaterial\CompileShaders.cmd" />
+    <None Include="$(MSBuildThisFileDirectory)Shaders\HLSL\BokehMaterial\CompileShaders.cmd" />
+    <None Include="$(MSBuildThisFileDirectory)Shaders\HLSL\BokehMaterial\Bokeh.fx" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\HLSL\BokehMaterial\psCoCMap.fxo" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\HLSL\BokehMaterial\psDiagonalBlurCombine_HIGH.fxo" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\HLSL\BokehMaterial\psDiagonalBlurCombine_LOW.fxo" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\HLSL\BokehMaterial\psDiagonalBlurCombine_MEDIUM.fxo" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\HLSL\BokehMaterial\psHorizontalBlur_HIGH.fxo" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\HLSL\BokehMaterial\psHorizontalBlur_LOW.fxo" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\HLSL\BokehMaterial\psHorizontalBlur_MEDIUM.fxo" />
     <None Include="$(MSBuildThisFileDirectory)Shaders\HLSL\ChromaticAberrationMaterial\ChromaticAberration.fx" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\HLSL\ChromaticAberrationMaterial\ChromaticAberrationpsSimple.fxo" />
     <None Include="$(MSBuildThisFileDirectory)Shaders\HLSL\ChromaticAberrationMaterial\CompileShaders.cmd" />

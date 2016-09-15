@@ -12,8 +12,8 @@
     <RootNamespace>WaveEngine.Vuforia</RootNamespace>
     <AssemblyName>WaveEngine.Vuforia</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
+    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,6 +47,8 @@
     </EmbeddedNativeLibrary>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Additions\ARHttpClient.cs" />
+    <Compile Include="Additions\ViewerParametersList.cs" />
     <Compile Include="ARServiceAndroid.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,9 +59,6 @@
     <TransformFile Include="Transforms\Metadata.xml" />
     <TransformFile Include="Transforms\EnumFields.xml" />
     <TransformFile Include="Transforms\EnumMethods.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedJar Include="Jars\Vuforia.jar" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Common\WaveEngine.Common\Projects\WaveEngineAndroid.Common.csproj">
@@ -81,6 +80,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedJar Include="Jars\Vuforia.jar" />
   </ItemGroup>
   <Import Project="..\..\Shared\WaveEngine.Vuforia.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.Bindings.targets" />

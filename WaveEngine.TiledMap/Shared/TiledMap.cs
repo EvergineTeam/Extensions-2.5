@@ -815,7 +815,7 @@ namespace WaveEngine.TiledMap
                 this.CreateChildTileLayer(tmxLayer, i);
             }
         }
-        
+
         /// <summary>
         /// Create the tile image layer as a child entity
         /// </summary>
@@ -825,7 +825,7 @@ namespace WaveEngine.TiledMap
         {
             var tag = "TileImageLayer_" + layerIndex;
             var tmxLayerName = tmxImageLayer.Name;
-            
+
             var tiledMapImageLayer = new TiledMapImageLayer(tmxImageLayer, this);
 
             Entity layerEntity = null;
@@ -854,9 +854,9 @@ namespace WaveEngine.TiledMap
             if (layerEntity == null)
             {
                 layerEntity = new Entity(tmxLayerName)
-                    {
-                        Tag = tag
-                    }
+                {
+                    Tag = tag
+                }
                     .AddComponent(new Sprite(tiledMapImageLayer.ImagePath))
                     .AddComponent(new Transform2D()
                     {
@@ -891,7 +891,7 @@ namespace WaveEngine.TiledMap
                 var tileMapTransform = layerEntity.FindComponent<Transform2D>();
                 tileMapLayer = layerEntity.FindComponent<TiledMapLayer>();
 
-                if (tileMapTransform != null 
+                if (tileMapTransform != null
                  && tileMapLayer != null)
                 {
                     tileMapTransform.LocalPosition = tileLayerOffset;
@@ -913,9 +913,9 @@ namespace WaveEngine.TiledMap
                 };
 
                 layerEntity = new Entity(tmxLayerName)
-                    {
-                        Tag = tag
-                    }
+                {
+                    Tag = tag
+                }
                     .AddComponent(tileMapLayer)
                     .AddComponent(new Transform2D()
                     {
@@ -947,7 +947,7 @@ namespace WaveEngine.TiledMap
                                 .Concat(this.TmxMap.ImageLayers)
                                 .OrderBy(l => l.OrderIndex)
                                 .Cast<ITmxElement>();
-            
+
             if (tmxLayers.Count() > 1)
             {
                 drawOrderStep = (this.minLayerDrawOrder - this.maxLayerDrawOrder) / (tmxLayers.Count() - 1);

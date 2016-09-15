@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>e78e60e2-9aca-45f5-8330-7381cec8cc86</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WaveEngine.Hololens</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)HololensProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HololensService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IHololensApplication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interaction\ISpatialInputManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interaction\SpatialGestures.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interaction\SpatialSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interaction\SpatialState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interaction\SpatialInputService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Media\ICameraResolution.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Media\IVideoCapture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Media\PhotoCaptureFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Media\PhotoCaptureStreamResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Media\PhotoCaptureResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Media\MediaCaptureService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Media\VideoCaptureStreamResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Media\VideoCaptureResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Media\VideoEncoding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SpatialMapping\SpatialMapping.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SpatialMapping\ISpatialMapping.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SpatialMapping\SpatialMappingService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SpatialMapping\BaseSpatialMapping.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SpatialMapping\SpatialMappingSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Speech\ConfidenceLevel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Speech\IKeywordRecognizer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Speech\KeywordRecognizerService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Speech\KeywordRecognizerResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Toolkit\GazeBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Toolkit\GazeCollision.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Toolkit\GazeIndicator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Toolkit\GazeStabilizer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Toolkit\Tagalong.cs" />
+  </ItemGroup>
+</Project>

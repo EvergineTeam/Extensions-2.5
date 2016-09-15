@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VuforiaAndroidAdapter", "VuforiaAndroidAdapter\VuforiaAndroidAdapter.vcxproj", "{44F3189E-0B7D-467E-AAEA-558597900D36}"
 EndProject
@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VuforiaAdapter.Shared", "..
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		VuforiaAdapter.Shared\VuforiaAdapter.Shared.vcxitems*{44f3189e-0b7d-467e-aaea-558597900d36}*SharedItemsImports = 4
+		..\VuforiaAdapter.Shared\VuforiaAdapter.Shared.vcxitems*{44f3189e-0b7d-467e-aaea-558597900d36}*SharedItemsImports = 4
 		..\VuforiaAdapter.Shared\VuforiaAdapter.Shared.vcxitems*{45d41acc-2c3c-43d2-bc10-02aa73ffc7c7}*SharedItemsImports = 9
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

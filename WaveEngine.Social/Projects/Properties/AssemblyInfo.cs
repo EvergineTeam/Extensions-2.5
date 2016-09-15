@@ -2,15 +2,15 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitleAttribute("WaveEngine.Social iOS")]
+[assembly: AssemblyTitleAttribute("WaveEngine.Social linux")]
 [assembly: AssemblyCompanyAttribute("Wave Engine")]
-[assembly: AssemblyDescriptionAttribute("iOS")]
+[assembly: AssemblyDescriptionAttribute("linux")]
 [assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2016")]
-[assembly: GuidAttribute("8f4157b5-6d0c-493a-b824-405c6b86e9b0")]
+[assembly: GuidAttribute("50A499C8-A459-4AFD-A4F8-5A76F947F6DE")]
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyVersionAttribute("2.2.1.*")]
+[assembly: AssemblyVersionAttribute("2.3.0.0000")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "2.2.1.*";
+        internal const string Version = "2.3.0.0000";
     }
 }

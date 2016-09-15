@@ -57,31 +57,7 @@ namespace WaveEngine.Social
         /// The score holder.
         /// </value>
         public Player ScoreHolder { get; set; }
-
-        /// <summary>
-        /// Gets or sets the display name of the score holder.
-        /// </summary>
-        /// <value>
-        /// The display name of the score holder.
-        /// </value>
-        public string ScoreHolderDisplayName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the score holder hi resource image URL.
-        /// </summary>
-        /// <value>
-        /// The score holder hi resource image URL.
-        /// </value>
-        public string ScoreHolderHiResImageUrl { get; set; }
-
-        /// <summary>
-        /// Gets or sets the score holder icon image URL.
-        /// </summary>
-        /// <value>
-        /// The score holder icon image URL.
-        /// </value>
-        public string ScoreHolderIconImageUrl { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the score tag.
         /// </summary>

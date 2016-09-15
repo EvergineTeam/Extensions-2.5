@@ -35,11 +35,6 @@ namespace WaveEngine.ImageEffects
         /// </summary>
         private string directionalLightPath;
 
-        /// <summary>
-        /// The directional light componant
-        /// </summary>
-        private DirectionalLightProperties directionalLight;
-
         #region Properties
         /// <summary>
         /// Gets or sets AutoIntensity, default value is true.

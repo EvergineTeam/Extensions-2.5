@@ -1,6 +1,6 @@
 ﻿#region File Description
 //-----------------------------------------------------------------------------
-// BlackAndWhiteMaterial
+// GrayScaleMaterial
 //
 // Copyright © 2016 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.

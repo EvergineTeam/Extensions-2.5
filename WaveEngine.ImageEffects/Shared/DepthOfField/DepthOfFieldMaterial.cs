@@ -1,6 +1,6 @@
 ﻿#region File Description
 //-----------------------------------------------------------------------------
-// BloomMaterial
+// DepthOfFieldMaterial
 //
 // Copyright © 2016 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
@@ -24,6 +24,9 @@ namespace WaveEngine.ImageEffects
     /// </summary>
     public class DepthOfFieldMaterial : Material
     {
+        /// <summary>
+        /// Effect's steps
+        /// </summary>
         public enum Passes
         {
             /// <summary>
