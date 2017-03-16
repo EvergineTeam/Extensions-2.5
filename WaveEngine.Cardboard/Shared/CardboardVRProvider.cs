@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // CardboardVRProvider
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -195,6 +195,24 @@ namespace WaveEngine.Cardboard
 
                 return VREyePose.DefaultPose;
             }
+        }
+
+        /// <summary>
+        /// Gets the left controller pose
+        /// </summary>
+        [DontRenderProperty]
+        public override VREyePose LeftControllerPose
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the right controller pose
+        /// </summary>
+        [DontRenderProperty]
+        public override VREyePose RightControllerPose
+        {
+            get;
         }
 
         /// <summary>
@@ -462,7 +480,7 @@ namespace WaveEngine.Cardboard
                 {
                     if (this.distortionMesh == null)
                     {
-                        var assembly = ReflectionHelper.GetTypeAssembly(typeof(CardboardVRProvider));
+                        var assembly = typeof(CardboardVRProvider).GetTypeAssembly();
 
                         using (var stream = ResourceLoader.GetEmbeddedResourceStream(assembly, "WaveEngine.Cardboard.BarrelDistortionMesh.wpk"))
                         {

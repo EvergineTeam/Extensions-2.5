@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------------
 // FilmGrain.fx
 //
-// Copyright © 2016 Wave Corporation
+// Copyright © 2017 Wave Corporation
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 

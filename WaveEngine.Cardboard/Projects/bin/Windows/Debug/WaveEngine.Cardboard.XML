@@ -133,6 +133,16 @@
             Gets the tracker camera pose
             </summary>
         </member>
+        <member name="P:WaveEngine.Cardboard.CardboardVRProvider.LeftControllerPose">
+            <summary>
+            Gets the left controller pose
+            </summary>
+        </member>
+        <member name="P:WaveEngine.Cardboard.CardboardVRProvider.RightControllerPose">
+            <summary>
+            Gets the right controller pose
+            </summary>
+        </member>
         <member name="P:WaveEngine.Cardboard.CardboardVRProvider.EyeTextures">
             <summary>
             Gets the eye textures information.

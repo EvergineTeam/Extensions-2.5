@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitleAttribute("WaveEngine.ImageEffects linux")]
 [assembly: AssemblyCompanyAttribute("Wave Engine")]
 [assembly: AssemblyDescriptionAttribute("linux")]
-[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2016")]
+[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2017")]
 [assembly: GuidAttribute("f8d5d016-03f5-4dd9-b883-ef1b048889b7")]
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyVersionAttribute("2.3.0.0000")]
+[assembly: AssemblyVersionAttribute("2.3.1.0000")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "2.3.0.0000";
+        internal const string Version = "2.3.1.0000";
     }
 }

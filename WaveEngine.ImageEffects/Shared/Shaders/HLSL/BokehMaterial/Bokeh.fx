@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Bokeh.fx
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 
@@ -24,6 +24,8 @@ cbuffer Parameters : register(b1)
 	float NearPlane				: packoffset(c1.y);
 	float FarParam				: packoffset(c1.z);
 	float FilmWidth				: packoffset(c1.w);
+	float ShineThreshold		: packoffset(c2.x);
+	float ShineAmount			: packoffset(c2.y);
 };
 
 Texture2D DiffuseTexture : register(t0);
@@ -61,27 +63,18 @@ float4 psCoCMap(PS_IN_TEXTURE input) : SV_Target0
 	// put CoC into a % of the image sensor height
 	const half blurFactor = coc / FilmWidth;
 
-	float3 color = DiffuseTexture.Sample(DiffuseTextureSampler, input.TexCoord).rgb;
+	float3 color = DiffuseTexture.Sample(DiffuseTextureSampler, input.TexCoord).rgb;		
 
 	return float4(color, blurFactor);
 }
 
-inline half hash12n(half2 p)
-{
-	p = frac(p * half2(5.3987, 5.4421));
-	p += dot(p.yx, p.xy + half2(21.5351, 14.3137));
-	return frac(p.x * p.y * 95.4307);
-}
-
 inline float3 Blur(float4 c0, half2 uv, half2 step)
 {
-	//uv += hash12n(uv) * step;
-
 	// Accumulation
 	float3 acc = c0.xyz;
 
 	// Total weight
-	half totalweight = 1;
+	half totalweight = 1;	
 
 	[unroll(SAMPLES)]
 	for (int i = 1; i < SAMPLES; i++)
@@ -89,7 +82,7 @@ inline float3 Blur(float4 c0, half2 uv, half2 step)
 		[unroll]
 		for (int j = -1.0; j <= 1.0; j += 2.0)
 		{
-			float4 c1 = DiffuseTexture.Sample(DiffuseTextureSampler, uv + j * i * step);
+			float4 c1 = DiffuseTexture.Sample(DiffuseTextureSampler, uv + j * i * step);			
 
 			half w = c0.a > c1.a + bleedingBias ? 0.0 : 1.0;
 
@@ -98,7 +91,9 @@ inline float3 Blur(float4 c0, half2 uv, half2 step)
 		}
 	}
 
-	return acc / totalweight;
+	float3 color = acc / totalweight;	
+
+	return color;
 }
 
 float4 psHorizontalBlur(PS_IN_TEXTURE input) : SV_Target0
@@ -119,7 +114,7 @@ float4 psHorizontalBlur(PS_IN_TEXTURE input) : SV_Target0
 float4 psDiagonalBlurCombine(PS_IN_TEXTURE input) : SV_Target0
 {
 	// Get Color and Coc value
-	float4 c0 = DiffuseTexture.Sample(DiffuseTextureSampler, input.TexCoord);
+	float4 c0 = DiffuseTexture.Sample(DiffuseTextureSampler, input.TexCoord);		
 
 	// Calculate the step1
 	half2 step = (BlurDisp * c0.a) / float(SAMPLES);
@@ -134,7 +129,10 @@ float4 psDiagonalBlurCombine(PS_IN_TEXTURE input) : SV_Target0
 	float3 color2 = Blur(c0, input.TexCoord, step);
 
 	// Bleending color
-	float3 sumCol = min(color1, color2);
+	float3 sumCol = min(color1, color2);	
 
-	return float4(sumCol, 1.0);
+	half luminance = dot(sumCol, float3(0.3, 0.59, 0.11));
+	half amount = saturate((luminance - ShineThreshold) * ShineAmount);	
+
+	return float4(sumCol + amount * c0.a, 1.0);
 }

@@ -101,6 +101,10 @@
       <Project>{8ed41698-d176-4732-9e96-d7f1ecb9d72b}</Project>
       <Name>WaveEngineMac.Framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Materials\Projects\WaveEngineMac.Materials.csproj">
+      <Project>{c1494f41-2d3f-4409-9101-30f9e55159f3}</Project>
+      <Name>WaveEngineMac.Materials</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\Shared\WaveEngine.Vuforia.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

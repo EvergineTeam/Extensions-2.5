@@ -8,214 +8,78 @@
 #endregion
 
 #region Using Statements
-using System;
 using System.Runtime.InteropServices;
-using WaveEngine.Vuforia;
 using UIKit;
-using WaveEngine.Common.Math;
 using Foundation;
-using WaveEngine.Framework.Services;
 using WaveEngine.Common.Graphics;
-using WaveEngine.Vuforia.QCAR;
+using System.Threading.Tasks;
+using WaveEngine.Framework;
+using WaveEngine.Framework.Graphics;
+using System;
+using WaveEngine.Common.Math;
 #endregion
 
 namespace WaveEngine.Vuforia
 {
-	public class ARServiceIOS : IVuforiaService
-	{
-		#region P/Invoke
-		[DllImport("__Internal")]
-		private extern static bool QCAR_init(string licenseKey);
+    internal class ARServiceIOS : ARServiceBase
+    {
+        /// <summary>
+        ///  The camera correction matrix
+        /// </summary>
+        protected static readonly Matrix cameraCorrectionRotationMatrix = Matrix.CreateRotationZ(-MathHelper.PiOver2);
 
-		[DllImport("__Internal")]
-		private extern static bool QCAR_shutDown();
+        protected static readonly Matrix cameraCorrectionRotationPortraitUpsideDownMatrix = Matrix.CreateRotationZ(MathHelper.PiOver2);
 
-		[DllImport("__Internal")]
-		private extern static ARState QCAR_getState();
+        #region P/Invoke
+        [DllImport(DllName)]
+        private extern static void QCAR_setVideoTexture(int texturePtr);
 
-		[DllImport("__Internal")]
-		private extern static void QCAR_setOrientation(AROrientation orientation);
-
-		[DllImport("__Internal")]
-		private extern static int QCAR_initialize (string dataSetPath, bool extendedTracking);
-
-		[DllImport("__Internal")]
-		private extern static bool QCAR_startTrack(int frameWidth, int frameHeight);
-
-		[DllImport("__Internal")]
-		private extern static bool QCAR_stopTrack();
-
-		[DllImport("__Internal")]
-		private extern static QCAR_TrackResult QCAR_update();
-
-		[DllImport("__Internal")]
-		private extern static QCAR_Matrix4x4 QCAR_getCameraProjection(float nearPlane, float farPlane);
-		#endregion
-
-		#region Variables
-		private Matrix correctionRotationMatrix;
-		private NSObject notificationToken;
-		private string currentTrackName;
-		#endregion
-
-		#region Properties
-		public ARState State {
-			get 
-			{
-				return QCAR_getState();
-			}
-		}
-
-		public string CurrentTrackName 
-		{
-			get {
-				return this.currentTrackName;
-			}
-			set{
-				bool notify = this.currentTrackName != value;
-
-				this.currentTrackName = value;
-				if (notify && this.trackNameChanged != null) 
-				{
-					this.trackNameChanged (this.currentTrackName);
-				}
-			}
-		}
-
-		public Matrix Pose {
-			get;
-			private set;
-		}
-
-		public Matrix PoseInv {
-			get;
-			private set;
-		}
-
-		public Matrix Projection {
-			get;
-			private set;
-		}
-		#endregion
-
-		#region Events
-		public TrackNameChangedHandler trackNameChanged;
-
-		public event TrackNameChangedHandler TrackNameChanged
-		{
-			add {this.trackNameChanged += value;}
-			remove {this.trackNameChanged -= value;}
-		}
-		#endregion
-
-		#region Initialize
-		public ARServiceIOS ()
-		{
-			this.correctionRotationMatrix = Matrix.CreateRotationX (MathHelper.PiOver2);
-		}
+        [DllImport(DllName)]
+        private extern static void QCAR_updateVideoTexture();
         #endregion
-
-        public void Initialize(string licenseKey)
+            
+        protected override Texture CreateCameraTexture(int textureWidth, int textureHeight)
         {
-			bool res = QCAR_init (licenseKey);
+            var adapter = Game.Current.Application.Adapter as Adapter.Adapter;
+            var renderTargetManager = adapter.Graphics.RenderTargetManager;
 
-			if(res)
-			{
-				// Capture orientation change notifiication
-				notificationToken = NSNotificationCenter.DefaultCenter.AddObserver(UIApplication.DidChangeStatusBarOrientationNotification, this.OrientationChangeNotification, null);
-			}
-		}
+            var textureManager = adapter.Graphics.TextureManager;
+            var cameraTexture = new Texture2D()
+            {
+                Format = PixelFormat.R8G8B8A8,
+                Levels = 1
+            };
+            textureManager.UploadTexture(cameraTexture);
+            var texturePtr = textureManager.TextureFromHandle<uint>(cameraTexture.TextureHandle);
 
-		public bool ShutDown ()
-		{
-			NSNotificationCenter.DefaultCenter.RemoveObserver(notificationToken);
+            QCAR_setVideoTexture((int)texturePtr);
+            return cameraTexture;
+        }
+        
+        protected override void UpdateCameraTexture()
+        {
+            QCAR_updateVideoTexture();
+        }
 
-			return QCAR_shutDown ();
-		}
+        /// <summary>
+        /// Update the service
+        /// </summary>
+        /// <param name="gameTime">The game time</param>
+        public override void Update(TimeSpan gameTime)
+        {
+            base.Update(gameTime);
 
-		public bool LoadDataSet (string dataSetPath)
-		{
-			return QCAR_initialize(dataSetPath, true) == 0;
-		}
-
-		public Matrix GetCameraProjection (float nearPlane, float farPlane)
-		{
-			return QCAR_getCameraProjection(nearPlane, farPlane).ToEngineMatrix();
-		}
-
-		public bool StartTrack (int width, int height)
-		{
-			this.UpdateOrientation ();
-			bool res = QCAR_startTrack (width, height);
-
-			if (res) 
-			{
-				this.UpdateOrientation();
-				return true;
-			}
-			return false;
-		}
-
-		public bool StopTrack ()
-		{
-			return QCAR_stopTrack ();
-		}
-
-		public void Update (TimeSpan gameTime)
-		{
-			if (this.State != ARState.TRACKING) 
-			{
-				return;
-			}
-
-			QCAR_TrackResult result = QCAR_update ();
-
-			this.CurrentTrackName = result.IsTracking ? result.TrackName : null;
-
-			if (result.IsTracking) 
-			{
-				this.Pose = this.correctionRotationMatrix * result.TrackPose.ToEngineMatrix ();
-				this.PoseInv = Matrix.Invert (this.Pose);
-			}
-		}
-
-		/// <summary>
-		/// Notification method called when the device orientation is changed
-		/// Is used to update capture orientaiton
-		/// </summary>
-		/// <param name="notification">notification object.</param>
-		private void OrientationChangeNotification(NSNotification notification)
-		{
-			this.UpdateOrientation ();
-		}
-
-		/// <summary>
-		/// Update QCAR orientation
-		/// </summary>
-		private void UpdateOrientation()
-		{
-			AROrientation qcarOrientation;
-
-			switch (UIApplication.SharedApplication.StatusBarOrientation) 
-			{
-			case UIInterfaceOrientation.LandscapeLeft:
-				qcarOrientation = AROrientation.ORIENTATION_LANDSCAPE_LEFT;
-				break;
-
-			case UIInterfaceOrientation.LandscapeRight:
-				qcarOrientation = AROrientation.ORIENTATION_LANDSCAPE_RIGHT;
-				break;
-
-			case UIInterfaceOrientation.PortraitUpsideDown:
-				qcarOrientation = AROrientation.ORIENTATION_PORTRAIT_UPSIDEDOWN;
-				break;
-
-			default:
-				qcarOrientation = AROrientation.ORIENTATION_PORTRAIT;
-				break;
-			}
-
-			QCAR_setOrientation (qcarOrientation);
-		}
-	}
+            switch(this.currentOrientation)
+            {
+                case AROrientation.ORIENTATION_PORTRAIT:
+                    this.videoTextureProjection = cameraCorrectionRotationMatrix * this.videoTextureProjection;
+                    break;
+                case AROrientation.ORIENTATION_PORTRAIT_UPSIDEDOWN:
+                    this.videoTextureProjection = cameraCorrectionRotationPortraitUpsideDownMatrix * this.videoTextureProjection;
+                    break;
+                default:
+                    break;
+            }            
+        }
+    }
 }

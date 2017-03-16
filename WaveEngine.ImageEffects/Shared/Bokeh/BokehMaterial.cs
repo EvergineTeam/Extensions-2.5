@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // BokehMaterial
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -99,7 +99,7 @@ namespace WaveEngine.ImageEffects
         /// <summary>
         /// Shader parameters.
         /// </summary>
-        [StructLayout(LayoutKind.Explicit, Size = 32)]
+        [StructLayout(LayoutKind.Explicit, Size = 48)]
         private struct BokehEffectParameters
         {
             [FieldOffset(0)]
@@ -122,6 +122,12 @@ namespace WaveEngine.ImageEffects
 
             [FieldOffset(28)]
             public float FilmWidth;
+
+            [FieldOffset(32)]
+            public float ShineThreshold;
+
+            [FieldOffset(36)]
+            public float ShineAmount;
         }
         #endregion
 
@@ -155,6 +161,16 @@ namespace WaveEngine.ImageEffects
         /// Film width, 24 mm by default.
         /// </summary>
         public float FilmWidth { get; set; }
+
+        /// <summary>
+        /// Shine threshold
+        /// </summary>
+        public float ShineThreshold { get; set; }
+
+        /// <summary>
+        ///  Shine amount
+        /// </summary>
+        public float ShineAmount { get; set; }
 
         /// <summary>
         /// Calculated offset.
@@ -255,6 +271,8 @@ namespace WaveEngine.ImageEffects
             this.FocalLength = 0.05f;
             this.FocalDistance = 20;
             this.FilmWidth = 0.024f;
+            this.ShineThreshold = 1.0f;
+            this.ShineAmount = 0.5f;
             this.shaderParameters = new BokehEffectParameters();
             this.Parameters = this.shaderParameters;
 
@@ -287,6 +305,8 @@ namespace WaveEngine.ImageEffects
             this.shaderParameters.NearPlane = camera.NearPlane;
             this.shaderParameters.FarParam = camera.FarPlane / (camera.FarPlane - camera.NearPlane);
             this.shaderParameters.FilmWidth = this.FilmWidth;
+            this.shaderParameters.ShineThreshold = this.ShineThreshold;
+            this.shaderParameters.ShineAmount = this.ShineAmount;
             this.Parameters = this.shaderParameters;
 
             depthTexture = this.renderManager.GraphicsDevice.RenderTargets.DefaultDepthTexture;

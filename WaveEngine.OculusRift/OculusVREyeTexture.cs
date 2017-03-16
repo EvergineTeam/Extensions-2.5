@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // OculusVREyeTexture
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -29,26 +29,26 @@ namespace WaveEngine.OculusRift
         /// <summary>
         /// Field of view
         /// </summary>
-        internal OVR.FovPort FieldOfView;
+        internal OVRTypes.FovPort FieldOfView;
 
         /// <summary>
         /// Texture size
         /// </summary>
-        internal OVR.Sizei TextureSize;
+        internal OVRTypes.Sizei TextureSize;
 
         /// <summary>
         /// Viewport size
         /// </summary>
-        internal OVR.Recti ViewportSize;
+        internal OVRTypes.Recti ViewportSize;
 
         /// <summary>
         /// Eye Render description
         /// </summary>
-        internal OVR.EyeRenderDesc RenderDescription;
+        internal OVRTypes.EyeRenderDesc RenderDescription;
 
         /// <summary>
         /// View offset
         /// </summary>
-        internal OVR.Vector3f HmdToEyeViewOffset;
+        internal OVRTypes.Vector3f HmdToEyeViewOffset;
     }
 }

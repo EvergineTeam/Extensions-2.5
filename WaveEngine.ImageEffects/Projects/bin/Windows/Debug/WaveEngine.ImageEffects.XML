@@ -340,6 +340,16 @@
             Maximun Circle of Confusion diameter.
             </summary>
         </member>
+        <member name="P:WaveEngine.ImageEffects.BokehLens.ShineThreshold">
+            <summary>
+            Shine Threshold
+            </summary>
+        </member>
+        <member name="P:WaveEngine.ImageEffects.BokehLens.ShineAmount">
+            <summary>
+            Shine amount
+            </summary>
+        </member>
         <member name="P:WaveEngine.ImageEffects.BokehLens.Quality">
             <summary>
             Bokeh quality, Low by default.
@@ -465,6 +475,16 @@
         <member name="P:WaveEngine.ImageEffects.BokehMaterial.FilmWidth">
             <summary>
             Film width, 24 mm by default.
+            </summary>
+        </member>
+        <member name="P:WaveEngine.ImageEffects.BokehMaterial.ShineThreshold">
+            <summary>
+            Shine threshold
+            </summary>
+        </member>
+        <member name="P:WaveEngine.ImageEffects.BokehMaterial.ShineAmount">
+            <summary>
+             Shine amount
             </summary>
         </member>
         <member name="P:WaveEngine.ImageEffects.BokehMaterial.BlurDisp">
@@ -2349,6 +2369,12 @@
             Releases unmanaged and - optionally - managed resources
             </summary>
             <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        </member>
+        <member name="M:WaveEngine.ImageEffects.FogLens.DensityCondition">
+            <summary>
+            Density visibility condition
+            </summary>
+            <returns>Density visibility state</returns>
         </member>
         <member name="T:WaveEngine.ImageEffects.FogMaterial">
             <summary>

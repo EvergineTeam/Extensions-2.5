@@ -2,15 +2,19 @@
 //-----------------------------------------------------------------------------
 // VuforiaService
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
 
 #region Usings Statements
 using System;
+using System.Threading.Tasks;
 using WaveEngine.Common;
+using WaveEngine.Common.Graphics;
+using WaveEngine.Common.Graphics.VertexFormats;
 using WaveEngine.Common.Math;
+using WaveEngine.Framework.Graphics;
 using WaveEngine.Framework.Services;
 #endregion
 
@@ -32,19 +36,20 @@ namespace WaveEngine.Vuforia
         private string licenseKey;
 
         /// <summary>
+        /// Vuforia extended tracking
+        /// </summary>
+        private bool extendedTracking;
+
+        /// <summary>
         /// Platform specific service code
         /// </summary>
-        private IVuforiaService platformSpecificARService;
+        private ARServiceBase platformSpecificARService;
 
         #region Events
         /// <summary>
         /// Event fired when track object name is changed
         /// </summary>
-        public event TrackNameChangedHandler TrackNameChanged
-        {
-            add { this.platformSpecificARService.TrackNameChanged += value; }
-            remove { this.platformSpecificARService.TrackNameChanged -= value; }
-        }
+        public event EventHandler<string> TrackNameChanged;
         #endregion
 
         #region Properties
@@ -67,10 +72,7 @@ namespace WaveEngine.Vuforia
         {
             get
             {
-                if (!this.IsSupported)
-                {
-                    throw new NotSupportedException(WaveServices.Platform.PlatformType + " does not have Vuforia support.");
-                }
+                this.CheckIfSupported();
 
                 return this.platformSpecificARService.State;
             }
@@ -84,10 +86,7 @@ namespace WaveEngine.Vuforia
         {
             get
             {
-                if (!this.IsSupported)
-                {
-                    throw new NotSupportedException(WaveServices.Platform.PlatformType + " does not have Vuforia support.");
-                }
+                this.CheckIfSupported();
 
                 return this.platformSpecificARService.CurrentTrackName;
             }
@@ -101,10 +100,7 @@ namespace WaveEngine.Vuforia
         {
             get
             {
-                if (!this.IsSupported)
-                {
-                    throw new NotSupportedException(WaveServices.Platform.PlatformType + " does not have Vuforia support.");
-                }
+                this.CheckIfSupported();
 
                 return this.platformSpecificARService.Pose;
             }
@@ -118,10 +114,7 @@ namespace WaveEngine.Vuforia
         {
             get
             {
-                if (!this.IsSupported)
-                {
-                    throw new NotSupportedException(WaveServices.Platform.PlatformType + " does not have Vuforia support.");
-                }
+                this.CheckIfSupported();
 
                 return this.platformSpecificARService.PoseInv;
             }
@@ -135,12 +128,50 @@ namespace WaveEngine.Vuforia
         {
             get
             {
-                if (!this.IsSupported)
-                {
-                    throw new NotSupportedException(WaveServices.Platform.PlatformType + " does not have Vuforia support.");
-                }
+                this.CheckIfSupported();
 
                 return this.platformSpecificARService.Projection;
+            }
+        }
+
+        /// <summary>
+        /// Gets the camera texture.
+        /// </summary>
+        /// <value>The camera texture.</value>
+        public Texture CameraTexture
+        {
+            get
+            {
+                this.CheckIfSupported();
+
+                return this.platformSpecificARService.CameraTexture;
+            }
+        }
+
+        /// <summary>
+        /// Gets the camera projection matrix.
+        /// </summary>
+        /// <value>The camera projection matrix.</value>
+        public Matrix CameraProjectionMatrix
+        {
+            get
+            {
+                this.CheckIfSupported();
+
+                return this.platformSpecificARService.CameraProjectionMatrix;
+            }
+        }
+
+        /// <summary>
+        /// The video mesh
+        /// </summary>
+        public Mesh VideoMesh
+        {
+            get
+            {
+                this.CheckIfSupported();
+
+                return this.platformSpecificARService.VoideoMesh;
             }
         }
         #endregion
@@ -151,15 +182,25 @@ namespace WaveEngine.Vuforia
         /// </summary>
         /// <param name="dataSetPath">Vuforia patters path.</param>
         /// <param name="licenseKey">Vuforia Liscense key</param>
-        public VuforiaService(string dataSetPath, string licenseKey)
+        /// <param name="extendedTracking">if set to <c>true</c> enables the extended tracking feature.</param>
+        public VuforiaService(string dataSetPath, string licenseKey, bool extendedTracking = true)
         {
             this.dataSetPath = dataSetPath;
             this.licenseKey = licenseKey;
+            this.extendedTracking = extendedTracking;
+
 #if IOS
             this.platformSpecificARService = new ARServiceIOS();
 #elif ANDROID
             this.platformSpecificARService = new ARServiceAndroid();
+#elif UWP
+            this.platformSpecificARService = new ARServiceUWP();
 #endif
+
+            if (this.platformSpecificARService != null)
+            {
+                this.platformSpecificARService.TrackNameChanged += this.PlatformSpecificARService_TrackNameChanged;
+            }
         }
         #endregion
 
@@ -167,12 +208,11 @@ namespace WaveEngine.Vuforia
         /// <summary>
         /// Initializes the Vuforia service
         /// </summary>
-        protected override void Initialize()
+        protected async override void Initialize()
         {
             if (this.IsSupported)
             {
-                this.platformSpecificARService.Initialize(this.licenseKey);
-                this.platformSpecificARService.LoadDataSet(this.dataSetPath);
+                await this.platformSpecificARService.Initialize(this.licenseKey, this.dataSetPath, this.extendedTracking);
             }
         }
 
@@ -182,10 +222,7 @@ namespace WaveEngine.Vuforia
         /// <returns><c>true</c>, if down was shut, <c>false</c> otherwise.</returns>
         public bool ShutDown()
         {
-            if (!this.IsSupported)
-            {
-                throw new NotSupportedException(WaveServices.Platform.PlatformType + " does not have Vuforia support.");
-            }
+            this.CheckIfSupported();
 
             return this.platformSpecificARService.ShutDown();
         }
@@ -198,10 +235,7 @@ namespace WaveEngine.Vuforia
         /// <param name="farPlane">Far plane.</param>
         public Matrix GetCameraProjection(float nearPlane, float farPlane)
         {
-            if (!this.IsSupported)
-            {
-                throw new NotSupportedException(WaveServices.Platform.PlatformType + " does not have Vuforia support.");
-            }
+            this.CheckIfSupported();
 
             return this.platformSpecificARService.GetCameraProjection(nearPlane, farPlane);
         }
@@ -209,16 +243,15 @@ namespace WaveEngine.Vuforia
         /// <summary>
         /// Starts Vuforia image tracking.
         /// </summary>
-        /// <returns><c>true</c>, if track was started, <c>false</c> otherwise.</returns>
-        /// <param name="frameSize">Frame size.</param>
-        public bool StartTrack()
+        /// <param name="retrieveCameraTexture">if set to <c>true</c>, the service will update the camera video texture.</param>
+        /// <returns>
+        ///   <c>true</c>, if track was started, <c>false</c> otherwise.
+        /// </returns>
+        public Task<bool> StartTrack(bool retrieveCameraTexture)
         {
-            if (!this.IsSupported)
-            {
-                throw new NotSupportedException(WaveServices.Platform.PlatformType + " does not have Vuforia support.");
-            }
+            this.CheckIfSupported();
 
-            return this.platformSpecificARService.StartTrack(WaveServices.Platform.ScreenWidth, WaveServices.Platform.ScreenHeight);
+            return this.platformSpecificARService.StartTrack(retrieveCameraTexture);
         }
 
         /// <summary>
@@ -227,10 +260,7 @@ namespace WaveEngine.Vuforia
         /// <returns><c>true</c>, if track was stopped, <c>false</c> otherwise.</returns>
         public bool StopTrack()
         {
-            if (!this.IsSupported)
-            {
-                throw new NotSupportedException(WaveServices.Platform.PlatformType + " does not have Vuforia support.");
-            }
+            this.CheckIfSupported();
 
             return this.platformSpecificARService.StopTrack();
         }
@@ -248,6 +278,26 @@ namespace WaveEngine.Vuforia
         #endregion
 
         #region Private Methods
+        private void PlatformSpecificARService_TrackNameChanged(object sender, string trackName)
+        {
+            if (this.TrackNameChanged != null)
+            {
+                this.TrackNameChanged(this, trackName);
+            }
+        }
+
+        /// <summary>
+        /// Checks if Vuforia is supported in the current platform.
+        /// </summary>
+        /// <exception cref="System.NotSupportedException"></exception>
+        private void CheckIfSupported()
+        {
+            if (!this.IsSupported)
+            {
+                throw new NotSupportedException(WaveServices.Platform.PlatformType + " does not have Vuforia support.");
+            }
+        }
+
         /// <summary>
         /// Terminate the service
         /// </summary>

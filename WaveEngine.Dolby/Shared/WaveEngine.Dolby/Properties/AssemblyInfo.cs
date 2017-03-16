@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitleAttribute("WaveEngine.Dolby Android")]
 [assembly: AssemblyCompanyAttribute("Wave Engine")]
 [assembly: AssemblyDescriptionAttribute("Android")]
-[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2016")]
+[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2017")]
 [assembly: GuidAttribute("f1dd0c12-f863-42b7-910a-78f5351363e2")]
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyVersionAttribute("2.3.0.0000")]
+[assembly: AssemblyVersionAttribute("2.3.1.0000")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "2.3.0.0000";
+        internal const string Version = "2.3.1.0000";
     }
 }

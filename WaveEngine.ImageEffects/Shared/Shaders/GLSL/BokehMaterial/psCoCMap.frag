@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------------
 // Bokeh.fx
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 
@@ -17,6 +17,8 @@ uniform float FocalDistance;
 uniform float NearPlane;
 uniform float FarParam;		
 uniform float FilmWidth;
+uniform float ShineThreshold;
+uniform float ShineAmount;
 
 uniform sampler2D Texture;
 uniform sampler2D DepthTexture;

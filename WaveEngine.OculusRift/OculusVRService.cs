@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // OculusVRService
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -15,7 +15,7 @@ using WaveEngine.Common;
 using WaveEngine.Common.Graphics;
 using WaveEngine.Common.Math;
 using WaveEngine.Common.VR;
-using WaveEngine.Framework.Services;
+using WaveEngine.OculusRift.Input;
 #endregion
 
 namespace WaveEngine.OculusRift
@@ -23,7 +23,7 @@ namespace WaveEngine.OculusRift
     /// <summary>
     /// Wave Engine service to make it easy to connect with the OVR framework.
     /// </summary>
-    public class OculusVRService : Service
+    public class OculusVRService : UpdatableService
     {
         /// <summary>
         /// The application
@@ -116,6 +116,38 @@ namespace WaveEngine.OculusRift
         }
 
         /// <summary>
+        /// Gets the left controller pose
+        /// </summary>
+        public VREyePose LeftControllerPose
+        {
+            get
+            {
+                if (!this.IsConnected)
+                {
+                    throw new Exception("OVR is not available. See console output to find the reason");
+                }
+
+                return this.ovrApplication.LeftControllerPose;
+            }
+        }
+
+        /// <summary>
+        /// Gets the right controller pose
+        /// </summary>
+        public VREyePose RightControllerPose
+        {
+            get
+            {
+                if (!this.IsConnected)
+                {
+                    throw new Exception("OVR is not available. See console output to find the reason");
+                }
+
+                return this.ovrApplication.RightControllerPose;
+            }
+        }
+
+        /// <summary>
         /// Gets the eye textures information.
         /// </summary>
         /// <value>
@@ -151,6 +183,16 @@ namespace WaveEngine.OculusRift
         }
         #endregion
 
+        /// <summary>
+        /// Gets the Oculus Remote state.
+        /// </summary>
+        public OculusRemoteState OculusRemoteState { get; }
+
+        /// <summary>
+        /// Gets the Oculus Touch controller state.
+        /// </summary>
+        public OculusTouchControllerState OculusTouchControllerState { get; }
+
         #region Initialize
         /// <summary>
         /// Initializes a new instance of the <see cref="OculusVRService"/> class.
@@ -159,10 +201,31 @@ namespace WaveEngine.OculusRift
         public OculusVRService(OculusVRApplication ovrApplication)
         {
             this.ovrApplication = ovrApplication;
+
+            this.OculusRemoteState = new OculusRemoteState();
+            this.OculusTouchControllerState = new OculusTouchControllerState();
         }
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Updates the oculus input states and the Touch controllers poses.
+        /// </summary>
+        /// <param name="gameTime">The elapsed game time since the last update.</param>
+        public override void Update(TimeSpan gameTime)
+        {
+            this.OculusRemoteState.Update(this.Hmd);
+            this.OculusTouchControllerState.Update(this.Hmd);
+        }
+
+        /// <summary>
+        /// Changes the tracking origin to floor height.
+        /// </summary>
+        /// <param name="floor">Whether to place the tracking origin at floor height.</param>
+        public void SetTrackingOriginAtFloorHeight(bool floor)
+        {
+            this.Hmd.SetTrackingOriginType(floor ? OVRTypes.TrackingOrigin.FloorLevel : OVRTypes.TrackingOrigin.EyeLevel);
+        }
         #endregion
 
         #region Private Methods

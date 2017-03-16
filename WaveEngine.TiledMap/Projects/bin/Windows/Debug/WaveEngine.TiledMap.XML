@@ -681,14 +681,14 @@
             Create tile layers
             </summary>
         </member>
-        <member name="M:WaveEngine.TiledMap.TiledMap.CreateChildTileImageLayer(TiledSharp.TmxImageLayer,System.Int32)">
+        <member name="M:WaveEngine.TiledMap.TiledMap.CreateChildTileImageLayer(TiledSharp.TmxImageLayer,System.Int32,System.Collections.Generic.IList{WaveEngine.Framework.Entity})">
             <summary>
             Create the tile image layer as a child entity
             </summary>
             <param name="tmxImageLayer">The tmx image layer.</param>
             <param name="layerIndex">The layer index</param>
         </member>
-        <member name="M:WaveEngine.TiledMap.TiledMap.CreateChildTileLayer(TiledSharp.TmxLayer,System.Int32)">
+        <member name="M:WaveEngine.TiledMap.TiledMap.CreateChildTileLayer(TiledSharp.TmxLayer,System.Int32,System.Collections.Generic.IList{WaveEngine.Framework.Entity})">
             <summary>
             Create the tile layer as a child entity
             </summary>

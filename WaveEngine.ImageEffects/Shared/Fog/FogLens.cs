@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // FogLens
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -29,6 +29,7 @@ namespace WaveEngine.ImageEffects
         /// Gets or sets the fog based technique, default value is Exponential.
         /// </summary>
         [DataMember]
+        [RenderProperty(Tag = 1)]
         public FogMaterial.Techniques Technique
         {
             get
@@ -66,7 +67,7 @@ namespace WaveEngine.ImageEffects
         /// Gets or sets fog density, default value is 10.
         /// </summary>
         [DataMember]
-        [RenderPropertyAsSlider(1f, 100.0f, 2f)]
+        [RenderPropertyAsSlider(1f, 100.0f, 2f, ShowConditionFunction = "DensityCondition")]
         public float FogDensity
         {
             get
@@ -84,7 +85,7 @@ namespace WaveEngine.ImageEffects
         /// Gets or sets start linear fog, default value is 0.02f.
         /// </summary>
         [DataMember]
-        [RenderPropertyAsSlider(0.01f, 1.0f, 0.01f)]
+        [RenderPropertyAsSlider(0.01f, 1.0f, 0.01f, AttatchToTag = 1, AttachToValue = FogMaterial.Techniques.Linear)]
         public float StartFog
         {
             get
@@ -102,7 +103,7 @@ namespace WaveEngine.ImageEffects
         /// Gets or sets fog density, default value is 0.8f.
         /// </summary>
         [DataMember]
-        [RenderPropertyAsSlider(0.01f, 1.0f, 0.01f)]
+        [RenderPropertyAsSlider(0.01f, 1.0f, 0.01f, AttatchToTag = 1, AttachToValue = FogMaterial.Techniques.Linear)]
         public float EndFog
         {
             get
@@ -159,6 +160,15 @@ namespace WaveEngine.ImageEffects
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
+        }
+
+        /// <summary>
+        /// Density visibility condition
+        /// </summary>
+        /// <returns>Density visibility state</returns>
+        private bool DensityCondition()
+        {
+            return (this.Technique == FogMaterial.Techniques.Exponencial || this.Technique == FogMaterial.Techniques.ExponencialSquared);
         }
         #endregion
     }

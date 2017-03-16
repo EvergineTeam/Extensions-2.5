@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // LightShaftLens
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -367,7 +367,7 @@ namespace WaveEngine.ImageEffects
                 return;
             }
 
-            Entity entity = this.EntityManager.Find(this.directionalLightPath);
+            Entity entity = this.EntityManager.Find(this.directionalLightPath, this.Owner);
             if (entity != null)
             {
                 (this.material as LightShaftMaterial).DirectionalLight = entity.FindComponent<DirectionalLightProperties>();

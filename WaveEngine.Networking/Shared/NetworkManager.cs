@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // NetworkManager
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -11,8 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using WaveEngine.Common.Serialization;
 using WaveEngine.Framework;
-using WaveEngine.Framework.Services.Serialize;
+using WaveEngine.Framework.Models.Entities;
 using WaveEngine.Networking.Messages;
 
 namespace WaveEngine.Networking
@@ -87,7 +88,7 @@ namespace WaveEngine.Networking
             this.networkService = networkService;
             this.factories = new Dictionary<string, Func<string, string, Entity>>();
             this.entityBehaviors = new Dictionary<string, NetworkBehavior>();
-            this.serializer = SerializerFactory.GetSerializer<Entity>(SerializationType.DATACONTRACT);
+            this.serializer = SerializerFactory.GetSerializer<Entity>();
         }
 
         /// <summary>
@@ -102,8 +103,8 @@ namespace WaveEngine.Networking
                 throw new ArgumentException("The 'sceneId' argument can't be null or empty");
             }
 
-            NetworkManager.RegisterScene(sceneId, this);
             this.SceneId = sceneId;
+            NetworkManager.RegisterScene(sceneId, this);
 
             var message = this.CreateNetworkBehaviorMessage(null, null, NetworkSyncType.Start);
             this.networkService.SendToServer(message, DeliveryMethod.ReliableOrdered);
@@ -154,7 +155,8 @@ namespace WaveEngine.Networking
         {
             using (var stream = new MemoryStream())
             {
-                this.serializer.Serialize(stream, offlineEntity);
+                var offlineEntityModel = new EntityModel(offlineEntity);
+                this.serializer.Serialize(stream, offlineEntityModel);
                 var data = new byte[stream.Length];
                 stream.Seek(0, SeekOrigin.Begin);
                 stream.Read(data, 0, data.Length);
@@ -175,8 +177,8 @@ namespace WaveEngine.Networking
                 stream.Write(data, 0, data.Length);
                 stream.Seek(0, SeekOrigin.Begin);
 
-                var entity = this.serializer.Deserialize(stream);
-                return (Entity)entity;
+                var entityModel = this.serializer.Deserialize(stream);
+                return ((EntityModel)entityModel).Entity;
             }
         }
 
@@ -364,7 +366,7 @@ namespace WaveEngine.Networking
             {
                 var message = this.CreateNetworkBehaviorMessage(behavior.NetworkBehaviorId, behavior.FactoryId, NetworkSyncType.Update);
                 behavior.WriteSyncData(message, behavior.ComponentsToSync);
-                this.networkService.SendToServer(message, DeliveryMethod.UnreliableSequenced);
+                this.networkService.SendToServer(message, DeliveryMethod.ReliableSequenced);
             }
         }
 
@@ -441,7 +443,7 @@ namespace WaveEngine.Networking
         {
             var sceneId = receivedmessage.ReadString();
             WeakReference<NetworkManager> managerReference;
-            if (registeredScenes.TryGetValue(sceneId, out managerReference))
+            if (sceneId != null && registeredScenes.TryGetValue(sceneId, out managerReference))
             {
                 NetworkManager registeredManager;
                 if (managerReference.TryGetTarget(out registeredManager))

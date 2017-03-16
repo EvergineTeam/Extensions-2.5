@@ -13,11 +13,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)ARCameraComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AROrientation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ARState.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IVuforiaService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ARServiceBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfoExt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QCAR\QCAR_Matrix4x4.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QCAR\QCAR_VideoMesh.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QCAR\QCAR_TrackResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VuforiaStartTackCallback.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VuforiaInitializedCallback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VuforiaService.cs" />
   </ItemGroup>
 </Project>

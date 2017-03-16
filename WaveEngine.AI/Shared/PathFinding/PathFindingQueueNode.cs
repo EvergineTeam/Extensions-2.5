@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // PathFindingQueueNode
 //
-// Copyright © 2016 Wave Coorporation. All rights reserved.
+// Copyright © 2017 Wave Coorporation. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion

@@ -1,0 +1,14 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Add Vuforia libraries to the project -->
+  <ItemGroup>
+  	<Content Include="$(MSBuildThisFileDirectory)\Vuforia\$(PlatformName)\VuforiaAdapter.dll">
+		<Link>VuforiaAdapter.dll</Link>
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+	<Content Include="$(MSBuildThisFileDirectory)\Vuforia\$(PlatformName)\Vuforia.dll">
+		<Link>Vuforia.dll</Link>
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+  </ItemGroup>  
+  
+</Project>

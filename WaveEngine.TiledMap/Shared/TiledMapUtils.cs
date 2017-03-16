@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // TiledMapUtils
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -31,24 +31,44 @@ namespace WaveEngine.TiledMap
             {
                 if (mapObject.Width > 0 && mapObject.Height > 0)
                 {
+                    entity = CreateBasicEntity(entityName, mapObject)
+                        .AddComponent(new RectangleCollider2D());
+                }
+            }
+            else if (mapObject.ObjectType == TiledMapObjectType.Polyline)
+            {
+                if (mapObject.Points.Count > 1)
+                {
                     entity = new Entity(entityName)
+                        .AddComponent(new Transform2D()
+                        {
+                            LocalPosition = new Vector2(mapObject.X, mapObject.Y),
+                            LocalRotation = MathHelper.ToRadians(mapObject.Rotation),
+                        })
+                        .AddComponent(new EdgeCollider2D()
+                        {
+                            Vertices = mapObject.Points.Select(p => new Vector2((float)p.X, (float)p.Y)).ToArray()
+                        });
+                }
+            }
+            else
+            {
+                // Only Basic and PolyLines object types are supported
+            }
+
+            return entity;
+        }
+
+        private static Entity CreateBasicEntity(string entityName, TiledMapObject mapObject)
+        {
+            return new Entity(entityName)
                     .AddComponent(new Transform2D()
                     {
                         LocalPosition = new Vector2(mapObject.X, mapObject.Y),
                         Rectangle = new RectangleF(0, 0, mapObject.Width, mapObject.Height),
                         LocalRotation = MathHelper.ToRadians(mapObject.Rotation),
                         Origin = Vector2.Zero
-                    })
-                    .AddComponent(new RectangleCollider2D())
-                    ;
-                }
-            }
-            else
-            {
-                // Only Basic object types are supported
-            }
-
-            return entity;
+                    });
         }
 
         /// <summary>

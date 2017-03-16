@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitleAttribute("WaveEngine.TiledMap linux")]
 [assembly: AssemblyCompanyAttribute("Wave Engine")]
 [assembly: AssemblyDescriptionAttribute("linux")]
-[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2016")]
+[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2017")]
 [assembly: GuidAttribute("a142bf2e-e6db-41ec-b84d-88fe9b566493")]
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyVersionAttribute("2.3.0.0000")]
+[assembly: AssemblyVersionAttribute("2.3.1.0000")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "2.3.0.0000";
+        internal const string Version = "2.3.1.0000";
     }
 }

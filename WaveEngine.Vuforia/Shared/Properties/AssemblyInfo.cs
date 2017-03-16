@@ -5,12 +5,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitleAttribute("WaveEngine.Vuforia linux")]
 [assembly: AssemblyCompanyAttribute("Wave Engine")]
 [assembly: AssemblyDescriptionAttribute("linux")]
-[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2016")]
-[assembly: GuidAttribute("E210DB9F-8AA2-4CD7-BDB8-CF78A871B236")]
+[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2017")]
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyVersionAttribute("2.3.0.0000")]
+[assembly: AssemblyVersionAttribute("2.3.1.0000")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "2.3.0.0000";
+        internal const string Version = "2.3.1.0000";
     }
 }

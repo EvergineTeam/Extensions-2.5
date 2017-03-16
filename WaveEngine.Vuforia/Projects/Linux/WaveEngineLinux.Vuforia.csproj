@@ -31,7 +31,7 @@
     <DocumentationFile>bin\Debug\WaveEngine.Vuforia.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
@@ -42,6 +42,7 @@
     <DefineConstants>LINUX</DefineConstants>
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>bin\Release\WaveEngine.Vuforia.XML</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NuGet|x86'">
     <OutputPath>bin\x86\NuGet\</OutputPath>
@@ -53,6 +54,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <Import Project="..\..\Shared\WaveEngine.Vuforia.Shared.projitems" Label="Shared" Condition="Exists('..\Shared\WaveEngine.Vuforia.Shared.projitems')" />
   <Import Project="..\..\Shared\WaveEngine.Vuforia.Shared.projitems" Label="Shared" Condition="Exists('..\..\Shared\WaveEngine.Vuforia.Shared.projitems')" />
@@ -74,6 +77,10 @@
     <ProjectReference Include="..\..\..\..\Common\WaveEngine.Framework\Projects\WaveEngineLinux.Framework.csproj">
       <Project>{5CD60A7B-72A4-4DAE-B5AB-E353F74A49A4}</Project>
       <Name>WaveEngineLinux.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Materials\Projects\WaveEngineLinux.Materials.csproj">
+      <Project>{0bcb6d2f-11a1-49b1-9e62-b6db9a4870fc}</Project>
+      <Name>WaveEngineLinux.Materials</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

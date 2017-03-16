@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // SkeletalData
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -63,7 +63,7 @@ namespace WaveEngine.Spine
         /// <summary>
         /// Gets or sets the Path of Spine atlas file (.xml).
         /// </summary>
-        [RenderPropertyAsAsset(AssetType.Unknown)]
+        [RenderPropertyAsAsset(AssetType.Unknown, ".atlas")]
         public string AtlasPath
         {
             get

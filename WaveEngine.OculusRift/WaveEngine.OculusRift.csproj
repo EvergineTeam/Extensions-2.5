@@ -72,6 +72,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Input\OculusRemoteState.cs" />
+    <Compile Include="Input\OculusTouchControllerState.cs" />
+    <Compile Include="Input\TouchState.cs" />
     <Compile Include="OculusVRApplication.cs">
       <SubType>Code</SubType>
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
@@ -102,8 +105,6 @@
     <Content Include="OculusWrap.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="x64\DllOvr.dll" />
-    <EmbeddedResource Include="x86\DllOvr.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\WaveEngine.Common\Projects\WaveEngine.Common.csproj">

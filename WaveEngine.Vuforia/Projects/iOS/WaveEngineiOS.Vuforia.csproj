@@ -30,7 +30,7 @@
     <DocumentationFile>bin\iOS\Debug\WaveEngine.Vuforia.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iOS\Release\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
@@ -39,6 +39,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <DocumentationFile>bin\iOS\Release\WaveEngine.Vuforia.XML</DocumentationFile>
     <DefineConstants>__IOS__;__MOBILE__;IOS</DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ARServiceIOS.cs" />
@@ -62,6 +63,18 @@
     <ProjectReference Include="..\..\..\..\Common\WaveEngine.Framework\Projects\WaveEngineiOS.Framework.csproj">
       <Project>{3534edae-dd3c-4d93-b7f5-9c5d7edf6679}</Project>
       <Name>WaveEngineiOS.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Materials\Projects\WaveEngineiOS.Materials.csproj">
+      <Project>{f3670bf5-0aad-43d6-b4e8-0a7f2dc34a02}</Project>
+      <Name>WaveEngineiOS.Materials</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Platforms\iOS\WaveEngineiOS.Adapter\WaveEngineiOS.Adapter.csproj">
+      <Project>{cddca817-5c5b-4c03-ae11-805dcbb0ad2f}</Project>
+      <Name>WaveEngineiOS.Adapter</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

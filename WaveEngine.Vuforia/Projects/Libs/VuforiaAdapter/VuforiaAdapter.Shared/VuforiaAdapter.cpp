@@ -6,33 +6,14 @@
 //-----------------------------------------------------------------------------
 
 #include "VuforiaAdapter.h"
-#include <string.h>
-#include <Vuforia/Vuforia.h>
-#include <Vuforia/TrackerManager.h>
-#include <Vuforia/Tracker.h>
-#include <Vuforia/TrackableResult.h>
-#include <Vuforia/DataSet.h>
-#include <Vuforia/CameraDevice.h>
-#include <Vuforia/Renderer.h>
-#include <Vuforia/Tool.h>
-#include <Vuforia/VideoBackgroundConfig.h>
-#include <Vuforia/ObjectTracker.h>
-
-#if __APPLE__
-#include <Vuforia/Vuforia_iOS.h>
-#include <OpenGLES/ES2/gl.h>
-#elif ANDROID
-#include <EGL\egl.h>
-#include <GLES\gl.h>
-#endif
 
 int gFrameWidth;
 int gFrameHeight;
-float gWidthScale;
-float gHeightScale;
 QCAR_State gState = QCAR_State::QCAR_STOPPED;
 
-void QCAR_configureVideoBackground(int frameWidth, int frameHeight);
+void ConfigureVideoBackground(bool isPortrait);
+void PrintInitError(int errorCode);
+bool InternalStartTracking();
 
 // QCAR State
 QCAR_State QCAR_getState()
@@ -40,31 +21,149 @@ QCAR_State QCAR_getState()
 	return gState;
 }
 
-// Init QCAR
-#if IOS
-bool QCAR_init(const char* licenseKey)
+void QCAR_getVideoMesh(VideoMesh* mesh)
 {
-    Vuforia::setInitParameters(Vuforia::GL_20, licenseKey);
-    
-	// QCAR::init() will return positive numbers up to 100 as it progresses towards success
-	// and negative numbers for error indicators
-	int initSuccess = 0;
-	do {
-		initSuccess = Vuforia::init();
-	} while (0 <= initSuccess && 100 > initSuccess);
+}
 
-	if (initSuccess != 100)
+void QCAR_getVideoInfo(int* textureWidth, int* textureHeight, VideoMesh* videoMesh)
+{
+	if (gState != QCAR_State::QCAR_STOPPED)
 	{
+		auto renderingPrimitives = new Vuforia::RenderingPrimitives(Vuforia::Device::getInstance().getRenderingPrimitives());
+		const Vuforia::Vec2I texSize = renderingPrimitives->getVideoBackgroundTextureSize();
+
+		// Initialize the video background mesh
+		const Vuforia::Mesh &vbMesh = renderingPrimitives->getVideoBackgroundMesh(Vuforia::VIEW_SINGULAR);
+		const Vuforia::Vec3F *vbVertices = vbMesh.getPositions();
+		const Vuforia::Vec2F *vbTexCoords = vbMesh.getUVs();
+		const unsigned short *vbIndices = vbMesh.getTriangles();
+
+		*textureWidth = texSize.data[0];
+		*textureHeight = texSize.data[1];
+
+		// Vertex poositions
+		videoMesh->v1.posX = vbVertices[0].data[0];
+		videoMesh->v1.posY = vbVertices[0].data[1];
+		videoMesh->v1.posZ = vbVertices[0].data[2];
+		videoMesh->v1.texCoordX = vbTexCoords[0].data[0];
+		videoMesh->v1.texCoordY = vbTexCoords[0].data[1];
+
+		videoMesh->v2.posX = vbVertices[1].data[0];
+		videoMesh->v2.posY = vbVertices[1].data[1];
+		videoMesh->v2.posZ = vbVertices[1].data[2];
+		videoMesh->v2.texCoordX = vbTexCoords[1].data[0];
+		videoMesh->v2.texCoordY = vbTexCoords[1].data[1];
+
+		videoMesh->v3.posX = vbVertices[2].data[0];
+		videoMesh->v3.posY = vbVertices[2].data[1];
+		videoMesh->v3.posZ = vbVertices[2].data[2];
+		videoMesh->v3.texCoordX = vbTexCoords[2].data[0];
+		videoMesh->v3.texCoordY = vbTexCoords[2].data[1];
+
+		videoMesh->v4.posX = vbVertices[3].data[0];
+		videoMesh->v4.posY = vbVertices[3].data[1];
+		videoMesh->v4.posZ = vbVertices[3].data[2];
+		videoMesh->v4.texCoordX = vbTexCoords[3].data[0];
+		videoMesh->v4.texCoordY = vbTexCoords[3].data[1];
+
+
+		videoMesh->indices[0] = vbIndices[0];
+		videoMesh->indices[1] = vbIndices[1];
+		videoMesh->indices[2] = vbIndices[2];
+		videoMesh->indices[3] = vbIndices[3];
+		videoMesh->indices[4] = vbIndices[4];
+		videoMesh->indices[5] = vbIndices[5];
+
+		////for (int i = 0; i < 6; i++)
+		////{
+		////	videoMesh->indices[i] = vbIndices[i];
+		////}
+		
+		delete renderingPrimitives;
+		renderingPrimitives = nullptr;
+	}
+}
+
+#ifdef DX11
+void QCAR_setVideoTexture(ID3D11Texture2D* texture)
+{
+	Vuforia::Renderer &vuforiaRenderer = Vuforia::Renderer::getInstance();
+	vuforiaRenderer.setVideoBackgroundTexture(Vuforia::DXTextureData(texture));
+}
+
+void QCAR_updateVideoTexture(ID3D11Device* device)
+{
+	Vuforia::Renderer &vuforiaRenderer = Vuforia::Renderer::getInstance();
+	Vuforia::DXRenderData dxRenderData(device);
+
+	vuforiaRenderer.begin(&dxRenderData);
+	vuforiaRenderer.updateVideoBackgroundTexture(nullptr);
+	vuforiaRenderer.end();
+};
+#endif
+
+#ifdef OPENGL
+void QCAR_setVideoTexture(int textureId)
+{
+	Vuforia::Renderer &vuforiaRenderer = Vuforia::Renderer::getInstance();
+	vuforiaRenderer.setVideoBackgroundTexture(Vuforia::GLTextureData(textureId));
+}
+
+void QCAR_updateVideoTexture()
+{
+	Vuforia::Renderer &vuforiaRenderer = Vuforia::Renderer::getInstance();
+
+	vuforiaRenderer.begin();
+	vuforiaRenderer.updateVideoBackgroundTexture(nullptr);
+	vuforiaRenderer.end();
+};
+#endif
+
+// Init QCAR
+#if ANDROID
+void QCAR_setInitState()
+{
+	// Initialized through Java binding
+	gState = QCAR_State::QCAR_INITIALIZED;
+}
+#else
+bool InternalInit()
+{
+	// Vuforia::init() will return positive numbers up to 100 as it progresses towards success
+	// and negative numbers for error indicators
+	int progress = 0;
+	while (progress >= 0 && progress < 100)
+	{
+		progress = Vuforia::init();
+	}
+
+	if (progress < 0)
+	{
+		PrintInitError(progress);
 		return false;
 	}
+
 	gState = QCAR_State::QCAR_INITIALIZED;
 
 	return true;
 }
-#elif ANDROID
-void QCAR_setInitState()
+
+void QCAR_init(const char* licenseKey, InitCallback callback)
 {
-	gState = QCAR_State::QCAR_INITIALIZED;
+#if UWP
+	Vuforia::setInitParameters(licenseKey);
+
+	Concurrency::create_task([callback]()
+	{
+		bool result = InternalInit();
+		callback(result);
+	});
+#else
+	Vuforia::setInitParameters(Vuforia::GL_20, licenseKey);
+
+	bool result = InternalInit();
+	callback(result);
+#endif
 }
 #endif
 
@@ -88,18 +187,15 @@ bool QCAR_shutDown()
 	return true;
 }
 
-
 // Set camera orientation
-void QCAR_setOrientation(QCAR_Orientation orientation)
+void QCAR_setOrientation(int frameWidth, int frameHeight, QCAR_Orientation orientation)
 {
 	if (gState != QCAR_State::QCAR_TRACKING)
 	{
 		return;
 	}
 
-	Vuforia::onSurfaceChanged(gFrameWidth, gFrameHeight);
-
-#if __APPLE__
+#if IOS
 	Vuforia::IOS_INIT_FLAGS orientationFlag;
 
 	switch (orientation) {
@@ -110,15 +206,46 @@ void QCAR_setOrientation(QCAR_Orientation orientation)
 		orientationFlag = Vuforia::ROTATE_IOS_270;
 		break;
 	case QCAR_ORIENTATION_LANDSCAPE_LEFT:
-		orientationFlag = Vuforia::ROTATE_IOS_180;
+		orientationFlag = Vuforia::ROTATE_IOS_0;
 		break;
 	default:
-		orientationFlag = Vuforia::ROTATE_IOS_0;
+		orientationFlag = Vuforia::ROTATE_IOS_180;
 		break;
 	}
 
 	Vuforia::setRotation(orientationFlag);
+#elif UWP
+	DisplayOrientations orientationFlag;
+
+	switch (orientation) {
+	case QCAR_ORIENTATION_PORTRAIT:
+		orientationFlag = DisplayOrientations::Portrait;
+		break;
+	case QCAR_ORIENTATION_PORTRAIT_UPSIDEDOWN:
+		orientationFlag = DisplayOrientations::PortraitFlipped;
+		break;
+	case QCAR_ORIENTATION_LANDSCAPE_LEFT:
+		orientationFlag = DisplayOrientations::Landscape;
+		break;
+	default:
+		orientationFlag = DisplayOrientations::LandscapeFlipped;
+		break;
+	}
+
+	Vuforia::setCurrentOrientation(orientationFlag);
 #endif
+
+	gFrameWidth = frameWidth;
+	gFrameHeight = frameHeight;
+
+	bool isPortrait =
+		(orientation == QCAR_ORIENTATION_PORTRAIT) ||
+		(orientation == QCAR_ORIENTATION_PORTRAIT_UPSIDEDOWN);
+
+
+	Vuforia::onSurfaceChanged(gFrameWidth, gFrameHeight);
+	
+	ConfigureVideoBackground(isPortrait);
 }
 
 // Initializes the QCAR tracking with a datase
@@ -127,6 +254,7 @@ int QCAR_initialize(const char* dataSetPath, bool extendedTracking)
 	// If QCAR is not in initialized state...
 	if (gState != QCAR_State::QCAR_INITIALIZED)
 	{
+		LogMessage("QCAR has not been initialized.\n");
 		return 200;
 	}
 
@@ -136,8 +264,7 @@ int QCAR_initialize(const char* dataSetPath, bool extendedTracking)
 
 	if (tracker == NULL)
 	{
-		printf("Failed to load tracking data set because the ImageTracker has"
-			" not been initialized.");
+		LogMessage("Failed to load tracking data set because the ImageTracker has not been initialized.\n");
 		return 100;
 	}
 
@@ -145,21 +272,21 @@ int QCAR_initialize(const char* dataSetPath, bool extendedTracking)
 	Vuforia::DataSet* dataSet = tracker->createDataSet();
 	if (dataSet == 0)
 	{
-		printf("Failed to create a new tracking data.");
+		LogMessage("Failed to create a new tracking data.\n");
 		return 101;
 	}
 
 	// Load the data sets:
 	if (!dataSet->load(dataSetPath, Vuforia::STORAGE_APPRESOURCE))
 	{
-		printf("Failed to load data set.");
+		LogMessage("Failed to load data set.\n");
 		return 102;
 	}
 
 	// Activate the data set:
 	if (!tracker->activateDataSet(dataSet))
 	{
-		printf("Failed to activate data set.");
+		LogMessage("Failed to activate data set.\n");
 		return 103;
 	}
 
@@ -180,47 +307,18 @@ int QCAR_initialize(const char* dataSetPath, bool extendedTracking)
 }
 
 // Start AR track
-bool QCAR_startTrack(int frameWidth, int frameHeight)
+void QCAR_startTrack(StartTrackCallback callback)
 {
-	if (gState == QCAR_State::QCAR_TRACKING)
+#if UWP
+	Concurrency::create_task([callback]()
 	{
-		return true;
-	}
-	else if (gState == QCAR_State::QCAR_STOPPED)
-	{
-		return false;
-	}
-
-	Vuforia::onSurfaceChanged(frameWidth, frameHeight);
-
-	// Initialise the camera
-	if (Vuforia::CameraDevice::getInstance().init())
-	{
-		// Configure video background
-		QCAR_configureVideoBackground(frameWidth, frameHeight);
-		Vuforia::CameraDevice::getInstance().setFocusMode(Vuforia::CameraDevice::FOCUS_MODE_CONTINUOUSAUTO);
-
-
-		// Start camera capturing
-		if (Vuforia::CameraDevice::getInstance().start())
-		{
-			// Start the tracker
-			Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
-			Vuforia::Tracker* tracker = trackerManager.getTracker(Vuforia::ObjectTracker::getClassType());
-
-			if (tracker != 0)
-			{
-				tracker->start();
-			}
-
-		}
-
-		gState = QCAR_State::QCAR_TRACKING;
-
-		return true;
-	}
-
-	return false;
+		bool result = InternalStartTracking();
+		callback(result);
+	});
+#else
+	bool result = InternalStartTracking();
+	callback(result);
+#endif
 }
 
 // Stop AR track
@@ -247,65 +345,61 @@ bool QCAR_stopTrack()
 	return true;
 }
 
-// Update frame
-TrackResult QCAR_update()
+// Update track
+void QCAR_update(TrackResult* trackResult)
 {
-	TrackResult trackResult;
-
 	if (gState == QCAR_State::QCAR_TRACKING)
 	{
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
+		// Get the state from Vuforia and mark the beginning of a rendering section
 		Vuforia::State state = Vuforia::Renderer::getInstance().begin();
-		Vuforia::Renderer::getInstance().drawVideoBackground();
 
-		trackResult.isTracking = state.getNumTrackableResults() > 0;
+		trackResult->isTracking = state.getNumTrackableResults() > 0;
 
-		if (trackResult.isTracking)
+		if (trackResult->isTracking)
 		{
 			// Get the trackable
 			const Vuforia::TrackableResult* result = state.getTrackableResult(0);
 			const Vuforia::Trackable& trackable = result->getTrackable();
-			Vuforia::Matrix44F modelViewMatrix = Vuforia::Tool::convertPose2GLMatrix(result->getPose());
+			
+			*((Vuforia::Matrix44F*)&trackResult->trackPose) = Vuforia::Tool::convertPose2GLMatrix(result->getPose());
 
-			strcpy(trackResult.trackName, trackable.getName());
-			memcpy(&trackResult.trackPose, &modelViewMatrix, sizeof(Vuforia::Matrix44F));
+			strcpy(trackResult->trackName, trackable.getName());
 		}
+
+		auto renderingPrimitives = new Vuforia::RenderingPrimitives(Vuforia::Device::getInstance().getRenderingPrimitives());
+
+		// Get the Vuforia video-background projection matrix
+		Vuforia::Matrix34F vbProjection = renderingPrimitives->getVideoBackgroundProjectionMatrix(Vuforia::VIEW::VIEW_SINGULAR, Vuforia::COORDINATE_SYSTEM_CAMERA);
+		*((Vuforia::Matrix44F*)&trackResult->videoBackgroundProjection) = Vuforia::Tool::convert2GLMatrix(vbProjection);
 
 		Vuforia::Renderer::getInstance().end();
 	}
-
-	return trackResult;
 }
 
 // Get Camera projection with its near/far plane
-Matrix4x4 QCAR_getCameraProjection(float nearPlane, float farPlane)
+void QCAR_getCameraProjection(float nearPlane, float farPlane, Matrix4x4* result)
 {
 	if (gState != QCAR_State::QCAR_TRACKING)
 	{
-		return Matrix4x4();
+		return;
 	}
 
-	// Cache the projection matrix:
-	const Vuforia::CameraCalibration& cameraCalibration = Vuforia::CameraDevice::getInstance().getCameraCalibration();
+	auto renderingPrimitives = new Vuforia::RenderingPrimitives(Vuforia::Device::getInstance().getRenderingPrimitives());
 
-	Vuforia::Matrix44F projection = Vuforia::Tool::getProjectionGL(cameraCalibration, nearPlane, farPlane);
+	// Calculate the DX Projection matrix
+	Vuforia::Matrix44F projection = Vuforia::Tool::convertPerspectiveProjection2GLMatrix(
+		renderingPrimitives->getProjectionMatrix(Vuforia::VIEW_SINGULAR, Vuforia::COORDINATE_SYSTEM_CAMERA),
+		nearPlane, farPlane);
 
-	Matrix4x4 result;
-	memcpy(&result, &projection, sizeof(Vuforia::Matrix44F));
-	result.data[0] *= gWidthScale;
-	result.data[5] *= gHeightScale;
+	delete renderingPrimitives;
+	renderingPrimitives = nullptr;
 
-	return result;
+	memcpy(result, &projection, sizeof(Vuforia::Matrix44F));
 }
 
-
 // Configure the video background
-void QCAR_configureVideoBackground(int frameWidth, int frameHeight)
+void ConfigureVideoBackground(bool isPortrait)
 {
-	gFrameWidth = frameWidth;
-	gFrameHeight = frameHeight;
-
 	// Get the default video mode
 	Vuforia::CameraDevice& cameraDevice = Vuforia::CameraDevice::getInstance();
 	Vuforia::VideoMode videoMode = cameraDevice.getVideoMode(Vuforia::CameraDevice::MODE_DEFAULT);
@@ -313,60 +407,139 @@ void QCAR_configureVideoBackground(int frameWidth, int frameHeight)
 	// Configure the video background
 	Vuforia::VideoBackgroundConfig config;
 	config.mEnabled = true;
-	config.mPosition.data[0] = 0.0f;
-	config.mPosition.data[1] = 0.0f;
+	config.mPosition.data[0] = 0;
+	config.mPosition.data[1] = 0;
 
-	// Compare aspect ratios of video and screen.  If they are different
-	// we use the full screen size while maintaining the video's aspect
-	// ratio, which naturally entails some cropping of the video.
-	// Note - screenRect is portrait but videoMode is always landscape,
-	// which is why "width" and "height" appear to be reversed.
-	float aspectRatioVideo = (float)videoMode.mWidth / (float)videoMode.mHeight;
-	float aspectRatioScreen = (float)gFrameWidth / (float)gFrameHeight;
-
-
-	if (aspectRatioScreen > aspectRatioVideo)
+	if (isPortrait)
 	{
-		config.mSize.data[0] = gFrameWidth;
-		config.mSize.data[1] = (int)(gFrameWidth / aspectRatioVideo);
-		gWidthScale = 1;
-		gHeightScale = gFrameWidth / (gFrameHeight * aspectRatioVideo);
+		config.mSize.data[0] = (int)(videoMode.mHeight * (gFrameHeight / (float)videoMode.mWidth));
+		config.mSize.data[1] = (int)gFrameHeight;
+
+		if (config.mSize.data[0] < gFrameWidth)
+		{
+			config.mSize.data[0] = (int)gFrameWidth;
+			config.mSize.data[1] = (int)(gFrameWidth * (videoMode.mWidth / (float)videoMode.mHeight));
+		}
 	}
 	else
 	{
-		config.mSize.data[0] = (int)(gFrameHeight * aspectRatioVideo);
-		config.mSize.data[1] = gFrameHeight;
-		gWidthScale = gFrameHeight / (gFrameWidth / aspectRatioVideo);
-		gHeightScale = 1;
+		config.mSize.data[0] = (int)gFrameWidth;
+		config.mSize.data[1] = (int)(videoMode.mHeight * (gFrameWidth / (float)videoMode.mWidth));
+
+		if (config.mSize.data[1] < gFrameHeight)
+		{
+			config.mSize.data[0] = (int)(gFrameHeight * (videoMode.mWidth / (float)videoMode.mHeight));
+			config.mSize.data[1] = (int)gFrameHeight;
+		}
 	}
 
 	// Set the config
 	Vuforia::Renderer::getInstance().setVideoBackgroundConfig(config);
 }
 
+void PrintInitError(int errorCode)
+{
+	if (errorCode >= 0)
+		return;// not an error, do nothing
 
+	switch (errorCode)
+	{
+	case Vuforia::INIT_ERROR:
+		LogMessage("Failed to initialize Vuforia.\n");
+		break;
+	case Vuforia::INIT_LICENSE_ERROR_INVALID_KEY:
+		LogMessage("Invalid Key used. Please make sure you are using a valid Vuforia App Key\n");
+		break;
+	case Vuforia::INIT_LICENSE_ERROR_CANCELED_KEY:
+		LogMessage("This App license key has been cancelled and may no longer be used. "
+			"Please get a new license key.\n");
+		break;
+	case Vuforia::INIT_LICENSE_ERROR_MISSING_KEY:
+		LogMessage("Vuforia App key is missing. Please get a valid key, by logging"
+			" into your account at developer.vuforia.com and creating a new project\n");
+		break;
+	case Vuforia::INIT_LICENSE_ERROR_PRODUCT_TYPE_MISMATCH:
+		LogMessage("Vuforia App key is not valid for this product."
+			" Please get a valid key, by logging into your account at developer.vuforia.com and choosing "
+			"the right product type during project creation\n");
+		break;
+	case Vuforia::INIT_LICENSE_ERROR_NO_NETWORK_TRANSIENT:
+		LogMessage("Unable to contact server. Please try again later.\n");
+		break;
+	case Vuforia::INIT_LICENSE_ERROR_NO_NETWORK_PERMANENT:
+		LogMessage("No network available. Please make sure you are connected to the internet.\n");
+		break;
+	case Vuforia::INIT_DEVICE_NOT_SUPPORTED:
+		LogMessage("Failed to initialize Vuforia because this device is not supported.\n");
+		break;
+	case Vuforia::INIT_EXTERNAL_DEVICE_NOT_DETECTED:
+		LogMessage("Failed to initialize Vuforia because this device is not docked with required external hardware.\n");
+		break;
+	case Vuforia::INIT_NO_CAMERA_ACCESS:
+		LogMessage("Camera Access was denied to this App. \n"
+			"When running on iOS8 devices, \n"
+			"users must explicitly allow the App to access the camera.\n"
+			"To restore camera access on your device, go to: \n"
+			"Settings > Privacy > Camera > [This App Name] and switch it ON.\n");
+		break;
+	default:
+		LogMessage("Vuforia init error. Unknown error.\n");
+	}
+}
 
+bool InternalStartTracking()
+{
+	if (gState == QCAR_State::QCAR_TRACKING)
+	{
+		return true;
+	}
+	else if (gState == QCAR_State::QCAR_STOPPED)
+	{
+		return false;
+	}
 
+	Vuforia::Device::getInstance().setMode(Vuforia::Device::MODE_AR);
 
+	// Initialise the camera
+	if (!Vuforia::CameraDevice::getInstance().init())
+	{
+		LogMessage("Failed to init camera.\n");
+		return false;
+	}
 
+	if (!Vuforia::CameraDevice::getInstance().selectVideoMode(Vuforia::CameraDevice::MODE_DEFAULT))
+	{
+		LogMessage("Failed to set camera video mode.\n");
+		return false;
+	}
 
+	// Configure video background
+	ConfigureVideoBackground(false);
+	Vuforia::CameraDevice::getInstance().setFocusMode(Vuforia::CameraDevice::FOCUS_MODE_CONTINUOUSAUTO);
 
+	// Start camera capturing
+	if (!Vuforia::CameraDevice::getInstance().start())
+	{
+		LogMessage("Failed to start camera capture.\n");
+		return false;
+	}
 
+	// Start the tracker
+	Vuforia::TrackerManager& trackerManager = Vuforia::TrackerManager::getInstance();
+	Vuforia::Tracker* tracker = trackerManager.getTracker(Vuforia::ObjectTracker::getClassType());
 
+	if (tracker == 0)
+	{
+		LogMessage("Cannot start tracker, tracker is null.\n");
+		return false;
+	}
 
+	if (!tracker->start())
+	{
+		LogMessage("Failed to start tracker.\n");
+		return false;
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	gState = QCAR_State::QCAR_TRACKING;
+	return true;
+}

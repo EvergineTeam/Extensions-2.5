@@ -30,7 +30,7 @@
     <DocumentationFile>bin\iOS\Debug\WaveEngine.Networking.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iOS\Release\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
@@ -39,6 +39,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <DefineConstants>__UNIFIED__;__MOBILE__;__IOS__;__MOBILE__;__IOS__;__IOS__;__MOBILE__;IOS</DefineConstants>
     <DocumentationFile>bin\iOS\Release\WaveEngine.Networking.XML</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

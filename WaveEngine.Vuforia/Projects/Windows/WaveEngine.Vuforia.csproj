@@ -34,6 +34,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NuGet|AnyCPU'">
     <OutputPath>bin\NuGet\</OutputPath>
@@ -43,6 +45,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -66,6 +70,10 @@
     <ProjectReference Include="..\..\..\..\Common\WaveEngine.Framework\Projects\WaveEngine.Framework.csproj">
       <Project>{75527125-5AA8-45D0-A801-F674EE689E78}</Project>
       <Name>WaveEngine.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Materials\Projects\WaveEngine.Materials.csproj">
+      <Project>{97D4CEF4-07B4-4F5E-8C47-4972D45D2456}</Project>
+      <Name>WaveEngine.Materials</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

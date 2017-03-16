@@ -30,7 +30,7 @@
     <DocumentationFile>bin\iOS\Debug\WaveEngine.Spine.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iOS\Release\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
@@ -39,6 +39,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <DocumentationFile>bin\iOS\Release\WaveEngine.Spine.XML</DocumentationFile>
     <DefineConstants>__IOS__;__MOBILE__;IOS</DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,6 +76,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\Shared\WaveEngine.Spine.Shared.projitems" Label="Shared" Condition="Exists('..\Shared\WaveEngine.Spine.Shared.projitems')" />
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />  
-  <Import Project="..\..\..\Resources\PostBuildTargets\iOS.targets" />  
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <Import Project="..\..\..\Resources\PostBuildTargets\iOS.targets" />
 </Project>

@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------------
 // Bokeh.fx
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 
@@ -31,6 +31,8 @@ uniform float FocalDistance;
 uniform float NearPlane;
 uniform float FarParam;		
 uniform float FilmWidth;
+uniform float ShineThreshold;
+uniform float ShineAmount;
 
 uniform sampler2D Texture;
 uniform sampler2D DepthTexture;
@@ -52,7 +54,7 @@ vec3 Blur(vec4 c0, vec2 uv, vec2 step)
 	{
 		for (int j = -1; j <= 1; j += 2)
 		{
-			vec4 c1 = texture2D(Texture, uv + vec2(j * i) * step);
+			vec4 c1 = texture2D(Texture, uv + vec2(j * i) * step);			
 
 			float w = c0.a > (c1.a + bleedingBias) ? 0.0 : 1.0;
 
@@ -84,5 +86,8 @@ void main()
 	// Bleending color
 	vec3 sumCol = min(color1, color2);
 
-	gl_FragColor = vec4(sumCol, 1.0);
+	float luminance = dot(sumCol, vec3(0.3, 0.59, 0.11));	
+	float amount = clamp((luminance - ShineThreshold) * ShineAmount, 0.0, 1.0);
+
+	gl_FragColor = vec4(sumCol + amount * c0.a, 1.0);
 }

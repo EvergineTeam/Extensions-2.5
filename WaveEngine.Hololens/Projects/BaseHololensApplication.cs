@@ -24,6 +24,7 @@ using WaveEngine.Hololens.Internals;
 using WaveEngine.Hololens.Utilities;
 using WaveEngine.DirectX;
 using Windows.UI.Input.Spatial;
+using Windows.UI.Xaml;
 #endregion
 
 namespace WaveEngine.Hololens
@@ -119,6 +120,14 @@ namespace WaveEngine.Hololens
 
             set
             {
+            }
+        }
+
+        public override UIElement View
+        {
+            get
+            {
+                return null;
             }
         }
         #endregion

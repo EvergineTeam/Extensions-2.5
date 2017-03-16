@@ -9,6 +9,7 @@ C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\WaveEngine.Adapt
 C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\WaveEngine.Common.dll
 C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\WaveEngine.Components.dll
 C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\WaveEngine.Framework.dll
+C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\protobuf-net.dll
 C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\WaveEngine.Materials.dll
 C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\WaveEngine.Physics.dll
 C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\WaveEngine.Box2D.dll
@@ -33,6 +34,8 @@ C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\SharpDX.DXGI.xml
 C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\SharpDX.MediaFoundation.xml
 C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\SharpDX.xml
 C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\SharpDX.Direct3D11.xml
+C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\protobuf-net.pdb
+C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\protobuf-net.xml
 C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\WaveEngine.Materials.pdb
 C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\WaveEngine.Materials.xml
 C:\VO\Engine\Extensions\WaveEngine.OculusRift\bin\Windows\Debug\WaveEngine.Physics.pdb

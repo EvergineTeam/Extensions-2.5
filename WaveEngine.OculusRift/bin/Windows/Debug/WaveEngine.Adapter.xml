@@ -792,11 +792,6 @@
             The gyroscope state
             </summary>
         </member>
-        <member name="E:WaveEngine.Adapter.Input.InputManager.OnOrientationChanged">
-            <summary>
-            Occurs when [on orientation changed].
-            </summary>
-        </member>
         <member name="E:WaveEngine.Adapter.Input.InputManager.OnCompassChanged">
             <summary>
             Occurs when [on compass state changed]
@@ -849,13 +844,11 @@
             <param name="rightTrigger">The level of the right trigger vibration motor.</param>
             <returns>True is everything Ok, false if doesn't exist the player index.</returns>
         </member>
-        <member name="M:WaveEngine.Adapter.Input.InputManager.TouchPanelGetState">
+        <member name="M:WaveEngine.Adapter.Input.InputManager.TouchPanelGetState(WaveEngine.Common.Input.TouchPanelState@)">
             <summary>
             Touches the state of the panel get.
             </summary>
-            <returns>
-            Touch panel state.
-            </returns>
+            <param name="state">Touch panel state.</param>
         </member>
         <member name="M:WaveEngine.Adapter.Input.InputManager.CompassGetState">
             <summary>
@@ -863,14 +856,6 @@
             </summary>
             <returns>
             Compass state.
-            </returns>
-        </member>
-        <member name="M:WaveEngine.Adapter.Input.InputManager.DisplayOrientationGetState">
-            <summary>
-            Displays the state of the orientation get.
-            </summary>
-            <returns>
-            Display orientation state.
             </returns>
         </member>
         <member name="M:WaveEngine.Adapter.Input.InputManager.GyroscopeExist">
@@ -1901,6 +1886,11 @@
             Occurs when screen size is changed.
             </summary>
         </member>
+        <member name="E:WaveEngine.Adapter.Adapter.OnDisplayOrientationChanged">
+            <summary>
+            Occurs when display orientation is changed.
+            </summary>
+        </member>
         <member name="F:WaveEngine.Adapter.Adapter.disposed">
             <summary>
             Holds if the instance has been disposed.
@@ -2053,6 +2043,14 @@
             The default orientation.
             </value>
         </member>
+        <member name="P:WaveEngine.Adapter.Adapter.DisplayOrientation">
+            <summary>
+            Gets the current display orientation of the device.
+            </summary>
+            <value>
+            The current display orientation of the device.
+            </value>
+        </member>
         <member name="P:WaveEngine.Adapter.Adapter.AdvertismentVisible">
             <summary>
             Sets a value indicating whether [advertisment visible].
@@ -2096,13 +2094,6 @@
             </summary>
             <param name="width">The new width.</param>
             <param name="height">The new height.</param>
-        </member>
-        <member name="M:WaveEngine.Adapter.Adapter.InputManager_OnOrientationChanged(System.Object,WaveEngine.Common.Input.OrientationChangedArgs)">
-            <summary>
-            Inputs the manager_ on orientation changed.
-            </summary>
-            <param name="sender">The sender.</param>
-            <param name="e">The e.</param>
         </member>
         <member name="M:WaveEngine.Adapter.Adapter.GetDeviceModelAndMake">
             <summary>
@@ -3475,11 +3466,6 @@
             Non premultiplied alpha blend state.
             </summary>
         </member>
-        <member name="F:WaveEngine.DirectX.RenderState.scissorTestEnabled">
-            <summary>
-            The scissor test enabled
-            </summary>
-        </member>
         <member name="F:WaveEngine.DirectX.RenderState.scissorRectangle">
             <summary>
             The scissor rectangle
@@ -3557,14 +3543,6 @@
             </summary>
             <value>
             The viewport.
-            </value>
-        </member>
-        <member name="P:WaveEngine.DirectX.RenderState.ScissorTestEnabled">
-            <summary>
-            Gets or sets a value indicating whether scissor test is enabled.
-            </summary>
-            <value>
-              <c>true</c> if scissor test is enabled; otherwise, <c>false</c>.
             </value>
         </member>
         <member name="P:WaveEngine.DirectX.RenderState.ScissorRectangle">
@@ -3969,12 +3947,13 @@
             </summary>
             <param name="effect">The effect.</param>        
         </member>
-        <member name="M:WaveEngine.DirectX.ShaderManager.SetTexture(WaveEngine.Common.Graphics.Texture,System.Int32)">
+        <member name="M:WaveEngine.DirectX.ShaderManager.SetTexture(WaveEngine.Common.Graphics.Texture,System.Int32,WaveEngine.Common.Graphics.TextureSlotUsage)">
             <summary>
             Sets the texture.
             </summary>
             <param name="texture">The texture.</param>
             <param name="slot">The slot.</param>
+            <param name="textureUsage">The texture usage</param>
         </member>
         <member name="M:WaveEngine.DirectX.ShaderManager.SetTechniqueLayout(WaveEngine.Common.Graphics.VertexBufferFormat)">
             <summary>

@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // OculusVRProvider
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -39,6 +39,12 @@ namespace WaveEngine.OculusRift
         /// </summary>
         [DataMember]
         private bool showHMDMirrorTexture;
+
+        /// <summary>
+        /// Whether the tracking origin is at floor height.
+        /// </summary>
+        [DataMember]
+        private bool trackingOriginAtFloorHeight;
 
         #region Properties
         /// <summary>
@@ -87,6 +93,40 @@ namespace WaveEngine.OculusRift
                 }
 
                 return this.ovrService.TrackerCameraPose;
+            }
+        }
+
+        /// <summary>
+        /// Gets the left controller pose
+        /// </summary>
+        [DontRenderProperty]
+        public override VREyePose LeftControllerPose
+        {
+            get
+            {
+                if (!this.IsConnected)
+                {
+                    throw new Exception("OVR is not available. See console output to find the reason");
+                }
+
+                return this.ovrService.LeftControllerPose;
+            }
+        }
+
+        /// <summary>
+        /// Gets the left controller pose
+        /// </summary>
+        [DontRenderProperty]
+        public override VREyePose RightControllerPose
+        {
+            get
+            {
+                if (!this.IsConnected)
+                {
+                    throw new Exception("OVR is not available. See console output to find the reason");
+                }
+
+                return this.ovrService.RightControllerPose;
             }
         }
 
@@ -146,6 +186,31 @@ namespace WaveEngine.OculusRift
                 return this.ovrService.HMDMirrorRenderTarget;
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the tracking origin is at floor height.
+        /// </summary>
+        /// <value>
+        /// Whether the tracking origin is at floor height.
+        /// </value>
+        public bool TrackingOriginAtFloorHeight
+        {
+            get
+            {
+                return this.trackingOriginAtFloorHeight;
+            }
+
+            set
+            {
+                this.trackingOriginAtFloorHeight = value;
+
+                if (this.ovrService != null)
+                {
+                    this.ovrService.SetTrackingOriginAtFloorHeight(value);
+                }
+            }
+        }
+
         #endregion
 
         #region Initialize
@@ -204,6 +269,7 @@ namespace WaveEngine.OculusRift
             if (this.IsConnected)
             {
                 this.ovrService.ShowHMDMirrorTexture = this.showHMDMirrorTexture;
+                this.TrackingOriginAtFloorHeight = this.trackingOriginAtFloorHeight;
             }
         }
         #endregion

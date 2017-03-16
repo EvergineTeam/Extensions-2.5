@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // QCAR_Matrix4x4
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -19,7 +19,7 @@ namespace WaveEngine.Vuforia.QCAR
     [StructLayout(LayoutKind.Sequential)]
     internal struct QCAR_Matrix4x4
     {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4 * 4)]
         public float[] data;
 
         /// <summary>

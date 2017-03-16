@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // TiledMap
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -37,6 +37,8 @@ namespace WaveEngine.TiledMap
     public class TiledMap : Component
     {
         private const string DefaultAssetsPath = @"Content\Assets\";
+        private const string TileImageTag = "TileImageLayer";
+        private const string TileLayerTag = "TileLayer";
 
         /// <summary>
         /// The transform 2D
@@ -101,7 +103,7 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Gets or sets the Path of the Tiled Map TMX file
         /// </summary>
-        [RenderPropertyAsAsset(AssetType.Unknown)]
+        [RenderPropertyAsAsset(AssetType.Unknown, ".tmx")]
         public string TmxPath
         {
             get { return this.tmxPath; }
@@ -705,7 +707,7 @@ namespace WaveEngine.TiledMap
             {
                 tileset.Dispose();
             }
-
+            
             this.tilesets.Clear();
             this.tileLayers.Clear();
             this.objectLayers.Clear();
@@ -756,7 +758,7 @@ namespace WaveEngine.TiledMap
                 this.transform.Rectangle = this.CalcRectangle();
                 this.CreateImageLayers();
                 this.CreateTileLayers();
-
+                
                 this.UpdateLayerDrawOrders();
             }
             catch (Exception ex)
@@ -795,11 +797,22 @@ namespace WaveEngine.TiledMap
         /// </summary>
         private void CreateImageLayers()
         {
+            var oldImageEntities = this.Owner.ChildEntities.Where(c => c.Tag.StartsWith(TileImageTag)).ToList();
+            foreach (var entity in oldImageEntities)
+            {
+                this.Owner.DetachChild(entity.Name);
+            }
+
             // Create layers
             for (int i = 0; i < this.TmxMap.ImageLayers.Count; i++)
             {
                 var tmxImageLayer = this.TmxMap.ImageLayers[i];
-                this.CreateChildTileImageLayer(tmxImageLayer, i);
+                this.CreateChildTileImageLayer(tmxImageLayer, i, oldImageEntities);
+            }
+
+            foreach (var entity in oldImageEntities)
+            {
+                entity.Dispose();
             }
         }
 
@@ -808,11 +821,22 @@ namespace WaveEngine.TiledMap
         /// </summary>
         private void CreateTileLayers()
         {
+            var oldTileEntities = this.Owner.ChildEntities.Where(c => c.Tag.StartsWith(TileLayerTag)).ToList();
+            foreach (var entity in oldTileEntities)
+            {
+                this.Owner.DetachChild(entity.Name);
+            }
+
             // Create layers
             for (int i = 0; i < this.TmxMap.Layers.Count; i++)
             {
                 var tmxLayer = this.TmxMap.Layers[i];
-                this.CreateChildTileLayer(tmxLayer, i);
+                this.CreateChildTileLayer(tmxLayer, i, oldTileEntities);
+            }
+
+            foreach (var entity in oldTileEntities)
+            {
+                entity.Dispose();
             }
         }
 
@@ -821,15 +845,19 @@ namespace WaveEngine.TiledMap
         /// </summary>
         /// <param name="tmxImageLayer">The tmx image layer.</param>
         /// <param name="layerIndex">The layer index</param>
-        private void CreateChildTileImageLayer(TmxImageLayer tmxImageLayer, int layerIndex)
+        private void CreateChildTileImageLayer(TmxImageLayer tmxImageLayer, int layerIndex, IList<Entity> previousEntities)
         {
-            var tag = "TileImageLayer_" + layerIndex;
             var tmxLayerName = tmxImageLayer.Name;
 
             var tiledMapImageLayer = new TiledMapImageLayer(tmxImageLayer, this);
 
             Entity layerEntity = null;
-            layerEntity = this.Owner.FindChildrenByTag(tag).FirstOrDefault();
+            if (previousEntities != null)
+            {
+                layerEntity = previousEntities.FirstOrDefault(e => e.Tag.StartsWith(TileImageTag) && e.Name == tmxLayerName);
+                previousEntities.Remove(layerEntity);
+            }
+
             var tileLayerOffset = new Vector2((float)tmxImageLayer.OffsetX, (float)tmxImageLayer.OffsetY);
 
             if (layerEntity != null)
@@ -854,9 +882,9 @@ namespace WaveEngine.TiledMap
             if (layerEntity == null)
             {
                 layerEntity = new Entity(tmxLayerName)
-                {
-                    Tag = tag
-                }
+                    {
+                        Tag = TileImageTag
+                    }
                     .AddComponent(new Sprite(tiledMapImageLayer.ImagePath))
                     .AddComponent(new Transform2D()
                     {
@@ -865,9 +893,9 @@ namespace WaveEngine.TiledMap
                         Opacity = (float)tmxImageLayer.Opacity
                     })
                     .AddComponent(new SpriteRenderer());
-                this.Owner.AddChild(layerEntity);
             }
 
+            this.Owner.AddChild(layerEntity);
             this.imageLayers.Add(tmxLayerName, tiledMapImageLayer);
         }
 
@@ -876,14 +904,18 @@ namespace WaveEngine.TiledMap
         /// </summary>
         /// <param name="tmxLayer">The tmx layer.</param>
         /// <param name="layerIndex">The layer index</param>
-        private void CreateChildTileLayer(TmxLayer tmxLayer, int layerIndex)
+        private void CreateChildTileLayer(TmxLayer tmxLayer, int layerIndex, IList<Entity> previousEntities)
         {
-            var tag = "TileLayer_" + layerIndex;
             var tmxLayerName = tmxLayer.Name;
 
             Entity layerEntity = null;
             TiledMapLayer tileMapLayer = null;
-            layerEntity = this.Owner.FindChildrenByTag(tag).FirstOrDefault();
+            if (previousEntities != null)
+            {
+                layerEntity = previousEntities.FirstOrDefault(e => e.Tag.StartsWith(TileLayerTag) && e.Name == tmxLayerName);
+                previousEntities.Remove(layerEntity);
+            }
+
             var tileLayerOffset = new Vector2((float)tmxLayer.OffsetX, (float)tmxLayer.OffsetY);
 
             if (layerEntity != null)
@@ -914,7 +946,7 @@ namespace WaveEngine.TiledMap
 
                 layerEntity = new Entity(tmxLayerName)
                 {
-                    Tag = tag
+                    Tag = TileLayerTag
                 }
                     .AddComponent(tileMapLayer)
                     .AddComponent(new Transform2D()
@@ -924,9 +956,9 @@ namespace WaveEngine.TiledMap
                         Opacity = (float)tmxLayer.Opacity
                     })
                     .AddComponent(new TiledMapLayerRenderer());
-                this.Owner.AddChild(layerEntity);
             }
 
+            this.Owner.AddChild(layerEntity);
             this.tileLayers.Add(tmxLayerName, tileMapLayer);
         }
 

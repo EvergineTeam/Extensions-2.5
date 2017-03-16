@@ -32,7 +32,7 @@
     <DocumentationFile>bin\Android\Debug\WaveEngineAndroid.TiledMap.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Android\Release\</OutputPath>
     <DefineConstants>TRACE;ANDROID</DefineConstants>
@@ -40,6 +40,7 @@
     <WarningLevel>4</WarningLevel>
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <DocumentationFile>bin\Android\Release\WaveEngineAndroid.TiledMap.XML</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

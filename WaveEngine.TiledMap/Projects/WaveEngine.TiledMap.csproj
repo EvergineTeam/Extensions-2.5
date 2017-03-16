@@ -56,7 +56,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TiledSharp">
+    <Reference Include="TiledSharp, Version=0.10.5890.28363, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Libraries\TiledSharp.dll</HintPath>
     </Reference>
     <Reference Include="Zlib.Portable">

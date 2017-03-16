@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // DepthOfFieldLens
 //
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
+// Copyright © 2017 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 #endregion
@@ -31,7 +31,7 @@ namespace WaveEngine.ImageEffects
         /// The ratio of the lens's focal length to the diameter of the entrance pupil.
         /// </summary>
         #region Properties
-        [RenderPropertyAsSlider(0.1f, 50, 1f)]
+        [RenderPropertyAsSlider(0.0f, 50.0f, 1.0f)]
         [DataMember]
         public float FStops
         {
@@ -53,7 +53,6 @@ namespace WaveEngine.ImageEffects
         /// Focus distance of the lens.
         /// </summary>
         [DataMember]
-        [RenderPropertyAsFInput(0, MinLimit = 0, MaxLimit = 1000)]
         public float FocalDistance
         {
             get
@@ -71,20 +70,21 @@ namespace WaveEngine.ImageEffects
         /// Focus range of the lens.
         /// </summary>
         [DataMember]
-        [RenderPropertyAsSlider(0.0001f, 1.0f, 0.001f)]
+        [RenderPropertyAsSlider(0.0f, 100.0f, 1.0f)]
         public float FocalLength
         {
             get
             {
-                return (this.material as BokehMaterial).FocalLength;
+                return (this.material as BokehMaterial).FocalLength * 100;
             }
 
             set
             {
-                (this.material as BokehMaterial).FocalLength = value;
+                float focal = value / 100;
+                (this.material as BokehMaterial).FocalLength = focal;
 
                 //Update apeture
-                (this.material as BokehMaterial).Aperture = value / fstops;
+                (this.material as BokehMaterial).Aperture = focal / fstops;
             }
         }
 
@@ -92,17 +92,17 @@ namespace WaveEngine.ImageEffects
         /// Film width, 24 mm by default.
         /// </summary>
         [DataMember]
-        [RenderPropertyAsSlider(0.0001f, 0.1f, 0.001f)]
+        [RenderPropertyAsSlider(0.0f, 100.0f, 1.0f)]
         public float FilmWidth
         {
             get
             {
-                return (this.material as BokehMaterial).FilmWidth;
+                return (this.material as BokehMaterial).FilmWidth * 1000;
             }
 
             set
             {
-                (this.material as BokehMaterial).FilmWidth = value;
+                (this.material as BokehMaterial).FilmWidth = value / 1000;
             }
         }
 
@@ -110,17 +110,53 @@ namespace WaveEngine.ImageEffects
         /// Maximun Circle of Confusion diameter.
         /// </summary>
         [DataMember]
-        [RenderPropertyAsSlider(0.001f, 0.1f, 0.001f)]
+        [RenderPropertyAsSlider(1.0f, 100.0f, 1.0f)]
         public float MaxBlur
         {
             get
             {
-                return this.maxBlur;
+                return this.maxBlur * 1000;
             }
 
             set
             {
-                this.maxBlur = value;
+                this.maxBlur = value / 1000;
+            }
+        }
+
+        /// <summary>
+        /// Shine Threshold
+        /// </summary>
+        [DataMember]
+        [RenderPropertyAsSlider(0.0f, 1.0f, 0.1f)]
+        public float ShineThreshold
+        {
+            get
+            {
+                return (this.material as BokehMaterial).ShineThreshold;
+            }
+
+            set
+            {
+                (this.material as BokehMaterial).ShineThreshold = value;
+            }
+        }
+
+        /// <summary>
+        /// Shine amount
+        /// </summary>
+        [DataMember]
+        [RenderPropertyAsSlider(0.0f, 3.0f, 0.1f)]
+        public float ShineAmount
+        {
+            get
+            {
+                return (this.material as BokehMaterial).ShineAmount;
+            }
+
+            set
+            {
+                (this.material as BokehMaterial).ShineAmount = value;
             }
         }
 

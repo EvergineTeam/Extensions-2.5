@@ -4,6 +4,7 @@ C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\Microsoft.Kinect.dll
 C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\Microsoft.Kinect.Face.dll
 C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\WaveEngine.Common.dll
 C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\WaveEngine.Framework.dll
+C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\protobuf-net.dll
 C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\WaveEngine.Physics.dll
 C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\WaveEngine.Box2D.dll
 C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\WaveEngine.Bepu.dll
@@ -12,6 +13,8 @@ C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\WaveEngine.Common.pd
 C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\WaveEngine.Common.xml
 C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\WaveEngine.Framework.pdb
 C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\WaveEngine.Framework.xml
+C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\protobuf-net.pdb
+C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\protobuf-net.xml
 C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\WaveEngine.Physics.pdb
 C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\WaveEngine.Physics.xml
 C:\VO\Engine\Extensions\WaveEngine.Kinect\bin\Windows\Debug\WaveEngine.Box2D.pdb
