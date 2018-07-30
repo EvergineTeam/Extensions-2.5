@@ -21,13 +21,14 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iOS\Debug\</OutputPath>
-    <DefineConstants>DEBUG;__IOS__;__MOBILE__;IOS</DefineConstants>
+    <DefineConstants>DEBUG;__UNIFIED__;__MOBILE__;__IOS__;__IOS__;__MOBILE__;IOS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <MtouchDebug>true</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <DocumentationFile>bin\iOS\Debug\WaveEngine.Vuforia.XML</DocumentationFile>
+    <NoWarn>1591;1572;</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,6 +41,7 @@
     <DocumentationFile>bin\iOS\Release\WaveEngine.Vuforia.XML</DocumentationFile>
     <DefineConstants>__IOS__;__MOBILE__;IOS</DefineConstants>
     <DebugSymbols>true</DebugSymbols>
+    <NoWarn>1591;1572;</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ARServiceIOS.cs" />
@@ -49,22 +51,25 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Common\Projects\WaveEngineiOS.Common.csproj">
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Common\Projects\iOS\WaveEngineiOS.Common.csproj">
       <Project>{ca72b53e-7cb1-48fb-b38f-cf1f85c6dab3}</Project>
       <Name>WaveEngineiOS.Common</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Components\Projects\WaveEngineiOS.Components.csproj">
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Components\Projects\iOS\WaveEngineiOS.Components.csproj">
       <Project>{3efa8318-eb28-455d-b2a5-8c6189fff0a6}</Project>
       <Name>WaveEngineiOS.Components</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Framework\Projects\WaveEngineiOS.Framework.csproj">
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Framework\Projects\iOS\WaveEngineiOS.Framework.csproj">
       <Project>{3534edae-dd3c-4d93-b7f5-9c5d7edf6679}</Project>
       <Name>WaveEngineiOS.Framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Materials\Projects\WaveEngineiOS.Materials.csproj">
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Materials\Projects\iOS\WaveEngineiOS.Materials.csproj">
       <Project>{f3670bf5-0aad-43d6-b4e8-0a7f2dc34a02}</Project>
       <Name>WaveEngineiOS.Materials</Name>
       <IsAppExtension>false</IsAppExtension>

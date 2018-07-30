@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// OrthogonalNeighbours
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -15,9 +8,13 @@ using System.Text;
 
 namespace WaveEngine.TiledMap
 {
+    /// <summary>
+    /// OrthogonalNeighbours
+    /// </summary>
     public class OrthogonalNeighbours : NeighboursCollection
     {
         #region Properties
+
         /// <summary>
         /// Gets the top neighbour.
         /// </summary>
@@ -104,10 +101,11 @@ namespace WaveEngine.TiledMap
         public override LayerTile TopLeft
         {
             get { return this.tileMapLayer.GetLayerTileByMapCoordinates(this.center.X - 1, this.center.Y - 1); }
-        } 
+        }
         #endregion
 
         #region Initilization
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OrthogonalNeighbours"/> class.
         /// </summary>
@@ -116,8 +114,7 @@ namespace WaveEngine.TiledMap
         public OrthogonalNeighbours(TiledMapLayer tileMapLayer, LayerTile center)
             : base(tileMapLayer, center)
         {
-
-        } 
+        }
         #endregion
     }
 }

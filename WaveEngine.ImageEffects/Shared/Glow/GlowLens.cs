@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// GlowLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -71,6 +64,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GlowLens"/> class.
         /// </summary>
@@ -90,6 +84,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Renders to image.
         /// </summary>
@@ -108,7 +103,7 @@ namespace WaveEngine.ImageEffects
 
             RenderTarget rt1 = graphicsDevice.RenderTargets.GetTemporalRenderTarget(width, height);
             RenderTarget rt2 = graphicsDevice.RenderTargets.GetTemporalRenderTarget(width, height);
-            graphicsDevice.RenderState.Viewport = new Viewport(0, 0, width, height);
+            graphicsDevice.Viewport = new Viewport(0, 0, width, height);
 
             // Down sampler
             mat.Texture = this.Source;
@@ -121,7 +116,7 @@ namespace WaveEngine.ImageEffects
             this.RenderToImage(rt2, this.material);
 
             // UpCombine
-            graphicsDevice.RenderState.Viewport = new Viewport(0, 0, this.Source.Width, this.Source.Height);
+            graphicsDevice.Viewport = new Viewport(0, 0, this.Source.Width, this.Source.Height);
             mat.Pass = GlowMaterial.Passes.UpCombine;
             mat.Texture = this.Source;
             mat.Texture1 = rt2;
@@ -136,6 +131,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>

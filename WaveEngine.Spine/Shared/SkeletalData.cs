@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// SkeletalData
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using Spine;
@@ -60,6 +53,7 @@ namespace WaveEngine.Spine
         internal event EventHandler OnAtlasRefresh;
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the Path of Spine atlas file (.xml).
         /// </summary>
@@ -95,6 +89,7 @@ namespace WaveEngine.Spine
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SkeletalData" /> class.
         /// </summary>
@@ -115,6 +110,7 @@ namespace WaveEngine.Spine
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Performs further custom initialization for this instance.
         /// </summary>

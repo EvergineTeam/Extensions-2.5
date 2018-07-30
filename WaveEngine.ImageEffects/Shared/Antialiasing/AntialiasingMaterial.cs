@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// AntialiasingMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -58,6 +51,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -120,13 +114,13 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AntialiasingMaterial"/> class.
         /// </summary>
         public AntialiasingMaterial()
             : base(DefaultLayers.Opaque)
         {
-            this.SamplerMode = AddressMode.LinearClamp;
             this.TexcoordOffset = Vector2.Zero;
             this.Span_max = 8.0f;
             this.Reduce_Mul = 1.0f / 8.0f;
@@ -134,7 +128,7 @@ namespace WaveEngine.ImageEffects
 
             this.shaderParameters = new AntialiasingEffectParameters();
             this.shaderParameters.TexcoordOffset = this.TexcoordOffset;
-            this.shaderParameters.Span_max= this.Span_max;
+            this.shaderParameters.Span_max = this.Span_max;
             this.shaderParameters.Reduce_Mul = this.Reduce_Mul;
             this.shaderParameters.Reduce_Min = this.Reduce_Min;
             this.Parameters = this.shaderParameters;
@@ -153,6 +147,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>
@@ -161,7 +156,7 @@ namespace WaveEngine.ImageEffects
         {
             if (!cached)
             {
-                this.shaderParameters.TexcoordOffset = this.TexcoordOffset; 
+                this.shaderParameters.TexcoordOffset = this.TexcoordOffset;
                 this.shaderParameters.Span_max = this.Span_max;
                 this.shaderParameters.Reduce_Mul = this.Reduce_Mul;
                 this.shaderParameters.Reduce_Min = this.Reduce_Min;

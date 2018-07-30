@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// ScanlinesLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -68,6 +61,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ScanlinesLens"/> class.
         /// </summary>
@@ -87,6 +81,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Renders to image.
         /// </summary>
@@ -102,6 +97,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>

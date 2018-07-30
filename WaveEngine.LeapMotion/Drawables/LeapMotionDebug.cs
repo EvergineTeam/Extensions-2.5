@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// LeapMotionDebug
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using Leap;
@@ -43,6 +36,7 @@ namespace WaveEngine.LeapMotion.Drawables
         private Transform3D transform = null;
 
         #region Initialize
+
         /// <summary>
         /// Default values
         /// </summary>
@@ -76,6 +70,7 @@ namespace WaveEngine.LeapMotion.Drawables
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Draw the left and right hands capture with leap motion.
         /// </summary>

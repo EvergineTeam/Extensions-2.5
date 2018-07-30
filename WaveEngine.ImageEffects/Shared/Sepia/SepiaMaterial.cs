@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// SepiaMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -68,6 +61,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -109,7 +103,6 @@ namespace WaveEngine.ImageEffects
             /// </summary>
             [FieldOffset(44)]
             public float GlobalAlpha;
-
         }
         #endregion
 
@@ -119,6 +112,7 @@ namespace WaveEngine.ImageEffects
         private SepiaEffectParameters shaderParameters;
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the texture.
         /// </summary>
@@ -154,14 +148,13 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SepiaMaterial"/> class.
         /// </summary>
         public SepiaMaterial()
             : base(DefaultLayers.Opaque)
         {
-
-            this.SamplerMode = AddressMode.LinearClamp;
             this.ImageTone = new Vector3(0.815f, 0.666f, 0f);
             this.Desaturation = 1.0f;
             this.DarkTone = new Vector3(0.313f, 0.258f, 0f);
@@ -192,6 +185,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>

@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// SSAOLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -30,6 +23,7 @@ namespace WaveEngine.ImageEffects
         private float downSampleFactor;
 
         #region Properties
+
         /// <summary>
         /// Gets or sets a value indicating whether [only Ambient Occlusion].
         /// </summary>
@@ -39,7 +33,7 @@ namespace WaveEngine.ImageEffects
         public bool OnlyAO { get; set; }
 
         /// <summary>
-        /// Blur Downsample factor.
+        /// Gets or sets blur Downsample factor.
         /// </summary>
         [DataMember]
         [RenderPropertyAsSlider(1, 8, 1f)]
@@ -116,6 +110,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SSAOLens"/> class.
         /// </summary>
@@ -137,6 +132,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Renders to image.
         /// </summary>
@@ -148,7 +144,7 @@ namespace WaveEngine.ImageEffects
             int height = (int)(this.Source.Height / this.downSampleFactor);
 
             RenderTarget rt1 = graphicsDevice.RenderTargets.GetTemporalRenderTarget(width, height);
-            graphicsDevice.RenderState.Viewport = new Viewport(0, 0, width, height);
+            graphicsDevice.Viewport = new Viewport(0, 0, width, height);
 
             // AO
             mat.Pass = SSAOMaterial.Passes.SSAO;
@@ -157,8 +153,8 @@ namespace WaveEngine.ImageEffects
             this.RenderToImage(rt1, this.material);
 
             // UpCombine
-            graphicsDevice.RenderState.Viewport = new Viewport(0, 0, this.Source.Width, this.Source.Height);
-            if (OnlyAO)
+            graphicsDevice.Viewport = new Viewport(0, 0, this.Source.Width, this.Source.Height);
+            if (this.OnlyAO)
             {
                 mat.Pass = SSAOMaterial.Passes.OnlyAO;
                 mat.Texture = this.Source;
@@ -181,6 +177,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>

@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// OculusVRApplication
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using OculusWrap;
@@ -57,29 +50,24 @@ namespace WaveEngine.OculusRift
         internal Hmd Hmd;
 
         /// <summary>
-        /// The eye textures info
-        /// </summary>
-        private OculusVREyeTexture[] eyeTextures;
-
-        /// <summary>
         /// The render pose
         /// </summary>
-        private VREyePose[] eyePoses;
+        private VREye[] eyeProperties;
 
         /// <summary>
         /// The tracker camera pose
         /// </summary>
-        private VREyePose trackerCameraPose;
+        private VRPose trackerCameraPose;
 
         /// <summary>
         /// The left controller pose
         /// </summary>
-        private VREyePose leftControllerPose;
+        private VRPose leftControllerPose;
 
         /// <summary>
         /// The right controller pose
         /// </summary>
-        private VREyePose rightControllerPose;
+        private VRPose rightControllerPose;
 
         /// <summary>
         /// Oculus Rift wrap instance
@@ -142,6 +130,7 @@ namespace WaveEngine.OculusRift
         private OculusWrap.TextureSwapChain eyeTextureSwapChain;
 
         #region Properties
+
         /// <summary>
         /// Gets a value indicating whether this instance is connected.
         /// </summary>
@@ -164,20 +153,20 @@ namespace WaveEngine.OculusRift
         }
 
         /// <summary>
-        /// Gets the eye poses
+        /// Gets the eye properties
         /// </summary>
-        internal VREyePose[] EyePoses
+        internal VREye[] EyesProperties
         {
             get
             {
-                return this.eyePoses;
+                return this.eyeProperties;
             }
         }
 
         /// <summary>
         /// Gets the tracker camera pose
         /// </summary>
-        internal VREyePose TrackerCameraPose
+        internal VRPose TrackerCameraPose
         {
             get
             {
@@ -186,23 +175,9 @@ namespace WaveEngine.OculusRift
         }
 
         /// <summary>
-        /// Gets the eye textures information.
-        /// </summary>
-        /// <value>
-        /// The render target.
-        /// </value>
-        internal OculusVREyeTexture[] EyeTextures
-        {
-            get
-            {
-                return this.eyeTextures;
-            }
-        }
-
-        /// <summary>
         /// Gets the left controller pose
         /// </summary>
-        internal VREyePose LeftControllerPose
+        internal VRPose LeftControllerPose
         {
             get
             {
@@ -213,7 +188,7 @@ namespace WaveEngine.OculusRift
         /// <summary>
         /// Gets the right controller pose
         /// </summary>
-        internal VREyePose RightControllerPose
+        internal VRPose RightControllerPose
         {
             get
             {
@@ -223,6 +198,7 @@ namespace WaveEngine.OculusRift
         #endregion
 
         #region Initialization
+
         /// <summary>
         /// Initializes static members of the <see cref="OculusVRApplication" /> class.
         /// </summary>
@@ -243,6 +219,7 @@ namespace WaveEngine.OculusRift
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Configures the specified windows handler.
         /// </summary>
@@ -262,7 +239,7 @@ namespace WaveEngine.OculusRift
             initializationParameters.Flags |= OVRTypes.InitFlags.Debug;
 #endif
 
-            bool success = Oculus.Initialize(initializationParameters);
+            bool success = this.Oculus.Initialize(initializationParameters);
             if (!success)
             {
                 Console.WriteLine("OVR Error: Failed to initialize the Oculus runtime library.");
@@ -287,6 +264,7 @@ namespace WaveEngine.OculusRift
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Base initialization
         /// </summary>
@@ -348,7 +326,7 @@ namespace WaveEngine.OculusRift
 
                     creationFlags |= DeviceCreationFlags.BgraSupport | DeviceCreationFlags.VideoSupport;
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     this.dxgiDeviceManager = null;
 
@@ -358,8 +336,8 @@ namespace WaveEngine.OculusRift
             }
 
             // Create Device and SwapChain
-            //SharpDX.DXGI.Factory f = new SharpDX.DXGI.Factory1();
-            //SharpDX.DXGI.Adapter a = f.GetAdapter(0);
+            // SharpDX.DXGI.Factory f = new SharpDX.DXGI.Factory1();
+            // SharpDX.DXGI.Adapter a = f.GetAdapter(0);
             SharpDX.Direct3D11.Device.CreateWithSwapChain(DriverType.Hardware, creationFlags, supportedLevels, this.desc, out this.device, out this.swapChain);
 
             // Setup multithread on the Direct3D11 device
@@ -380,7 +358,7 @@ namespace WaveEngine.OculusRift
                 OVRTypes.Result result;
 
                 // Retrieve the DXGI device, in order to set the maximum frame latency.
-                using (SharpDX.DXGI.Device1 dxgiDevice = device.QueryInterface<SharpDX.DXGI.Device1>())
+                using (SharpDX.DXGI.Device1 dxgiDevice = this.device.QueryInterface<SharpDX.DXGI.Device1>())
                 {
                     dxgiDevice.MaximumFrameLatency = 1;
                 }
@@ -389,10 +367,14 @@ namespace WaveEngine.OculusRift
                 this.layerEyeFov = this.ovrLayers.AddLayerEyeFov();
 
                 // Create a set of layers to submit.
-                this.eyeTextures = new OculusVREyeTexture[2];
-                this.eyePoses = new VREyePose[3];
+                this.eyeProperties = new VREye[3];
                 this.oculusEyePoses = new OVRTypes.Posef[2];
                 this.hmdToEyeViewOffsets = new OVRTypes.Vector3f[2];
+
+                for (int i = 0; i < this.eyeProperties.Length; i++)
+                {
+                    this.eyeProperties[i] = new VREye();
+                }
 
                 result = this.CreateVRSwapTextureSet();
                 OculusVRHelpers.WriteErrorDetails(this.Oculus, result, "Failed to create swap texture set.");
@@ -401,7 +383,7 @@ namespace WaveEngine.OculusRift
                 {
                     OVRTypes.EyeType eye = (OVRTypes.EyeType)eyeIndex;
                     OculusVREyeTexture eyeTexture = new OculusVREyeTexture();
-                    this.eyeTextures[eyeIndex] = eyeTexture;
+                    this.eyeProperties[eyeIndex].Texture = eyeTexture;
 
                     // Retrieve size and position of the texture for the current eye.
                     eyeTexture.FieldOfView = this.Hmd.DefaultEyeFov[eyeIndex];
@@ -416,9 +398,7 @@ namespace WaveEngine.OculusRift
                         eyeTexture.ViewportSize.Position.x / (float)this.swapRenderTargets[0].Width,
                         eyeTexture.ViewportSize.Position.y / (float)this.swapRenderTargets[0].Height,
                         eyeTexture.ViewportSize.Size.Width / (float)this.swapRenderTargets[0].Width,
-                        eyeTexture.ViewportSize.Size.Height / (float)this.swapRenderTargets[0].Height,
-                        0.0f,
-                        1.0f);
+                        eyeTexture.ViewportSize.Size.Height / (float)this.swapRenderTargets[0].Height);
 
                     this.hmdToEyeViewOffsets[eyeIndex] = eyeTexture.HmdToEyeViewOffset;
 
@@ -441,12 +421,12 @@ namespace WaveEngine.OculusRift
                 OculusWrap.MirrorTexture mirrorTexture;
 
                 // Create the texture used to display the rendered result on the computer monitor.
-                result = this.Hmd.CreateMirrorTextureDX(device.NativePointer, mirrorTextureDescription, out mirrorTexture);
+                result = this.Hmd.CreateMirrorTextureDX(this.device.NativePointer, mirrorTextureDescription, out mirrorTexture);
                 OculusVRHelpers.WriteErrorDetails(this.Oculus, result, "Failed to create mirror texture.");
 
                 // Retrieve the Direct3D texture contained in the Oculus MirrorTexture.
                 IntPtr mirrorTextureComPtr = IntPtr.Zero;
-                result = mirrorTexture.GetBufferDX(textureInterfaceId, out mirrorTextureComPtr);
+                result = mirrorTexture.GetBufferDX(this.textureInterfaceId, out mirrorTextureComPtr);
                 OculusVRHelpers.WriteErrorDetails(this.Oculus, result, "Failed to retrieve the texture from the created mirror texture buffer.");
 
                 this.mirrorTexture = new Texture2D(mirrorTextureComPtr);
@@ -464,7 +444,7 @@ namespace WaveEngine.OculusRift
 
         /// <summary>
         /// Create VR swap texture set
-        /// </summary>        
+        /// </summary>
         /// <returns>The result creation vr texture swap</returns>
         private OVRTypes.Result CreateVRSwapTextureSet()
         {
@@ -515,7 +495,7 @@ namespace WaveEngine.OculusRift
             {
                 // Retrieve the Direct3D texture contained in the Oculus TextureSwapChainBuffer.
                 IntPtr swapChainTextureComPtr = IntPtr.Zero;
-                this.eyeTextureSwapChain.GetBufferDX(textureIndex, textureInterfaceId, out swapChainTextureComPtr);
+                this.eyeTextureSwapChain.GetBufferDX(textureIndex, this.textureInterfaceId, out swapChainTextureComPtr);
 
                 this.swapRenderTargets[textureIndex] = renderTargetManager.CreateRenderTarget(swapChainTextureComPtr);
                 if (this.msaaSampleCount == 1)
@@ -541,18 +521,18 @@ namespace WaveEngine.OculusRift
                 OVRTypes.TrackingState trackingState = this.Hmd.GetTrackingState(frameTiming, true);
 
                 // Update tracker camera pose
-                var trackerPose = this.Hmd.GetTrackerPose(0);
-                trackerPose.Pose.Position.ToVector3(out this.trackerCameraPose.Position);
-                trackerPose.Pose.Orientation.ToQuaternion(out this.trackerCameraPose.Orientation);
+                var trackerPoseOVR = this.Hmd.GetTrackerPose(0);
+                trackerPoseOVR.Pose.Position.ToVector3(out this.trackerCameraPose.Position);
+                trackerPoseOVR.Pose.Orientation.ToQuaternion(out this.trackerCameraPose.Orientation);
 
                 // Update controller poses
-                var leftControllerPose = trackingState.HandPoses[(int)HandType.Left];
-                leftControllerPose.ThePose.Position.ToVector3(out this.leftControllerPose.Position);
-                leftControllerPose.ThePose.Orientation.ToQuaternion(out this.leftControllerPose.Orientation);
+                var leftControllerPoseOVR = trackingState.HandPoses[(int)HandType.Left];
+                leftControllerPoseOVR.ThePose.Position.ToVector3(out this.leftControllerPose.Position);
+                leftControllerPoseOVR.ThePose.Orientation.ToQuaternion(out this.leftControllerPose.Orientation);
 
-                var rightControllerPose = trackingState.HandPoses[(int)HandType.Right];
-                rightControllerPose.ThePose.Position.ToVector3(out this.rightControllerPose.Position);
-                rightControllerPose.ThePose.Orientation.ToQuaternion(out this.rightControllerPose.Orientation);
+                var rightControllerPoseOVR = trackingState.HandPoses[(int)HandType.Right];
+                rightControllerPoseOVR.ThePose.Position.ToVector3(out this.rightControllerPose.Position);
+                rightControllerPoseOVR.ThePose.Orientation.ToQuaternion(out this.rightControllerPose.Orientation);
 
                 // Calculate the position and orientation of each eye.
                 this.Oculus.CalcEyePoses(trackingState.HeadPose.ThePose, this.hmdToEyeViewOffsets, ref this.oculusEyePoses);
@@ -563,14 +543,19 @@ namespace WaveEngine.OculusRift
 
                 for (int eyeIndex = 0; eyeIndex < 2; eyeIndex++)
                 {
-                    OculusVREyeTexture eyeTexture = this.eyeTextures[eyeIndex];
+                    var eyeTexture = (OculusVREyeTexture)this.eyeProperties[eyeIndex].Texture;
 
-                    this.oculusEyePoses[eyeIndex].Position.ToVector3(out this.eyePoses[eyeIndex].Position);
-                    this.oculusEyePoses[eyeIndex].Orientation.ToQuaternion(out this.eyePoses[eyeIndex].Orientation);
+                    var eyePose = this.eyeProperties[eyeIndex].Pose;
+                    this.oculusEyePoses[eyeIndex].Position.ToVector3(out eyePose.Position);
+                    this.oculusEyePoses[eyeIndex].Orientation.ToQuaternion(out eyePose.Orientation);
+                    this.eyeProperties[eyeIndex].Pose = eyePose;
+
                     eyeTexture.RenderTarget = (this.msaaSampleCount > 1) ? this.msaaRenderTarget : this.swapRenderTargets[currentIndex];
 
                     // Get eye projection
-                    this.Oculus.Matrix4f_Projection(eyeTexture.FieldOfView, eyeTexture.NearPlane, eyeTexture.FarPlane, OVRTypes.ProjectionModifier.None).ToMatrix(out this.eyePoses[eyeIndex].Projection);
+                    var eyeProjection = this.eyeProperties[eyeIndex].Projection;
+                    this.Oculus.Matrix4f_Projection(eyeTexture.FieldOfView, eyeTexture.NearPlane, eyeTexture.FarPlane, OVRTypes.ProjectionModifier.None).ToMatrix(out eyeProjection);
+                    this.eyeProperties[eyeIndex].Projection = eyeProjection;
 
                     this.layerEyeFov.RenderPose[eyeIndex] = this.oculusEyePoses[eyeIndex];
                 }
@@ -579,9 +564,13 @@ namespace WaveEngine.OculusRift
                 result = this.eyeTextureSwapChain.Commit();
                 OculusVRHelpers.WriteErrorDetails(this.Oculus, result, "Failed to commit the swap chain texture.");
 
-                // Calc central position
-                Vector3.Lerp(ref this.eyePoses[0].Position, ref this.eyePoses[1].Position, 0.5f, out this.eyePoses[2].Position);
-                Quaternion.Lerp(ref this.eyePoses[0].Orientation, ref this.eyePoses[1].Orientation, 0.5f, out this.eyePoses[2].Orientation);
+                // Calc central pose
+                var leftEyePose = this.eyeProperties[(int)VREyeType.LeftEye].Pose;
+                var rightEyePose = this.eyeProperties[(int)VREyeType.RightEye].Pose;
+                var centerEyePose = this.eyeProperties[(int)VREyeType.CenterEye].Pose;
+                Vector3.Lerp(ref leftEyePose.Position, ref rightEyePose.Position, 0.5f, out centerEyePose.Position);
+                Quaternion.Lerp(ref leftEyePose.Orientation, ref rightEyePose.Orientation, 0.5f, out centerEyePose.Orientation);
+                this.eyeProperties[(int)VREyeType.CenterEye].Pose = centerEyePose;
             }
 
             base.Render();
@@ -619,9 +608,9 @@ namespace WaveEngine.OculusRift
                 this.context.ClearState();
                 this.context.Flush();
             }
-            
+
             Dispose(this.eyeTextureSwapChain);
-            
+
             // Disposing the device, before the hmd, will cause the hmd to fail when disposing.
             // Disposing the device, after the hmd, will cause the dispose of the device to fail.
             // It looks as if the hmd steals ownership of the device and destroys it, when it's shutting down.

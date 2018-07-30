@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// MotionBlurLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -25,6 +18,7 @@ namespace WaveEngine.ImageEffects
     public class MotionBlurLens : Lens
     {
         #region Properties
+
         /// <summary>
         /// Gets or sets the blur lenght, default value is 0.5f.
         /// </summary>
@@ -44,7 +38,7 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
-        /// Motion blur quality, Low by default.
+        /// Gets or sets motion blur quality, Low by default.
         /// </summary>
         [DataMember]
         public MotionBlurMaterial.EffectQuality Quality
@@ -63,6 +57,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MotionBlurLens"/> class.
         /// </summary>
@@ -83,6 +78,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Renders to image.
         /// </summary>
@@ -98,6 +94,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>

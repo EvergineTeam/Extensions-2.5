@@ -40,17 +40,17 @@ namespace Tool
 
     /// Returns a 4x4 col-major OpenGL matrix from a 3x4 Vuforia matrix.
     /**
-    *  Vuforia uses 3x4 row-major matrices.
-    *  convert2GLMatrix() takes such a matrix and returns an OpenGL compatible matrix.
-    */
+     *  Vuforia uses 3x4 row-major matrices.
+     *  convert2GLMatrix() takes such a matrix and returns an OpenGL compatible matrix.
+     */
     VUFORIA_API Matrix44F convert2GLMatrix(const Matrix34F& matrix34F);
 
     /// Returns a 4x4 col-major OpenGL perspective projection matrix from a 3x4 Vuforia perspective projection
     /// matrix.
     /**
-    *  Vuforia uses 3x4 row-major matrices for perspective projection data. convertPerspectiveProjection2GLMatrix()
-    *  takes such a perspective projection matrix and returns an OpenGL compatible perspective projection matrix.
-    */
+     *  Vuforia uses 3x4 row-major matrices for perspective projection data. convertPerspectiveProjection2GLMatrix()
+     *  takes such a perspective projection matrix and returns an OpenGL compatible perspective projection matrix.
+     */
     VUFORIA_API Matrix44F convertPerspectiveProjection2GLMatrix(const Matrix34F& projection, float nearPlane, float farPlane);
 
     /// Returns an OpenGL style projection matrix.

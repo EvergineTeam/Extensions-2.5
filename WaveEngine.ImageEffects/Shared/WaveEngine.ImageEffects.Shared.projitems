@@ -59,6 +59,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pixelate\PixelateMaterial.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Posterize\PosterizeLens.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Posterize\PosterizeMaterial.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfoExt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RadialBlur\RadialBlurLens.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RadialBlur\RadialBlurMaterial.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scanlines\ScanlinesLens.cs" />
@@ -81,10 +83,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Vignette\VignetteMaterial.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)ColorCorrection\RGBTable16x1.wpk" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Distortion\DistortionNormals.wpk" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)FilmGrain\NoiseEffectGrain.wpk" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)ScreenOverlay\Gradient.wpk" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\AntialiasingMaterial\AntialiasingpsFXAA.frag" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\BloomMaterial\BloompsBloom.frag" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\BloomMaterial\BloompsBloomDown.frag" />
@@ -141,9 +139,6 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\ToneMappingMaterial\ToneMappingpsUncharted2.frag" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\ToneMappingMaterial\ToneMappingpsWhitePreservingLumaBasedReinhard.frag" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\VignetteMaterial\VignettepsVignette.frag" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)LensFlare\LensColor.wpk" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)LensFlare\LensDirt.wpk" />
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)LensFlare\LensStar.wpk" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\DepthOfFieldMaterial\psBlur.frag" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\DepthOfFieldMaterial\psCombine.frag" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\DepthOfFieldMaterial\psDown.frag" />
@@ -319,5 +314,22 @@
     <None Include="$(MSBuildThisFileDirectory)Shaders\HLSL\VignetteMaterial\CompileShaders.cmd" />
     <None Include="$(MSBuildThisFileDirectory)Shaders\HLSL\VignetteMaterial\Vignette.fx" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\HLSL\VignetteMaterial\VignettepsVignette.fxo" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)LensFlare\LensColor.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)LensFlare\LensDirt.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)LensFlare\LensStar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Distortion\DistortionNormals.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)FilmGrain\NoiseEffectGrain.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)ScreenOverlay\Gradient.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)ColorCorrection\RGBTable16x1.png" />
   </ItemGroup>
 </Project>

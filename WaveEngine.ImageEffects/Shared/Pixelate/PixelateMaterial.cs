@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// PixelateMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -43,6 +36,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -62,6 +56,7 @@ namespace WaveEngine.ImageEffects
         private PixelateEffectParameters shaderParameters;
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the texture.
         /// </summary>
@@ -97,13 +92,13 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PixelateMaterial"/> class.
         /// </summary>
         public PixelateMaterial()
             : base(DefaultLayers.Opaque)
         {
-            this.SamplerMode = AddressMode.LinearClamp;
             this.PixelSize = new Vector2(10);
 
             this.shaderParameters = new PixelateEffectParameters();
@@ -124,6 +119,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>

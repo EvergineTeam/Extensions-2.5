@@ -82,7 +82,7 @@ public:
 
     /// Returns the idx-th active dataset. Returns NULL if no DataSet has
     /// been activated or if idx is out of range.
-    virtual DataSet* getActiveDataSet(const int idx = 0) = 0;
+    virtual DataSet* getActiveDataSet(const int idx) = 0;
 
     /// Returns the number of currently activated dataset. 
     virtual int getActiveDataSetCount() const = 0;

@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// FishEyeMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -43,6 +36,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -63,6 +57,7 @@ namespace WaveEngine.ImageEffects
         private FishEyeEffectParameters shaderParameters;
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the texture.
         /// </summary>
@@ -98,8 +93,9 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="SepiaMaterial"/> class.
+        /// Initializes a new instance of the <see cref="FishEyeMaterial"/> class.
         /// </summary>
         public FishEyeMaterial()
             : base(DefaultLayers.Opaque)
@@ -123,6 +119,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>

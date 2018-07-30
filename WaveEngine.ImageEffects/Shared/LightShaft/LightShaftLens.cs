@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// LightShaftLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -36,8 +29,9 @@ namespace WaveEngine.ImageEffects
         private string directionalLightPath;
 
         #region Properties
+
         /// <summary>
-        /// Gets or sets AutoIntensity, default value is true.
+        /// Gets or sets a value indicating whether gets or sets AutoIntensity, default value is true.
         /// </summary>
         [DataMember]
         public bool AutoIntensity
@@ -54,7 +48,7 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
-        /// Gets or sets HaloEnabled, default value is true.
+        /// Gets or sets a value indicating whether gets or sets HaloEnabled, default value is true.
         /// </summary>
         [DataMember]
         public bool HaloEnabled
@@ -215,7 +209,7 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
-        /// Down sample factor, by default is 4;
+        /// Gets or sets down sample factor, by default is 4;
         /// </summary>
         [DataMember]
         [RenderPropertyAsSlider(1, 10, 1f)]
@@ -233,7 +227,7 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
-        /// Light Shaft quality, Low by default.
+        /// Gets or sets light Shaft quality, Low by default.
         /// </summary>
         [DataMember]
         public LightShaftMaterial.EffectQuality Quality
@@ -250,21 +244,22 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
-        /// Light Shaft quality, Low by default.
+        /// Gets or sets light Shaft quality, Low by default.
         /// </summary>
         [DataMember]
-        [RenderPropertyAsEntity(new String[] { "WaveEngine.Framework.Graphics.DirectionalLightProperties" })]
+        [RenderPropertyAsEntity(new string[] { "WaveEngine.Framework.Graphics.DirectionalLightProperties" })]
         public string DirectionalLight
         {
             get
             {
                 return this.directionalLightPath;
             }
+
             set
             {
                 this.directionalLightPath = value;
 
-                if(this.isInitialized)
+                if (this.isInitialized)
                 {
                     this.RefrehsDirectionalLight();
                 }
@@ -273,6 +268,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LightShaftLens"/> class.
         /// </summary>
@@ -294,6 +290,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Initialize the lens
         /// </summary>
@@ -327,9 +324,9 @@ namespace WaveEngine.ImageEffects
 
             RenderTarget rt1 = graphicsDevice.RenderTargets.GetTemporalRenderTarget(width, height);
             RenderTarget rt2 = graphicsDevice.RenderTargets.GetTemporalRenderTarget(width, height);
-            graphicsDevice.RenderState.Viewport = new Viewport(0, 0, width, height);
+            graphicsDevice.Viewport = new Viewport(0, 0, width, height);
 
-            // Black mask 
+            // Black mask
             mat.Pass = LightShaftMaterial.Passes.BlackMask;
             mat.Texture = this.Source;
             this.RenderToImage(rt1, this.material);
@@ -340,7 +337,7 @@ namespace WaveEngine.ImageEffects
             this.RenderToImage(rt2, this.material);
 
             // UpCombine
-            graphicsDevice.RenderState.Viewport = new Viewport(0, 0, this.Source.Width, this.Source.Height);
+            graphicsDevice.Viewport = new Viewport(0, 0, this.Source.Width, this.Source.Height);
             mat.Pass = LightShaftMaterial.Passes.Combine;
             mat.Texture = this.Source;
             mat.Texture1 = rt2;
@@ -355,6 +352,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Refresh directional light
         /// </summary>

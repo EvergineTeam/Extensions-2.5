@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// OculusVRProvider
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using OculusWrap;
@@ -19,6 +12,8 @@ using WaveEngine.Common.Math;
 using WaveEngine.Common.VR;
 using WaveEngine.Components.VR;
 using WaveEngine.Framework.Services;
+using WaveEngine.Common.Input;
+using WaveEngine.OculusRift.Input;
 #endregion
 
 namespace WaveEngine.OculusRift
@@ -47,6 +42,7 @@ namespace WaveEngine.OculusRift
         private bool trackingOriginAtFloorHeight;
 
         #region Properties
+
         /// <summary>
         /// Gets a value indicating whether this instance is connected.
         /// </summary>
@@ -63,10 +59,10 @@ namespace WaveEngine.OculusRift
         }
 
         /// <summary>
-        /// Gets the eye poses
+        /// Gets the eye properties
         /// </summary>
         [DontRenderProperty]
-        public override VREyePose[] EyePoses
+        public override VREye[] EyesProperties
         {
             get
             {
@@ -75,7 +71,7 @@ namespace WaveEngine.OculusRift
                     throw new Exception("OVR is not available. See console output to find the reason");
                 }
 
-                return this.ovrService.EyePoses;
+                return this.ovrService.EyesProperties;
             }
         }
 
@@ -83,7 +79,7 @@ namespace WaveEngine.OculusRift
         /// Gets the tracker camera pose
         /// </summary>
         [DontRenderProperty]
-        public override VREyePose TrackerCameraPose
+        public override VRPose TrackerCameraPose
         {
             get
             {
@@ -93,60 +89,6 @@ namespace WaveEngine.OculusRift
                 }
 
                 return this.ovrService.TrackerCameraPose;
-            }
-        }
-
-        /// <summary>
-        /// Gets the left controller pose
-        /// </summary>
-        [DontRenderProperty]
-        public override VREyePose LeftControllerPose
-        {
-            get
-            {
-                if (!this.IsConnected)
-                {
-                    throw new Exception("OVR is not available. See console output to find the reason");
-                }
-
-                return this.ovrService.LeftControllerPose;
-            }
-        }
-
-        /// <summary>
-        /// Gets the left controller pose
-        /// </summary>
-        [DontRenderProperty]
-        public override VREyePose RightControllerPose
-        {
-            get
-            {
-                if (!this.IsConnected)
-                {
-                    throw new Exception("OVR is not available. See console output to find the reason");
-                }
-
-                return this.ovrService.RightControllerPose;
-            }
-        }
-
-        /// <summary>
-        /// Gets the eye textures information.
-        /// </summary>
-        /// <value>
-        /// The render target.
-        /// </value>
-        [DontRenderProperty]
-        public override VREyeTexture[] EyeTextures
-        {
-            get
-            {
-                if (!this.IsConnected)
-                {
-                    throw new Exception("OVR is not available. See console output to find the reason");
-                }
-
-                return this.ovrService.EyeTextures;
             }
         }
 
@@ -211,12 +153,122 @@ namespace WaveEngine.OculusRift
             }
         }
 
+        /// <summary>
+        /// Gets the state of the Oculus Touch controller.
+        /// </summary>
+        /// <value>
+        /// The state of the Oculus Touch controller.
+        /// </value>
+        [DontRenderProperty]
+        public OculusTouchControllerState OculusTouchControllerState
+        {
+            get
+            {
+                if (!this.IsConnected)
+                {
+                    throw new Exception("OVR is not available. See console output to find the reason");
+                }
+
+                return this.ovrService.OculusTouchControllerState;
+            }
+        }
+
+        /// <summary>
+        /// Gets the state of the Oculus Remote controller.
+        /// </summary>
+        /// <value>
+        /// The state of the Oculus Remote controller.
+        /// </value>
+        [DontRenderProperty]
+        public OculusRemoteState OculusRemoteState
+        {
+            get
+            {
+                if (!this.IsConnected)
+                {
+                    throw new Exception("OVR is not available. See console output to find the reason");
+                }
+
+                return this.ovrService.OculusRemoteState;
+            }
+        }
+
+        /// <summary>
+        /// Gets the left controller index
+        /// </summary>
+        [DontRenderProperty]
+        public override int LeftControllerIndex
+        {
+            get
+            {
+                if (!this.IsConnected)
+                {
+                    throw new Exception("OVR is not available. See console output to find the reason");
+                }
+
+                return this.ovrService.LeftControllerIndex;
+            }
+        }
+
+        /// <summary>
+        /// Gets the right controller index
+        /// </summary>
+        [DontRenderProperty]
+        public override int RightControllerIndex
+        {
+            get
+            {
+                if (!this.IsConnected)
+                {
+                    throw new Exception("OVR is not available. See console output to find the reason");
+                }
+
+                return this.ovrService.RightControllerIndex;
+            }
+        }
+
+        /// <summary>
+        /// Gets the controller state list
+        /// </summary>
+        public override VRGenericControllerState[] ControllerStates
+        {
+            get
+            {
+                if (!this.IsConnected)
+                {
+                    throw new Exception("OVR is not available. See console output to find the reason");
+                }
+
+                return this.ovrService.GenericControllerStates;
+            }
+        }
+
+        /// <summary>
+        /// Gets the state of the gamepad controller.
+        /// </summary>
+        /// <value>
+        /// The state of the generic controller.
+        /// </value>
+        [DontRenderProperty]
+        public override GamePadState GamepadState
+        {
+            get
+            {
+                if (!this.IsConnected)
+                {
+                    throw new Exception("OVR is not available. See console output to find the reason");
+                }
+
+                return this.ovrService.GamePadState;
+            }
+        }
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OculusVRProvider"/> class.
-        /// </summary>        
+        /// </summary>
         public OculusVRProvider()
         {
         }
@@ -232,6 +284,7 @@ namespace WaveEngine.OculusRift
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Update the provider
         /// </summary>
@@ -244,18 +297,19 @@ namespace WaveEngine.OculusRift
             {
                 if (this.cameraRig.LeftEyeCamera != null)
                 {
-                    this.cameraRig.LeftEyeCamera.SetCustomProjection(this.EyePoses[(int)VREyeType.LeftEye].Projection);
+                    this.cameraRig.LeftEyeCamera.SetCustomProjection(this.EyesProperties[(int)VREyeType.LeftEye].Projection);
                 }
 
                 if (this.cameraRig.RightEyeCamera != null)
                 {
-                    this.cameraRig.RightEyeCamera.SetCustomProjection(this.EyePoses[(int)VREyeType.RightEye].Projection);
+                    this.cameraRig.RightEyeCamera.SetCustomProjection(this.EyesProperties[(int)VREyeType.RightEye].Projection);
                 }
             }
         }
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Allows to execute custom logic during the initialization of this instance.
         /// </summary>

@@ -20,20 +20,11 @@ countries.
 namespace Vuforia
 {
 
-/// Initializes Vuforia
-/**
-<b>UWP:</b> Called to initialize Vuforia.  Initialization is progressive, so this function
-should be called repeatedly until it returns 100 or a negative value.
-Returns an integer representing the percentage complete (negative on error).
-*/
-int VUFORIA_API init();
-
 /// Sets Vuforia initialization parameters
 /**
 <b>UWP:</b> Called to set the Vuforia initialization parameters prior to calling Vuforia::init().
 */
 void VUFORIA_API setInitParameters(const char* key);
-
 
 /// Sets the current rotation to be applied to the projection and background
 /**
@@ -43,6 +34,13 @@ This method should be called from the call-back registered with DisplayInformati
 */
 void VUFORIA_API setCurrentOrientation(Windows::Graphics::Display::DisplayOrientations orientation);
 
+/// Sets the app specified coordinate system object
+/**
+<b>UWP (Holographic):</b> Called to set the app coordinate system which is a pointer to an
+ISpatialCoordinateSystem object. This must be called shortly after init and before the 
+camera is started. This is only applicable on Windows Holographic.
+*/
+bool VUFORIA_API setHolographicAppCS(void* appSpecifiedCS);
 
 } // namespace Vuforia
 

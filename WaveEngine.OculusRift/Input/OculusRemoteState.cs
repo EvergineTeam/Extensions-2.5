@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// OculusRemoteState
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using OculusWrap;
@@ -67,12 +60,33 @@ namespace WaveEngine.OculusRift.Input
 
             this.IsConnected = inputState.ControllerType == OVRTypes.ControllerType.Remote;
 
-            this.Up     = (inputState.Buttons & (uint)OVRTypes.Button.Up)       != 0 ? ButtonState.Pressed : ButtonState.Release;
-            this.Down   = (inputState.Buttons & (uint)OVRTypes.Button.Down)     != 0 ? ButtonState.Pressed : ButtonState.Release;
-            this.Left   = (inputState.Buttons & (uint)OVRTypes.Button.Left)     != 0 ? ButtonState.Pressed : ButtonState.Release;
-            this.Right  = (inputState.Buttons & (uint)OVRTypes.Button.Right)    != 0 ? ButtonState.Pressed : ButtonState.Release;
-            this.Start  = (inputState.Buttons & (uint)OVRTypes.Button.Enter)    != 0 ? ButtonState.Pressed : ButtonState.Release;
-            this.Back   = (inputState.Buttons & (uint)OVRTypes.Button.Back)     != 0 ? ButtonState.Pressed : ButtonState.Release;
+            this.Up = (inputState.Buttons & (uint)OVRTypes.Button.Up) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            this.Down = (inputState.Buttons & (uint)OVRTypes.Button.Down) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            this.Left = (inputState.Buttons & (uint)OVRTypes.Button.Left) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            this.Right = (inputState.Buttons & (uint)OVRTypes.Button.Right) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            this.Start = (inputState.Buttons & (uint)OVRTypes.Button.Enter) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            this.Back = (inputState.Buttons & (uint)OVRTypes.Button.Back) != 0 ? ButtonState.Pressed : ButtonState.Released;
+        }
+
+        /// <summary>
+        /// Updates generic controller state.
+        /// </summary>
+        /// <param name="gamePad">The gamepad</param>
+        internal void ToGamePadState(out GamePadState gamePad)
+        {
+            gamePad = default(GamePadState);
+
+            if (this.IsConnected)
+            {
+                gamePad.IsConnected = true;
+
+                gamePad.DPad.Up = this.Up;
+                gamePad.DPad.Down = this.Down;
+                gamePad.DPad.Left = this.Left;
+                gamePad.DPad.Right = this.Right;
+                gamePad.Buttons.A = this.Start;
+                gamePad.Buttons.B = this.Back;
+            }
         }
     }
 }

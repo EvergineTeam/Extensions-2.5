@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// KinectService
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using WaveEngine.Kinect.Enums;
@@ -18,6 +11,8 @@ using WaveEngine.Framework;
 using WaveEngine.Framework.Graphics;
 using WaveEngine.Framework.Services;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using WaveEngine.Common.Attributes;
 #endregion
 
 namespace WaveEngine.Kinect
@@ -25,12 +20,13 @@ namespace WaveEngine.Kinect
     /// <summary>
     /// Kinect Integration Service
     /// </summary>
+    [DataContract(Namespace = "WaveEngine.Kinect")]
     public class KinectService : UpdatableService
     {
         /// <summary>
         /// The face frame features
         /// </summary>
-        private const FaceFrameFeatures faceFrameFeatures = FaceFrameFeatures.BoundingBoxInColorSpace
+        private const FaceFrameFeatures Features = FaceFrameFeatures.BoundingBoxInColorSpace
                                                             | FaceFrameFeatures.PointsInColorSpace
                                                             | FaceFrameFeatures.RotationOrientation
                                                             | FaceFrameFeatures.FaceEngagement
@@ -55,7 +51,7 @@ namespace WaveEngine.Kinect
         /// <summary>
         /// The kinect sensor
         /// </summary>
-        private KinectSensor kinectSensor;      
+        private KinectSensor kinectSensor;
 
         /// <summary>
         /// The multi source frame reader
@@ -74,7 +70,7 @@ namespace WaveEngine.Kinect
 
         /// <summary>
         /// Color Texture handler
-        /// </summary>        
+        /// </summary>
         private IntPtr colorTexturePointer;
 
         private bool updateColorTexture;
@@ -86,10 +82,10 @@ namespace WaveEngine.Kinect
 
         /// <summary>
         /// The depth texture data
-        /// </summary>        
+        /// </summary>
         private byte[] depthData;
 
-        private bool updateDepthTexture;    
+        private bool updateDepthTexture;
 
         /// <summary>
         /// The infrared texture
@@ -103,7 +99,7 @@ namespace WaveEngine.Kinect
 
         /// <summary>
         /// The infrared texture handler
-        /// </summary>        
+        /// </summary>
         private IntPtr infraredTexturePointer;
 
         private bool updateInfraredTexture;
@@ -179,6 +175,7 @@ namespace WaveEngine.Kinect
         /// <value>
         /// The body count.
         /// </value>
+        [DontRenderProperty]
         public int BodyCount { get; internal set; }
 
         /// <summary>
@@ -187,6 +184,7 @@ namespace WaveEngine.Kinect
         /// <value>
         /// The face frame sources.
         /// </value>
+        [DontRenderProperty]
         public FaceFrameSource[] FaceFrameSources
         {
             get
@@ -215,6 +213,7 @@ namespace WaveEngine.Kinect
         /// <value>
         /// The mapper.
         /// </value>
+        [DontRenderProperty]
         public CoordinateMapper Mapper { get; set; }
 
         /// <summary>
@@ -223,6 +222,7 @@ namespace WaveEngine.Kinect
         /// <value>
         /// The color texture.
         /// </value>
+        [DontRenderProperty]
         public Texture2D ColorTexture
         {
             get
@@ -237,6 +237,7 @@ namespace WaveEngine.Kinect
         /// <value>
         /// The infrared texture.
         /// </value>
+        [DontRenderProperty]
         public Texture2D InfraredTexture
         {
             get
@@ -251,6 +252,7 @@ namespace WaveEngine.Kinect
         /// <value>
         /// The depth texture.
         /// </value>
+        [DontRenderProperty]
         public Texture2D DepthTexture
         {
             get
@@ -265,6 +267,7 @@ namespace WaveEngine.Kinect
         /// <value>
         /// <c>true</c> if this instance is available; otherwise, <c>false</c>.
         /// </value>
+        [DontRenderProperty]
         public bool IsAvailable
         {
             get
@@ -293,7 +296,6 @@ namespace WaveEngine.Kinect
             }
         }
 
-
         /// <summary>
         /// Gets or sets a value indicating whether [use depth maximum reliable distance].
         /// </summary>
@@ -320,6 +322,7 @@ namespace WaveEngine.Kinect
         /// <value>
         ///   <c>true</c> if this instance is paused; otherwise, <c>false</c>.
         /// </value>
+        [DontRenderProperty]
         public bool IsPaused
         {
             get
@@ -341,7 +344,8 @@ namespace WaveEngine.Kinect
         /// <value>
         /// The bodies.
         /// </value>
-        public Body[] Bodies { get; set; } 
+        [DontRenderProperty]
+        public Body[] Bodies { get; set; }
 
         #endregion
 
@@ -385,7 +389,7 @@ namespace WaveEngine.Kinect
             {
                 for (int i = 0; i < this.BodyCount; i++)
                 {
-                    this.faceFrameSources[i] = new FaceFrameSource(this.kinectSensor, 0, faceFrameFeatures);
+                    this.faceFrameSources[i] = new FaceFrameSource(this.kinectSensor, 0, Features);
                     this.faceFrameReaders[i] = this.faceFrameSources[i].OpenReader();
                     this.faceFrameReaders[i].FrameArrived -= this.KinectServiceFaceFrameArrived;
                     this.faceFrameReaders[i].FrameArrived += this.KinectServiceFaceFrameArrived;
@@ -407,7 +411,7 @@ namespace WaveEngine.Kinect
                 this.kinectSensor = null;
             }
 
-            // unsubscribe events 
+            // unsubscribe events
             if (this.multiSourceFrameReader != null)
             {
                 this.multiSourceFrameReader.MultiSourceFrameArrived -= this.MultiSourceFrameReaderHandler;
@@ -434,13 +438,13 @@ namespace WaveEngine.Kinect
             if (this.kinectSensor.IsOpen)
             {
                 if (this.updateColorTexture)
-                {                    
+                {
                     this.graphicsDevice.Textures.SetData(this.colorTexture, this.colorTexturePointer, this.colorPointerSize);
                     this.updateColorTexture = false;
                 }
 
                 if (this.updateDepthTexture)
-                {                    
+                {
                     this.graphicsDevice.Textures.SetData(this.depthTexture, this.depthData);
                     this.updateDepthTexture = false;
                 }
@@ -450,7 +454,7 @@ namespace WaveEngine.Kinect
                     this.graphicsDevice.Textures.SetData(this.infraredTexture, this.infraredTexturePointer, this.infraredPointerSize);
                     this.updateInfraredTexture = false;
                 }
-            }            
+            }
         }
 
         /// <summary>
@@ -463,7 +467,7 @@ namespace WaveEngine.Kinect
 
             // Initialize textures //
 
-            // Color Texture            
+            // Color Texture
             var colorDescription = this.kinectSensor.ColorFrameSource.FrameDescription;
             this.colorTexture = new Texture2D()
             {
@@ -478,7 +482,7 @@ namespace WaveEngine.Kinect
             this.colorPointerSize = colorDescription.Width * colorDescription.Height * 4;
             this.colorTexturePointer = Marshal.AllocHGlobal(this.colorPointerSize);
 
-            // DepthTexture            
+            // DepthTexture
             var dephtDescription = this.kinectSensor.DepthFrameSource.FrameDescription;
             this.depthTexture = new Texture2D()
             {
@@ -491,9 +495,9 @@ namespace WaveEngine.Kinect
             };
             this.graphicsDevice.Textures.UploadTexture(this.depthTexture);
             int depthSize = dephtDescription.Width * dephtDescription.Height * 4;
-            this.depthData = new byte[depthSize];                                    
+            this.depthData = new byte[depthSize];
 
-            // InfraredTexture            
+            // InfraredTexture
             var infraredDescription = this.kinectSensor.InfraredFrameSource.FrameDescription;
             this.infraredTexture = new Texture2D()
             {
@@ -510,6 +514,7 @@ namespace WaveEngine.Kinect
         }
 
         #region Face
+
         /// <summary>
         /// Kinects the service face frame arrived.
         /// </summary>
@@ -611,7 +616,6 @@ namespace WaveEngine.Kinect
                 return;
             }
 
-
             // Update Color Texture
             if (this.CurrentSource.HasFlag(KinectSources.Color))
             {
@@ -650,6 +654,7 @@ namespace WaveEngine.Kinect
         }
 
         #region Body/Skeleton
+
         /// <summary>
         /// Processes the body frame.
         /// </summary>
@@ -676,7 +681,7 @@ namespace WaveEngine.Kinect
                         // check if a valid face is tracked in this face source
                         if (this.faceFrameSources[i] != null && !this.faceFrameSources[i].IsTrackingIdValid)
                         {
-                            // check if the corresponding body is tracked 
+                            // check if the corresponding body is tracked
                             if (this.Bodies[i].IsTracked)
                             {
                                 // update the face frame source to track this body
@@ -690,13 +695,14 @@ namespace WaveEngine.Kinect
         #endregion
 
         #region Color
+
         /// <summary>
         /// Processes the color image.
         /// </summary>
         /// <param name="frame">The frame.</param>
         private void ProcessColorImage(ColorFrame frame)
         {
-            if (updateColorTexture)
+            if (this.updateColorTexture)
             {
                 return;
             }
@@ -710,8 +716,8 @@ namespace WaveEngine.Kinect
                 {
                     // Check resolution
                     if (frameDescription.Width == this.colorTexture.Width && frameDescription.Height == this.colorTexture.Height)
-                    {                        
-                        frame.CopyConvertedFrameDataToIntPtr(this.colorTexturePointer, (uint)this.colorPointerSize, ColorImageFormat.Rgba);                        
+                    {
+                        frame.CopyConvertedFrameDataToIntPtr(this.colorTexturePointer, (uint)this.colorPointerSize, ColorImageFormat.Rgba);
                         this.updateColorTexture = true;
                     }
                 }
@@ -720,13 +726,14 @@ namespace WaveEngine.Kinect
         #endregion
 
         #region Depth
+
         /// <summary>
         /// Processes the Depth Image.
         /// </summary>
         /// <param name="frame">The frame.</param>
         private void ProcessDepthImage(DepthFrame frame)
         {
-            if (updateDepthTexture)
+            if (this.updateDepthTexture)
             {
                 return;
             }
@@ -735,15 +742,15 @@ namespace WaveEngine.Kinect
             {
                 FrameDescription frameDescription = frame.FrameDescription;
 
-                // the fastest way to process the body index data is to directly access 
+                // the fastest way to process the body index data is to directly access
                 // the underlying buffer
                 using (KinectBuffer buffer = frame.LockImageBuffer())
                 {
                     // verify data and write the color data to the display bitmap
                     if (((frameDescription.Width * frameDescription.Height) == (buffer.Size / frameDescription.BytesPerPixel)) &&
                         (frameDescription.Width == this.depthTexture.Width) && (frameDescription.Height == this.depthTexture.Height))
-                    {                        
-                        this.ProcessGrayFrameData(buffer.UnderlyingBuffer, buffer.Size, this.depthMinReliableDistance, this.depthMaxReliableDistance, frameDescription.BytesPerPixel, this.depthData);                        
+                    {
+                        this.ProcessGrayFrameData(buffer.UnderlyingBuffer, buffer.Size, this.depthMinReliableDistance, this.depthMaxReliableDistance, frameDescription.BytesPerPixel, this.depthData);
                         this.updateDepthTexture = true;
                     }
                 }
@@ -767,7 +774,7 @@ namespace WaveEngine.Kinect
             }
 
             // depth frame data is a 16 bit value
-            ushort* frameData = (ushort*)depthFrameData;            
+            ushort* frameData = (ushort*)depthFrameData;
 
             // convert depth to a visual representation
             for (int i = 0; i < (int)(depthFrameDataSize / bytesPerPixel); ++i)
@@ -788,6 +795,7 @@ namespace WaveEngine.Kinect
         #endregion
 
         #region Infrared
+
         /// <summary>
         /// Processes the infrared frame.
         /// </summary>
@@ -798,15 +806,15 @@ namespace WaveEngine.Kinect
             {
                 FrameDescription frameDescription = frame.FrameDescription;
 
-                // the fastest way to process the body index data is to directly access 
+                // the fastest way to process the body index data is to directly access
                 // the underlying buffer
                 using (KinectBuffer buffer = frame.LockImageBuffer())
                 {
                     // verify data and write the color data to the display bitmap
                     if (((frameDescription.Width * frameDescription.Height) == (buffer.Size / frameDescription.BytesPerPixel)) &&
                         (frameDescription.Width == this.infraredTexture.Width) && (frameDescription.Height == this.infraredTexture.Height))
-                    {                        
-                        frame.CopyFrameDataToIntPtr(this.infraredTexturePointer, (uint)this.infraredPointerSize);                        
+                    {
+                        frame.CopyFrameDataToIntPtr(this.infraredTexturePointer, (uint)this.infraredPointerSize);
                         this.updateInfraredTexture = true;
                     }
                 }

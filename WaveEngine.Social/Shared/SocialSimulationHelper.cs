@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// SocialFakeHelper
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 
@@ -232,7 +225,7 @@ namespace WaveEngine.Social
 
             return NetTask.FromResult(result);
         }
-        
+
         /// <summary>
         /// Shows a default/system view of the games achievements.
         /// </summary>
@@ -303,7 +296,7 @@ namespace WaveEngine.Social
         {
             return NetTask.FromResult(this.simulatedAchievements.Cast<Achievement>());
         }
-        
+
         /// <summary>
         /// Serializes the specified value.
         /// </summary>

@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// LeapMotionService
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using Leap;
@@ -13,6 +6,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using System.Security;
 using WaveEngine.Common;
 using WaveEngine.Common.Graphics;
@@ -25,6 +19,7 @@ namespace WaveEngine.LeapMotion
     /// <summary>
     /// This waveengine service make easy to connect with LeapMotion device.
     /// </summary>
+    [DataContract(Namespace = "WaveEngine.LeapMotion")]
     public class LeapMotionService : UpdatableService
     {
         /// <summary>
@@ -213,7 +208,8 @@ namespace WaveEngine.LeapMotion
         #endregion
 
         #region Initialize
-        [SuppressUnmanagedCodeSecurity, DllImport("kernel32")]
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport("kernel32")]
         private static extern IntPtr LoadLibrary(string lpFileName);
 
         /// <summary>
@@ -264,6 +260,7 @@ namespace WaveEngine.LeapMotion
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Starts to capture from leapmotion device.
         /// </summary>
@@ -322,9 +319,13 @@ namespace WaveEngine.LeapMotion
         /// </summary>
         public void StopSensor()
         {
-            this.controller.Dispose();
+            if (this.controller != null)
+            {
+                this.controller.Dispose();
+                this.controller = null;
+            }
+
             this.CurrentFeatures = LeapFeatures.None;
-            this.controller = null;
             this.hands = null;
             this.currentFrame = null;
 
@@ -436,6 +437,7 @@ namespace WaveEngine.LeapMotion
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Initialize a texture 2D
         /// </summary>

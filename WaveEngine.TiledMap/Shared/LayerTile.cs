@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// Tile
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -25,6 +18,7 @@ namespace WaveEngine.TiledMap
     public class LayerTile
     {
         #region Properties
+
         /// <summary>
         /// Gets the tile ID.
         /// </summary>
@@ -35,7 +29,7 @@ namespace WaveEngine.TiledMap
         }
 
         /// <summary>
-        /// The X coordinate of the Tile.
+        /// Gets the X coordinate of the Tile.
         /// </summary>
         public int X
         {
@@ -44,7 +38,7 @@ namespace WaveEngine.TiledMap
         }
 
         /// <summary>
-        /// The Y coordinate of the Tile.
+        /// Gets the Y coordinate of the Tile.
         /// </summary>
         public int Y
         {
@@ -53,7 +47,7 @@ namespace WaveEngine.TiledMap
         }
 
         /// <summary>
-        /// The tile has Horizontal Flip
+        /// Gets a value indicating whether the tile has Horizontal Flip
         /// </summary>
         public bool HorizontalFlip
         {
@@ -62,7 +56,7 @@ namespace WaveEngine.TiledMap
         }
 
         /// <summary>
-        /// The tile has Vertical Flip
+        /// Gets a value indicating whether the tile has Vertical Flip
         /// </summary>
         public bool VerticalFlip
         {
@@ -71,7 +65,7 @@ namespace WaveEngine.TiledMap
         }
 
         /// <summary>
-        /// The tile has Diagonal Flip
+        /// Gets a value indicating whether the tile has Diagonal Flip
         /// </summary>
         public bool DiagonalFlip
         {
@@ -108,6 +102,7 @@ namespace WaveEngine.TiledMap
         #endregion
 
         #region Initialization
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LayerTile" /> class.
         /// </summary>>
@@ -132,11 +127,12 @@ namespace WaveEngine.TiledMap
         #endregion
 
         #region Public Methods
+
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// Returns a <see cref="string" /> that represents this instance.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="string" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {

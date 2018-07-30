@@ -1,0 +1,27 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Add NoesisGUI library to the project -->
+  <ItemGroup>
+	<None Include="$(MSBuildThisFileDirectory)\NoesisGUI\libNoesis.a">
+		<Link>libNoesis.a</Link>
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</None>
+	<None Include="$(MSBuildThisFileDirectory)\NoesisGUI\symbols.cpp">
+		<Link>symbols.cpp</Link>
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</None>
+  </ItemGroup>  
+  
+  <!-- Link NoesisGUI library -->
+  <PropertyGroup>
+    <MtouchExtraArgs Condition=" '$(OS)' == 'Windows_NT' ">		
+		$(MtouchExtraArgs) --dynamic-symbol-mode=ignore -cxx -gcc_flags "-lstdc++ -L${ProjectDir} -lNoesis -force_load ${ProjectDir}/libNoesis.a ${ProjectDir}/symbols.cpp -framework MetalKit -framework Metal -framework UIKit -framework Foundation -framework CoreGraphics -framework GLKit -framework OpenGLES"
+	</MtouchExtraArgs>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(OS)' == 'Unix' ">
+    <MtouchExtraArgs>
+		$(MtouchExtraArgs) --dynamic-symbol-mode=ignore -cxx -gcc_flags "-lstdc++ -L${TargetDir} -lNoesis -force_load ${TargetDir}/libNoesis.a ${TargetDir}/symbols.cpp -framework MetalKit -framework Metal -framework UIKit -framework Foundation -framework CoreGraphics -framework GLKit -framework OpenGLES"
+	</MtouchExtraArgs>
+  </PropertyGroup>
+  
+</Project>

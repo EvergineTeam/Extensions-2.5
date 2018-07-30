@@ -21,5 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AnalyticsSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Localytics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocalyticsInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfoExt.cs" />
   </ItemGroup>
 </Project>

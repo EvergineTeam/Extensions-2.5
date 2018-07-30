@@ -1,20 +1,16 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// NeighboursCollection
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
 using System.Collections.Generic;
-using System.Text; 
+using System.Text;
 #endregion
 
 namespace WaveEngine.TiledMap
 {
+    /// <summary>
+    /// NeighboursCollection
+    /// </summary>
     public abstract class NeighboursCollection : IEnumerable<LayerTile>
     {
         /// <summary>
@@ -28,6 +24,7 @@ namespace WaveEngine.TiledMap
         protected LayerTile center;
 
         #region Properties
+
         /// <summary>
         /// Gets the top neighbour.
         /// </summary>
@@ -121,6 +118,7 @@ namespace WaveEngine.TiledMap
         #endregion
 
         #region Initilization
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NeighboursCollection"/> class.
         /// </summary>
@@ -130,26 +128,27 @@ namespace WaveEngine.TiledMap
         {
             this.tileMapLayer = tileMapLayer;
             this.center = center;
-        } 
+        }
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Gets the enumerator.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>IEnumerator_LayerTile</returns>
         public IEnumerator<LayerTile> GetEnumerator()
         {
             for (int i = 0; i < 8; i++)
             {
                 yield return this[i];
             }
-        } 
+        }
 
         /// <summary>
         /// Gets the enumerator.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>IEnumerator</returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();

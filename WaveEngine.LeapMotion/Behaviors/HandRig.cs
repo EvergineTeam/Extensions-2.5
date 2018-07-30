@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// HandRig
-//
-// Copyright © 2017 Wave Coorporation. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -30,6 +23,7 @@ namespace WaveEngine.LeapMotion.Behaviors
         private LeapMotionService leapService;
 
         #region Properties
+
         /// <summary>
         /// Gets the anchor entity in the Bow position.
         /// </summary>
@@ -157,6 +151,7 @@ namespace WaveEngine.LeapMotion.Behaviors
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Default values
         /// </summary>
@@ -194,6 +189,7 @@ namespace WaveEngine.LeapMotion.Behaviors
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Update the local position of each anchor.
         /// </summary>

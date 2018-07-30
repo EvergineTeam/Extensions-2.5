@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>bb2153e9-f00a-4154-aac3-e6a7305d6f67</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WaveEngine.ARMobile.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ARMobileHitTestResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ARMobileHitType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ARMobilePlaneAnchor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ARMobileAnchor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ARMobileService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ARMobileStartOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ARMobileWorldAlignment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ARMobileLightEstimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ARLightEstimationMaterial.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ARLightEstimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ARMobileProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ARMobilePlaneVisualizer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Materials\YUVMaterial.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlaneAnchorType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlaneDetectionType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfoExt.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\YUVMaterial\psYUVMaterial.frag" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\GLSL\YUVMaterial\vsYUVMaterial.vert" />
+    <None Include="$(MSBuildThisFileDirectory)Shaders\HLSL\YUVMaterial\CompileShaders.cmd" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\HLSL\YUVMaterial\psYUVMaterial.fxo" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Shaders\HLSL\YUVMaterial\vsYUVMaterial.fxo" />
+    <None Include="$(MSBuildThisFileDirectory)Shaders\HLSL\YUVMaterial\YUVMaterial.fx" />
+  </ItemGroup>
+</Project>

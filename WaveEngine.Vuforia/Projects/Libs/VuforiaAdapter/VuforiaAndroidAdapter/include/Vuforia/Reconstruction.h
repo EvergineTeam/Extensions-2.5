@@ -50,8 +50,8 @@ public:
 
     /// Define how much the SmartTerrain ground plane mesh is diminished.
     /**
-    *  Padding must be greater than or equal to 0.
-    */
+     *  Padding must be greater than or equal to 0.
+     */
     virtual void setNavMeshPadding(float padding) = 0;
 
     /// Smart terrain reconstruction is started or continued if it was 

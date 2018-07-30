@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// LeapMotionRig
-//
-// Copyright © 2017 Wave Coorporation. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -31,6 +24,7 @@ namespace WaveEngine.LeapMotion.Behaviors
         public LeapMotionService LeapService;
 
         #region Properties
+
         /// <summary>
         /// Gets the root entity of tracking space.
         /// </summary>
@@ -82,6 +76,7 @@ namespace WaveEngine.LeapMotion.Behaviors
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Default values
         /// </summary>
@@ -111,7 +106,7 @@ namespace WaveEngine.LeapMotion.Behaviors
 
             if (this.TrackingSpace == null)
             {
-                this.TrackingSpace = this.ConfigureRootAnchor("TrackingSpace");                
+                this.TrackingSpace = this.ConfigureRootAnchor("TrackingSpace");
             }
 
             this.TrackingSpaceTransform = this.TrackingSpace.FindComponent<Transform3D>();
@@ -139,6 +134,7 @@ namespace WaveEngine.LeapMotion.Behaviors
         #endregion
 
         #region Private methods
+
         /// <summary>
         /// Refresh all local positions.
         /// </summary>

@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// AnalyticsManager
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -17,6 +10,9 @@ using System.Net;
 using System.IO;
 using WaveEngine.Common;
 using System.Diagnostics;
+using WaveEngine.Framework;
+using WaveEngine.Framework.Services;
+using System.Runtime.Serialization;
 #endregion
 
 namespace WaveEngine.Analytics
@@ -24,6 +20,7 @@ namespace WaveEngine.Analytics
     /// <summary>
     /// This class management the analytics systems.
     /// </summary>
+    [DataContract(Namespace = "WaveEngine.Analytics")]
     public class AnalyticsManager : Service
     {
         /// <summary>
@@ -32,16 +29,12 @@ namespace WaveEngine.Analytics
         protected AnalyticsSystem analyticsSystem;
 
         /// <summary>
-        /// Handle to adapter.
-        /// </summary>
-        private IAdapter adapter;
-
-        /// <summary>
         /// Analytics is open.
         /// </summary>
         private bool isOpen;
 
         #region Properties
+
         /// <summary>
         /// Gets a value indicating whether this instance is open.
         /// </summary>
@@ -56,13 +49,13 @@ namespace WaveEngine.Analytics
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AnalyticsManager"/> class.
         /// </summary>
-        /// <param name="adapter">The adapter.</param>
-        public AnalyticsManager(IAdapter adapter)
+        public AnalyticsManager()
         {
-            this.adapter = adapter;
+            ////this.adapter = adapter;
         }
 
         /// <summary>
@@ -85,16 +78,16 @@ namespace WaveEngine.Analytics
         /// <summary>
         /// Sets the analytics system.
         /// </summary>
-        /// <param name="analyticsInfo">The analytics info.</param>        
+        /// <param name="analyticsInfo">The analytics info.</param>
         public void SetAnalyticsSystem(AnalyticsInfo analyticsInfo)
         {
-            var args = new object[] { this.adapter, analyticsInfo };
+            var args = new object[] { analyticsInfo };
             this.analyticsSystem = Activator.CreateInstance(analyticsInfo.InternalType, args) as AnalyticsSystem;
         }
 
         /// <summary>
         /// Opens this instance.
-        /// </summary>        
+        /// </summary>
         public void Open()
         {
             if (this.analyticsSystem == null)
@@ -113,7 +106,7 @@ namespace WaveEngine.Analytics
 
         /// <summary>
         /// Closes this instance.
-        /// </summary>        
+        /// </summary>
         public void Close()
         {
             if (this.analyticsSystem == null)
@@ -127,7 +120,7 @@ namespace WaveEngine.Analytics
 
         /// <summary>
         /// Uploads this instance.
-        /// </summary>        
+        /// </summary>
         public void Upload()
         {
             if (this.analyticsSystem == null)
@@ -143,7 +136,7 @@ namespace WaveEngine.Analytics
         /// </summary>
         /// <param name="eventName">Name of the event.</param>
         /// <param name="attribute">The attribute.</param>
-        /// <param name="value">The value.</param>       
+        /// <param name="value">The value.</param>
         public void TagEvent(string eventName, string attribute, string value)
         {
             if (this.analyticsSystem == null)
@@ -158,7 +151,7 @@ namespace WaveEngine.Analytics
         /// Tags the event.
         /// </summary>
         /// <param name="eventName">Name of the event.</param>
-        /// <param name="attributes">The attributes.</param>        
+        /// <param name="attributes">The attributes.</param>
         public void TagEvent(string eventName, Dictionary<string, string> attributes)
         {
             if (this.analyticsSystem == null)

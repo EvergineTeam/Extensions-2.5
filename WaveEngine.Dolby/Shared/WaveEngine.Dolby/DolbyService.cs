@@ -1,14 +1,8 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// DolbyService
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
+using System.Runtime.Serialization;
 using WaveEngine.Common;
 #endregion
 
@@ -17,6 +11,7 @@ namespace WaveEngine.Dolby
     /// <summary>
     /// Dolby Integration Service
     /// </summary>
+    [DataContract(Namespace = "WaveEngine.Dolby")]
     public class DolbyService : Service
     {
         /// <summary>
@@ -25,8 +20,9 @@ namespace WaveEngine.Dolby
         private IDolbyService platformSpecificDolbyService;
 
         /// <summary>
-        /// Gets the IsEnabled property
+        /// Gets or sets a value indicating whether the IsEnabled property
         /// </summary>
+        [DataMember]
         public bool IsEnabled
         {
             get
@@ -53,12 +49,14 @@ namespace WaveEngine.Dolby
         /// <summary>
         /// Gets or sets the DolbyProfile property
         /// </summary>
+        [DataMember]
         public DolbyProfile DolbyProfile
         {
             get
             {
                 return this.GetCurrentProfile();
             }
+
             set
             {
                 this.SetCurrentProfile(value);
@@ -68,6 +66,7 @@ namespace WaveEngine.Dolby
         /// <summary>
         /// Get Current Profile. MUSIC by default if not supported
         /// </summary>
+        /// <returns>The current dolby profile.</returns>
         private DolbyProfile GetCurrentProfile()
         {
             DolbyProfile res = DolbyProfile.MUSIC;
@@ -83,7 +82,7 @@ namespace WaveEngine.Dolby
         /// <summary>
         /// Sets the current profile
         /// </summary>
-        /// <param name="profile"></param>
+        /// <param name="profile">The profile to set.</param>
         private void SetCurrentProfile(DolbyProfile profile)
         {
             if (this.platformSpecificDolbyService != null)
@@ -93,6 +92,7 @@ namespace WaveEngine.Dolby
         }
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DolbyService" /> class.
         /// </summary>

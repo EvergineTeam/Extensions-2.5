@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// DepthOfFieldMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -86,6 +79,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -118,15 +112,17 @@ namespace WaveEngine.ImageEffects
         private DOFEffectParameters shaderParameters;
 
         #region Properties
+
         /// <summary>
-        /// Focus Distance
+        /// Gets or sets focus Distance
         /// </summary>
         public float FocusDistance { get; set; }
 
         /// <summary>
-        /// Focus range
+        /// Gets or sets focus range
         /// </summary>
         public float FocusRange { get; set; }
+
         /// <summary>
         /// Gets or sets the texture.
         /// </summary>
@@ -167,11 +163,6 @@ namespace WaveEngine.ImageEffects
 
             set
             {
-                if (value == null)
-                {
-                    throw new NullReferenceException("Texture cannot be null.");
-                }
-
                 this.texture1 = value;
             }
         }
@@ -209,6 +200,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DepthOfFieldMaterial"/> class.
         /// </summary>
@@ -224,7 +216,6 @@ namespace WaveEngine.ImageEffects
         {
             base.DefaultValues();
 
-            this.SamplerMode = AddressMode.LinearClamp;
             this.BlurScale = 4.0f;
             this.FocusRange = 2;
             this.FocusDistance = 4;
@@ -247,6 +238,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>
@@ -257,7 +249,7 @@ namespace WaveEngine.ImageEffects
             {
                 this.shaderParameters.TexcoordOffset = this.TexcoordOffset;
 
-                if (Pass == Passes.Combine)
+                if (this.Pass == Passes.Combine)
                 {
                     Camera camera = this.renderManager.CurrentDrawingCamera;
 
@@ -268,7 +260,7 @@ namespace WaveEngine.ImageEffects
                     this.shaderParameters.BlurScale = this.BlurScale;
                     this.Parameters = this.shaderParameters;
 
-                    depthTexture = this.renderManager.GraphicsDevice.RenderTargets.DefaultDepthTexture;
+                    this.depthTexture = this.renderManager.GraphicsDevice.RenderTargets.DefaultDepthTexture;
 
                     if (this.depthTexture != null)
                     {

@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// OculusVRCamera3D
-//
-// Copyright © 2017 Wave Coorporation. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -24,6 +17,7 @@ namespace WaveEngine.OculusRift
     public class OculusVRCamera3D : BaseDecorator
     {
         #region Properties
+
         /// <summary>
         /// Gets the VRCameraRig component
         /// </summary>
@@ -48,6 +42,7 @@ namespace WaveEngine.OculusRift
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OculusVRCamera3D" /> class.
         /// </summary>

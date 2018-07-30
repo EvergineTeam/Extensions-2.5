@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// AntialiasingLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -87,6 +80,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AntialiasingLens"/> class.
         /// </summary>
@@ -108,13 +102,14 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Renders to image.
         /// </summary>
         /// <param name="gameTime">The game time.</param>
         public override void Render(TimeSpan gameTime)
         {
-            var mat = (this.material as AntialiasingMaterial);
+            var mat = this.material as AntialiasingMaterial;
             if (mat.TexcoordOffset == Vector2.Zero)
             {
                 mat.TexcoordOffset.X = 1f / this.Source.Width;
@@ -129,6 +124,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>

@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// LightShaftMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -105,13 +98,14 @@ namespace WaveEngine.ImageEffects
         {
             new ShaderTechnique("Combine", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psLSCombine", VertexPositionTexture.VertexFormat),
             new ShaderTechnique("BlackMask", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psBlackMask", VertexPositionTexture.VertexFormat),
-            new ShaderTechnique("BlackMask_Halo", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psBlackMask", VertexPositionTexture.VertexFormat, null, new string[]{"HALO"}),
-            new ShaderTechnique("LightShaft_Low", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psLightShaft", VertexPositionTexture.VertexFormat, null, new string[]{"LOW"}),
-            new ShaderTechnique("LightShaft_Medium", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psLightShaft", VertexPositionTexture.VertexFormat, null, new string[]{"MEDIUM"}),
-            new ShaderTechnique("LightShaft_High", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psLightShaft", VertexPositionTexture.VertexFormat, null, new string[]{"HIGH"}),
+            new ShaderTechnique("BlackMask_Halo", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psBlackMask", VertexPositionTexture.VertexFormat, null, new string[] { "HALO" }),
+            new ShaderTechnique("LightShaft_Low", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psLightShaft", VertexPositionTexture.VertexFormat, null, new string[] { "LOW" }),
+            new ShaderTechnique("LightShaft_Medium", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psLightShaft", VertexPositionTexture.VertexFormat, null, new string[] { "MEDIUM" }),
+            new ShaderTechnique("LightShaft_High", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psLightShaft", VertexPositionTexture.VertexFormat, null, new string[] { "HIGH" }),
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -162,8 +156,9 @@ namespace WaveEngine.ImageEffects
         private LSEffectParameters shaderParameters;
 
         #region Properties
+
         /// <summary>
-        /// Light Shaft quality effect, Low by default.
+        /// Gets or sets light Shaft quality effect, Low by default.
         /// </summary>
         public EffectQuality Quality { get; set; }
 
@@ -184,59 +179,60 @@ namespace WaveEngine.ImageEffects
         public bool HaloEnabled { get; set; }
 
         /// <summary>
-        /// Sun Radius.
+        /// Gets or sets sun Radius.
         /// </summary>
         public float Radius { get; set; }
 
         /// <summary>
-        /// Sun EdgeSharpness.
+        /// Gets or sets sun EdgeSharpness.
         /// </summary>
         public float EdgeSharpness { get; set; }
 
         /// <summary>
-        /// Sun intensity.
+        /// Gets or sets sun intensity.
         /// </summary>
         public float SunIntensity { get; set; }
 
         /// <summary>
-        /// Depth Threshold
+        /// Gets or sets depth Threshold
         /// </summary>
         public float DepthThreshold { get; set; }
 
         /// <summary>
-        /// Shaft mask blend.
+        /// Gets or sets shaft mask blend.
         /// </summary>
         public float Blend { get; set; }
 
         /// <summary>
-        /// Shaft density.
+        /// Gets or sets shaft density.
         /// </summary>
         public float Density { get; set; }
 
         /// <summary>
-        /// Shaft weight.
+        /// Gets or sets shaft weight.
         /// </summary>
         public float Weight { get; set; }
 
         /// <summary>
-        /// Shaft decay.
+        /// Gets or sets shaft decay.
         /// </summary>
         public float Decay { get; set; }
 
         /// <summary>
-        /// Shaft exposure.
+        /// Gets or sets shaft exposure.
         /// </summary>
         public float Exposure { get; set; }
 
         /// <summary>
-        /// Focus Distance
+        /// Gets or sets focus Distance
         /// </summary>
         public Color ShaftTint { get; set; }
 
         /// <summary>
-        /// Focus range
+        /// Gets or sets focus range
         /// </summary>
         public Vector2 LightCenter { get; set; }
+
         /// <summary>
         /// Gets or sets the texture.
         /// </summary>
@@ -292,6 +288,9 @@ namespace WaveEngine.ImageEffects
             }
         }
 
+        /// <summary>
+        /// Gets or sets DirectionalLight
+        /// </summary>
         public DirectionalLightProperties DirectionalLight
         {
             get;
@@ -331,6 +330,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LightShaftMaterial"/> class.
         /// </summary>
@@ -361,7 +361,6 @@ namespace WaveEngine.ImageEffects
             this.Exposure = 1f;
             this.Blend = 1f;
 
-            this.SamplerMode = AddressMode.LinearClamp;
             this.LightCenter = new Vector2(0.5f);
             this.ShaftTint = Color.White;
             this.shaderParameters = new LSEffectParameters();
@@ -381,6 +380,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>
@@ -389,7 +389,7 @@ namespace WaveEngine.ImageEffects
         {
             if (!cached)
             {
-                if (Pass != Passes.Combine)
+                if (this.Pass != Passes.Combine)
                 {
                     // Calcule light projection
                     Camera camera = this.renderManager.CurrentDrawingCamera;
@@ -414,7 +414,7 @@ namespace WaveEngine.ImageEffects
                             lightPosition.X = -this.DirectionalLight.Direction.X;
                             lightPosition.Y = -this.DirectionalLight.Direction.Y;
                             lightPosition.Z = -this.DirectionalLight.Direction.Z;
-                            lightPosition.W = 0;                         
+                            lightPosition.W = 0;
                         }
                     }
 
@@ -422,7 +422,7 @@ namespace WaveEngine.ImageEffects
                     float signW = Math.Sign(screenPosition.W);
                     screenPosition /= screenPosition.W;
 
-                    this.shaderParameters.LightCenter = new Vector2(screenPosition.X * 0.5f + 0.5f, 1 - (screenPosition.Y * 0.5f + 0.5f));
+                    this.shaderParameters.LightCenter = new Vector2((screenPosition.X * 0.5f) + 0.5f, 1 - ((screenPosition.Y * 0.5f) + 0.5f));
                     this.shaderParameters.LightCenter *= signW;
 
                     if (platform.AdapterType != Common.AdapterType.DirectX)
@@ -431,12 +431,11 @@ namespace WaveEngine.ImageEffects
                         this.shaderParameters.LightCenter.Y = 1 - this.shaderParameters.LightCenter.Y;
                     }
 
-                    if (Pass == Passes.BlackMask)
+                    if (this.Pass == Passes.BlackMask)
                     {
                         // Black Mask PASS
-                        depthTexture = this.renderManager.GraphicsDevice.RenderTargets.DefaultDepthTexture;                        
+                        this.depthTexture = this.renderManager.GraphicsDevice.RenderTargets.DefaultDepthTexture;
                         this.shaderParameters.TexcoordOffset = this.TexcoordOffset;
-
 
                         this.shaderParameters.SunIntensity = this.SunIntensity / (1 - this.DepthThreshold);
                         this.shaderParameters.DepthThreshold = this.DepthThreshold;

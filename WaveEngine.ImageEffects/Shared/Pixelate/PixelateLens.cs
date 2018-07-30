@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// PixelateLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -29,6 +22,7 @@ namespace WaveEngine.ImageEffects
         private Vector2 pixelSize;
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the image tone, default value is Vector2(10).
         /// </summary>
@@ -60,8 +54,9 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="SepiaLens"/> class.
+        /// Initializes a new instance of the <see cref="PixelateLens"/> class.
         /// </summary>
         public PixelateLens()
             : base()
@@ -80,16 +75,17 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Renders to image.
         /// </summary>
         /// <param name="gameTime">The game time.</param>
         public override void Render(TimeSpan gameTime)
         {
-            var mat = (this.material as PixelateMaterial);
+            var mat = this.material as PixelateMaterial;
             mat.Texture = this.Source;
-            mat.PixelSize.X = this.Source.Width / pixelSize.X;
-            mat.PixelSize.Y = this.Source.Height / pixelSize.Y;
+            mat.PixelSize.X = this.Source.Width / this.pixelSize.X;
+            mat.PixelSize.Y = this.Source.Height / this.pixelSize.Y;
 
             this.RenderToImage(this.Destination, this.material);
 

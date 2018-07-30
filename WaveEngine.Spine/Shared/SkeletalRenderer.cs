@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// SkeletalRenderer
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using statements
 using System;
@@ -16,8 +9,9 @@ using WaveEngine.Framework;
 using WaveEngine.Framework.Graphics;
 using System.Runtime.Serialization;
 using Spine;
-using SpineBlendMode = Spine.BlendMode;
 using System.Collections.Generic;
+using WaveEngine.Materials;
+using SpineBlendMode = Spine.BlendMode;
 #endregion
 
 namespace WaveEngine.Spine
@@ -32,12 +26,6 @@ namespace WaveEngine.Spine
         /// Number of instances of this component created.
         /// </summary>
         private static int instances;
-
-        /// <summary>
-        /// Transform of skeletal model/>.
-        /// </summary>
-        [RequiredComponent]
-        private Transform2D Transform2D = null;
 
         /// <summary>
         /// The skeletal data
@@ -65,7 +53,7 @@ namespace WaveEngine.Spine
         /// The vertices
         /// </summary>
         private VertexPositionColorTexture[] vertices;
-        
+
         /// <summary>
         /// The mesh
         /// </summary>
@@ -82,34 +70,7 @@ namespace WaveEngine.Spine
         #region Cached fields
         #endregion
 
-        /// <summary>
-        /// Debug modes
-        /// </summary>
-        [Flags]
-        public enum DebugMode
-        {
-            /// <summary>
-            /// The none
-            /// </summary>
-            None = 1,
-
-            /// <summary>
-            /// The bones
-            /// </summary>
-            Bones = 2,
-
-            /// <summary>
-            /// The quads
-            /// </summary>
-            Quads = 4
-        }
-
         #region Properties
-        /// <summary>
-        /// Gets or sets the sampler mode
-        /// </summary>
-        [DataMember]
-        public AddressMode SamplerMode { get; set; }
 
         /// <summary>
         /// Gets or sets the color of the debug bones.
@@ -130,15 +91,6 @@ namespace WaveEngine.Spine
         public Color DebugQuadColor { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [debug mode].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [debug mode]; otherwise, <c>false</c>.
-        /// </value>
-        [DataMember]
-        public DebugMode ActualDebugMode { get; set; }
-
-        /// <summary>
         /// Gets or sets the distance between slots.
         /// </summary>
         [DataMember]
@@ -146,6 +98,7 @@ namespace WaveEngine.Spine
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SkeletalRenderer" /> class.
         /// </summary>
@@ -160,12 +113,10 @@ namespace WaveEngine.Spine
         /// <summary>
         /// Initializes a new instance of the <see cref="SkeletalRenderer" /> class.
         /// </summary>
-        /// <param name="layerType">Type of the layer.</param>
-        /// <param name="samplerMode">The sampler mode.</param>
-        public SkeletalRenderer(Type layerType, AddressMode samplerMode = AddressMode.LinearClamp)
-            : base("SkeletalRenderer" + instances++, layerType)
+        /// <param name="layerId">Type of the layer.</param>
+        public SkeletalRenderer(int layerId)
+            : base("SkeletalRenderer" + instances++, layerId)
         {
-            this.SamplerMode = samplerMode;
         }
 
         /// <summary>
@@ -174,9 +125,7 @@ namespace WaveEngine.Spine
         protected override void DefaultValues()
         {
             base.DefaultValues();
-            this.SamplerMode = AddressMode.LinearClamp;
             this.Transform2D = null;
-            this.ActualDebugMode = DebugMode.Bones;
             this.quadIndices = new ushort[6] { 0, 3, 1, 1, 3, 2 };
             this.ZOrderBias = 0.0001f;
         }
@@ -202,8 +151,9 @@ namespace WaveEngine.Spine
             base.DeleteDependencies();
         }
         #endregion
-        
+
         #region Public Methods
+
         /// <summary>
         /// Allows to perform custom drawing.
         /// </summary>
@@ -215,15 +165,19 @@ namespace WaveEngine.Spine
                 return;
             }
 
-            float opacity = this.RenderManager.DebugLines ? DebugAlpha : this.Transform2D.GlobalOpacity;
+            float opacity = this.Transform2D.GlobalOpacity;
+            if (this.RenderManager.ShouldDrawFlag(Framework.Managers.DebugLinesFlags.DebugAlphaOpacity))
+            {
+                opacity *= DebugAlpha;
+            }
 
             int numVertices = 0;
             int numPrimitives = 0;
 
             VertexPositionColorTexture tempVertex;
-            Material material = null;
+            StandardMaterial material = null;
 
-            // Process Mesh                        
+            // Process Mesh
             for (int i = 0; i < this.drawOrder.Count; i++)
             {
                 var slot = this.drawOrder.Items[i];
@@ -249,7 +203,7 @@ namespace WaveEngine.Spine
                     float[] uvs = regionAttachment.UVs;
 
                     var region = (AtlasRegion)regionAttachment.RendererObject;
-                    material = (Material)region.page.rendererObject;
+                    material = (StandardMaterial)region.page.rendererObject;
 
                     var computedVertices = this.ComputeAttachmentVertices(regionAttachment, slot);
                     this.vertices = new VertexPositionColorTexture[4];
@@ -284,7 +238,7 @@ namespace WaveEngine.Spine
 
                     numVertices = 4;
                     numPrimitives = 2;
-                    this.indices = quadIndices;
+                    this.indices = this.quadIndices;
                 }
                 else if (attachment is MeshAttachment)
                 {
@@ -303,11 +257,11 @@ namespace WaveEngine.Spine
                     Color color = new Color(r, g, b, a);
 
                     numVertices = mesh.Vertices.Length;
-                    indices = CopyIndices(mesh.Triangles);
-                    numPrimitives = indices.Length / 3;
+                    this.indices = this.CopyIndices(mesh.Triangles);
+                    numPrimitives = this.indices.Length / 3;
 
                     var region = (AtlasRegion)mesh.RendererObject;
-                    material = (Material)region.page.rendererObject;
+                    material = (StandardMaterial)region.page.rendererObject;
 
                     var computedVertices = this.ComputeAttachmentVertices(mesh, slot);
                     this.vertices = new VertexPositionColorTexture[numVertices / 2];
@@ -339,13 +293,13 @@ namespace WaveEngine.Spine
                     Color color = new Color(r, g, b, a);
 
                     numVertices = mesh.UVs.Length;
-                    indices = CopyIndices(mesh.Triangles);
-                    numPrimitives = indices.Length / 3;
+                    this.indices = this.CopyIndices(mesh.Triangles);
+                    numPrimitives = this.indices.Length / 3;
 
                     var computedVertices = this.ComputeAttachmentVertices(mesh, slot);
 
                     var region = (AtlasRegion)mesh.RendererObject;
-                    material = (Material)region.page.rendererObject;
+                    material = (StandardMaterial)region.page.rendererObject;
 
                     this.vertices = new VertexPositionColorTexture[numVertices / 2];
 
@@ -366,8 +320,8 @@ namespace WaveEngine.Spine
 
                     if (this.spineMeshes[i] != null)
                     {
-                        if (this.spineMeshes[i].VertexBuffer.VertexCount != vertices.Length ||
-                            this.spineMeshes[i].IndexBuffer.Data.Length != indices.Length)
+                        if (this.spineMeshes[i].VertexBuffer.VertexCount != this.vertices.Length ||
+                            this.spineMeshes[i].IndexBuffer.Data.Length != this.indices.Length)
                         {
                             Mesh toDispose = this.spineMeshes[i];
                             this.GraphicsDevice.DestroyIndexBuffer(toDispose.IndexBuffer);
@@ -385,7 +339,7 @@ namespace WaveEngine.Spine
                             0,
                             numPrimitives,
                             new DynamicVertexBuffer(VertexPositionColorTexture.VertexFormat),
-                            new DynamicIndexBuffer(indices),
+                            new DynamicIndexBuffer(this.indices),
                             PrimitiveType.TriangleList);
 
                         this.spineMeshes[i] = newMesh;
@@ -399,8 +353,7 @@ namespace WaveEngine.Spine
                     mesh.ZOrder = this.Transform2D.DrawOrder - (i * this.ZOrderBias);
                     mesh.DisableBatch = true;
 
-                    material.LayerType = this.LayerType;
-                    material.SamplerMode = this.SamplerMode;
+                    material.LayerId = this.LayerId;
 
                     Matrix worldTransform = this.Transform2D.WorldTransform;
                     this.RenderManager.DrawMesh(mesh, material, ref worldTransform, false);
@@ -426,6 +379,7 @@ namespace WaveEngine.Spine
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Performs further custom initialization for this instance.
         /// </summary>
@@ -458,7 +412,7 @@ namespace WaveEngine.Spine
             Matrix worldTransform = this.Transform2D.WorldTransform;
 
             // Draw bones
-            if (this.ActualDebugMode.HasFlag(DebugMode.Bones))
+            if (this.RenderManager.ShouldDrawFlag(Framework.Managers.DebugLinesFlags.Bones))
             {
                 foreach (var bone in this.SkeletalAnimation.Skeleton.Bones)
                 {
@@ -472,41 +426,38 @@ namespace WaveEngine.Spine
                         Vector2.Transform(ref start, ref worldTransform, out start);
                         Vector2.Transform(ref end, ref worldTransform, out end);
 
-                        RenderManager.LineBatch2D.DrawLine(ref start, ref end, ref color, this.Transform2D.DrawOrder);
+                        this.RenderManager.LineBatch2D.DrawLine(ref start, ref end, ref color, this.Transform2D.DrawOrder);
                     }
                 }
             }
 
             // Draw quads
-            if (this.ActualDebugMode.HasFlag(DebugMode.Quads))
+            color = Color.Yellow;
+            for (int i = 0; i < this.drawOrder.Count; i++)
             {
-                color = Color.Yellow;
-                for (int i = 0; i < this.drawOrder.Count; i++)
+                var slot = this.drawOrder.Items[i];
+                var attachment = slot.Attachment;
+
+                var computedVertices = this.ComputeAttachmentVertices(attachment, slot);
+                int vertexCount = computedVertices.Count;
+
+                for (int j = 0; j < vertexCount; j++)
                 {
-                    var slot = this.drawOrder.Items[i];
-                    var attachment = slot.Attachment;
+                    start = computedVertices[j].ToVector2();
 
-                    var computedVertices = this.ComputeAttachmentVertices(attachment, slot);
-                    int vertexCount = computedVertices.Count;
-
-                    for (int j = 0; j < vertexCount; j++)
+                    if (j < vertexCount - 1)
                     {
-                        start = computedVertices[j].ToVector2();
-
-                        if (j < vertexCount - 1)
-                        {
-                            end = computedVertices[j + 1].ToVector2();
-                        }
-                        else
-                        {
-                            end = computedVertices[0].ToVector2();
-                        }
-
-                        Vector2.Transform(ref start, ref worldTransform, out start);
-                        Vector2.Transform(ref end, ref worldTransform, out end);
-
-                        RenderManager.LineBatch2D.DrawLine(ref start, ref end, ref color, this.Transform2D.DrawOrder);
+                        end = computedVertices[j + 1].ToVector2();
                     }
+                    else
+                    {
+                        end = computedVertices[0].ToVector2();
+                    }
+
+                    Vector2.Transform(ref start, ref worldTransform, out start);
+                    Vector2.Transform(ref end, ref worldTransform, out end);
+
+                    this.RenderManager.LineBatch2D.DrawLine(ref start, ref end, ref color, this.Transform2D.DrawOrder);
                 }
             }
         }
@@ -517,6 +468,7 @@ namespace WaveEngine.Spine
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
             if (disposing)
             {
                 this.DisposeMeshes();
@@ -653,7 +605,7 @@ namespace WaveEngine.Spine
 
                 var width = maxVertexPosition.X - minVertexPosition.X;
                 var height = maxVertexPosition.Y - minVertexPosition.Y;
-                
+
                 this.Transform2D.Rectangle = new RectangleF(0, 0, width, height);
                 this.Transform2D.Origin = new Vector2(
                     (width - maxVertexPosition.X) / width,

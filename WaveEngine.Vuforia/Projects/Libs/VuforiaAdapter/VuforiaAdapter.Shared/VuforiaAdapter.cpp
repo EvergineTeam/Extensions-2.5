@@ -11,6 +11,8 @@ int gFrameWidth;
 int gFrameHeight;
 QCAR_State gState = QCAR_State::QCAR_STOPPED;
 
+Vuforia::DataSet* currentDataset;
+
 void ConfigureVideoBackground(bool isPortrait);
 void PrintInitError(int errorCode);
 bool InternalStartTracking();
@@ -65,19 +67,13 @@ void QCAR_getVideoInfo(int* textureWidth, int* textureHeight, VideoMesh* videoMe
 		videoMesh->v4.posZ = vbVertices[3].data[2];
 		videoMesh->v4.texCoordX = vbTexCoords[3].data[0];
 		videoMesh->v4.texCoordY = vbTexCoords[3].data[1];
-
-
+		
 		videoMesh->indices[0] = vbIndices[0];
 		videoMesh->indices[1] = vbIndices[1];
 		videoMesh->indices[2] = vbIndices[2];
 		videoMesh->indices[3] = vbIndices[3];
 		videoMesh->indices[4] = vbIndices[4];
 		videoMesh->indices[5] = vbIndices[5];
-
-		////for (int i = 0; i < 6; i++)
-		////{
-		////	videoMesh->indices[i] = vbIndices[i];
-		////}
 		
 		delete renderingPrimitives;
 		renderingPrimitives = nullptr;
@@ -100,6 +96,11 @@ void QCAR_updateVideoTexture(ID3D11Device* device)
 	vuforiaRenderer.updateVideoBackgroundTexture(nullptr);
 	vuforiaRenderer.end();
 };
+
+bool QCAR_setHolographicAppCS(void* appSpecifiedCS)
+{
+	return Vuforia::setHolographicAppCS(appSpecifiedCS);
+}
 #endif
 
 #ifdef OPENGL
@@ -152,7 +153,7 @@ void QCAR_init(const char* licenseKey, InitCallback callback)
 {
 #if UWP
 	Vuforia::setInitParameters(licenseKey);
-
+	
 	Concurrency::create_task([callback]()
 	{
 		bool result = InternalInit();
@@ -248,8 +249,13 @@ void QCAR_setOrientation(int frameWidth, int frameHeight, QCAR_Orientation orien
 	ConfigureVideoBackground(isPortrait);
 }
 
+bool QCAR_setHint(unsigned int hint, int value)
+{
+	return Vuforia::setHint(hint, value);
+}
+
 // Initializes the QCAR tracking with a datase
-int QCAR_initialize(const char* dataSetPath, bool extendedTracking)
+int QCAR_loadDataSet(const char* dataSetPath, bool extendedTracking, LoadDataSetResult* trackables)
 {
 	// If QCAR is not in initialized state...
 	if (gState != QCAR_State::QCAR_INITIALIZED)
@@ -268,31 +274,51 @@ int QCAR_initialize(const char* dataSetPath, bool extendedTracking)
 		return 100;
 	}
 
-	// Create the data sets:
-	Vuforia::DataSet* dataSet = tracker->createDataSet();
-	if (dataSet == 0)
+	if (currentDataset != nullptr)
+	{
+		tracker->destroyDataSet(currentDataset);
+	}
+
+	// Create the data set:
+	currentDataset = tracker->createDataSet();
+	if (currentDataset == 0)
 	{
 		LogMessage("Failed to create a new tracking data.\n");
 		return 101;
 	}
-
-	// Load the data sets:
-	if (!dataSet->load(dataSetPath, Vuforia::STORAGE_APPRESOURCE))
+	
+	// Load the data set:
+	if (!currentDataset->load(dataSetPath, Vuforia::STORAGE_APPRESOURCE))
 	{
 		LogMessage("Failed to load data set.\n");
 		return 102;
 	}
 
 	// Activate the data set:
-	if (!tracker->activateDataSet(dataSet))
+	if (!tracker->activateDataSet(currentDataset))
 	{
 		LogMessage("Failed to activate data set.\n");
 		return 103;
 	}
 
-	for (int i = 0; i < dataSet->getNumTrackables(); i++)
+	trackables->NumTrackables = currentDataset->getNumTrackables();
+
+	for (int i = 0; i < trackables->NumTrackables; i++)
 	{
-		Vuforia::Trackable* trackable = dataSet->getTrackable(i);
+		Vuforia::Trackable* trackable = currentDataset->getTrackable(i);
+		
+		trackables->trackableResults[i].id = trackable->getId();
+		strcpy(trackables->trackableResults[i].trackName, trackable->getName());
+		
+		if (trackable->isOfType(Vuforia::VuMarkTemplate::getClassType()))
+		{
+			trackables->trackableResults[i].targetType = QCAR_TargetTypes::VuMark;
+		}
+		else
+		{
+			trackables->trackableResults[i].targetType = QCAR_TargetTypes::ImageTarget;
+		}
+
 		if (extendedTracking)
 		{
 			trackable->startExtendedTracking();
@@ -345,39 +371,58 @@ bool QCAR_stopTrack()
 	return true;
 }
 
-// Update track
-void QCAR_update(TrackResult* trackResult)
+// Update
+void QCAR_update(UpdateResult* updateResult)
 {
 	if (gState == QCAR_State::QCAR_TRACKING)
 	{
 		// Get the state from Vuforia and mark the beginning of a rendering section
-		Vuforia::State state = Vuforia::Renderer::getInstance().begin();
+		auto state = Vuforia::Renderer::getInstance().begin();
 
-		trackResult->isTracking = state.getNumTrackableResults() > 0;
+		updateResult->numTrackableResults = state.getNumTrackableResults();
 
-		if (trackResult->isTracking)
+		for (int tIdx = 0; tIdx < updateResult->numTrackableResults; tIdx++)
 		{
 			// Get the trackable
-			const Vuforia::TrackableResult* result = state.getTrackableResult(0);
-			const Vuforia::Trackable& trackable = result->getTrackable();
-			
-			*((Vuforia::Matrix44F*)&trackResult->trackPose) = Vuforia::Tool::convertPose2GLMatrix(result->getPose());
+			const Vuforia::TrackableResult* result = state.getTrackableResult(tIdx);
+			QCAR_TrackableResult* trackResult = &updateResult->trackableResults[tIdx];
 
-			strcpy(trackResult->trackName, trackable.getName());
+			*((Vuforia::Matrix44F*)&trackResult->trackPose) = Vuforia::Tool::convertPose2GLMatrix(result->getPose());
+			trackResult->status = (QCAR_TrackableResultStatus)result->getStatus();
+
+			const Vuforia::Trackable& trackable = result->getTrackable();
+			trackResult->id = trackable.getId();
+
+			if (result->isOfType(Vuforia::VuMarkTargetResult::getClassType()))
+			{
+				const Vuforia::VuMarkTarget& vmTarget = (Vuforia::VuMarkTarget&)trackable;
+				trackResult->templateId = vmTarget.getTemplate().getId();
+
+				const Vuforia::InstanceId & vmId = vmTarget.getInstanceId();
+				trackResult->dataType = (QCAR_VuMarkDataType)vmId.getDataType();
+				trackResult->dataSize = (unsigned int)vmId.getLength();
+				trackResult->numericValue = (unsigned int)vmId.getNumericValue();
+
+				memcpy(trackResult->data, vmId.getBuffer(), vmId.getLength());
+			}
+			else
+			{
+				trackResult->templateId = trackResult->id;
+			}
 		}
 
 		auto renderingPrimitives = new Vuforia::RenderingPrimitives(Vuforia::Device::getInstance().getRenderingPrimitives());
 
 		// Get the Vuforia video-background projection matrix
 		Vuforia::Matrix34F vbProjection = renderingPrimitives->getVideoBackgroundProjectionMatrix(Vuforia::VIEW::VIEW_SINGULAR, Vuforia::COORDINATE_SYSTEM_CAMERA);
-		*((Vuforia::Matrix44F*)&trackResult->videoBackgroundProjection) = Vuforia::Tool::convert2GLMatrix(vbProjection);
+		*((Vuforia::Matrix44F*)&updateResult->videoBackgroundProjection) = Vuforia::Tool::convert2GLMatrix(vbProjection);
 
 		Vuforia::Renderer::getInstance().end();
 	}
 }
 
 // Get Camera projection with its near/far plane
-void QCAR_getCameraProjection(float nearPlane, float farPlane, Matrix4x4* result)
+void QCAR_getCameraProjection(float nearPlane, float farPlane, QCAR_Matrix4x4* result)
 {
 	if (gState != QCAR_State::QCAR_TRACKING)
 	{
@@ -498,10 +543,10 @@ bool InternalStartTracking()
 		return false;
 	}
 
-	Vuforia::Device::getInstance().setMode(Vuforia::Device::MODE_AR);
+	Vuforia::Device::getInstance().setMode(Vuforia::Device::MODE_VR);
 
 	// Initialise the camera
-	if (!Vuforia::CameraDevice::getInstance().init())
+	if (!Vuforia::CameraDevice::getInstance().init(Vuforia::CameraDevice::CAMERA_DIRECTION_DEFAULT))
 	{
 		LogMessage("Failed to init camera.\n");
 		return false;
@@ -539,7 +584,7 @@ bool InternalStartTracking()
 		LogMessage("Failed to start tracker.\n");
 		return false;
 	}
-
+		
 	gState = QCAR_State::QCAR_TRACKING;
 	return true;
 }

@@ -1,11 +1,4 @@
-﻿#region File Description
-// -----------------------------------------------------------------------------
-// KinectSkeletonsDrawable2D
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-// -----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -34,24 +27,29 @@ namespace WaveEngine.Kinect.Drawables
 
         /// <summary>
         /// The color0
-        /// </summary>        
+        /// </summary>
         private Color lineColor;
 
         /// <summary>
         /// The color1
-        /// </summary>        
+        /// </summary>
         private Color pointColor;
 
         /// <summary>
         /// The points
         /// </summary>
-        private Vector2 point0, point1;
+        private Vector2 point0;
+
+        /// <summary>
+        /// The points
+        /// </summary>
+        private Vector2 point1;
 
         #region Properties
 
         /// <summary>
         /// Gets or sets line color
-        /// </summary>    
+        /// </summary>
         [DataMember]
         public Color LineColor
         {
@@ -68,7 +66,7 @@ namespace WaveEngine.Kinect.Drawables
 
         /// <summary>
         /// Gets or sets point color
-        /// </summary>        
+        /// </summary>
         [DataMember]
         public Color PointColor
         {
@@ -132,7 +130,7 @@ namespace WaveEngine.Kinect.Drawables
                 ////    this.layer.LineBatch2D.DrawPointVM(ref this.point0, 10, ref this.pointColor, 0);
                 ////}
                 ////else
-                ////{                                   
+                ////{
                     this.layer.LineBatch2D.DrawCircle(ref this.point0, 10, ref this.lineColor, 0);
                     this.layer.LineBatch2D.DrawPoint(ref this.point0, 10, ref this.pointColor, 0);
                 ////}
@@ -151,7 +149,7 @@ namespace WaveEngine.Kinect.Drawables
                 ////}
                 ////else
                 ////{
-                    this.RenderManager.LineBatch2D.DrawLine(ref point0, ref point1, ref pointColor, 0);
+                    this.RenderManager.LineBatch2D.DrawLine(ref this.point0, ref this.point1, ref this.pointColor, 0);
                 ////}
             }
         }
@@ -161,6 +159,14 @@ namespace WaveEngine.Kinect.Drawables
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
+
+        /// <summary>
+        /// Refresh the bounding box of this drawable
+        /// </summary>
+        protected override void RefreshBoundingBox()
         {
         }
     }

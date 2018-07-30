@@ -16,6 +16,8 @@
     <Import_RootNamespace>WaveEngine.Spine</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfoExt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SkeletalAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SkeletalData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SkeletalRenderer.cs" />

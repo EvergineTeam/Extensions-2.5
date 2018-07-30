@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// SocialService
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -21,7 +14,6 @@ using WaveEngineiOS.Social.Social;
 #if ANDROID
 using WaveEngineAndroid.Social.Social;
 #endif
-
 
 #endregion
 
@@ -132,7 +124,6 @@ namespace WaveEngine.Framework.Services
 
             this.platformSocial = socialService;
             this.currentSocial = socialService;
-
         }
 
         /// <summary>

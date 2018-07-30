@@ -9,14 +9,22 @@
     <Import_RootNamespace>WaveEngine.Cardboard</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)VRLensLayer.cs">
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceInfo\CardboardDistortion.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceInfo\CardboardDevice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceInfo\CardboardViewer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceInfo\CardboardDeviceInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfoExt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CardboardVRProvider.cs">
       <SubType>Code</SubType>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)BarrelDistortionMesh.wpk" />
   </ItemGroup>
 </Project>

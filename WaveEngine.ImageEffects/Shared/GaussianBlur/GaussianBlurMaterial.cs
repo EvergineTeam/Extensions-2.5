@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// GaussianBlurMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -54,6 +47,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -143,7 +137,6 @@ namespace WaveEngine.ImageEffects
 
             [FieldOffset(164)]
             public float SampleWeights13;
-
         }
         #endregion
 
@@ -153,13 +146,14 @@ namespace WaveEngine.ImageEffects
         private BlurEffectParameters shaderParameters;
 
         #region Properties
+
         /// <summary>
-        /// Effect pass.
+        /// Gets or sets effect pass.
         /// </summary>
         public Passes Pass { get; set; }
 
         /// <summary>
-        /// Gaussian Blur factor.
+        /// Gets or sets gaussian Blur factor.
         /// </summary>
         public float Factor { get; set; }
 
@@ -198,6 +192,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GaussianBlurMaterial"/> class.
         /// </summary>
@@ -213,7 +208,6 @@ namespace WaveEngine.ImageEffects
         {
             base.DefaultValues();
             this.Factor = 1.0f;
-            this.SamplerMode = AddressMode.LinearClamp;
             this.shaderParameters = new BlurEffectParameters();
             this.Parameters = this.shaderParameters;
 
@@ -231,6 +225,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>
@@ -239,13 +234,13 @@ namespace WaveEngine.ImageEffects
         {
             if (this.Pass == Passes.Horizontal)
             {
-                ComputeGaussianBlur(this.Factor / this.texture.Width, 0);
+                this.ComputeGaussianBlur(this.Factor / this.texture.Width, 0);
             }
             else
             {
-                ComputeGaussianBlur(0, this.Factor / this.texture.Height);
+                this.ComputeGaussianBlur(0, this.Factor / this.texture.Height);
             }
-                  
+
             this.Parameters = this.shaderParameters;
 
             if (this.texture != null)
@@ -256,11 +251,12 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Private Methods
+
         /// <summary>
-        /// 
+        /// ComputeGaussianBlur
         /// </summary>
-        /// <param name="dx"></param>
-        /// <param name="dy"></param>
+        /// <param name="dx">dx</param>
+        /// <param name="dy">dy</param>
         private void ComputeGaussianBlur(float dx, float dy)
         {
             // Look up how many samples our gaussian blur effect supports.
@@ -271,7 +267,7 @@ namespace WaveEngine.ImageEffects
             Vector2[] sampleOffsets = new Vector2[sampleCount];
 
             // The first sample always has a zero offset.
-            sampleWeights[0] = ComputeGaussian(0);
+            sampleWeights[0] = this.ComputeGaussian(0);
             sampleOffsets[0] = new Vector2(0);
 
             // Maintain a sum of all the weighting values.
@@ -282,10 +278,10 @@ namespace WaveEngine.ImageEffects
             for (int i = 0; i < sampleCount / 2; i++)
             {
                 // Store weights for the positive and negative taps.
-                float weight = ComputeGaussian(i + 1);
+                float weight = this.ComputeGaussian(i + 1);
 
-                sampleWeights[i * 2 + 1] = weight;
-                sampleWeights[i * 2 + 2] = weight;
+                sampleWeights[(i * 2) + 1] = weight;
+                sampleWeights[(i * 2) + 2] = weight;
 
                 totalWeights += weight * 2;
 
@@ -297,13 +293,13 @@ namespace WaveEngine.ImageEffects
                 // This allows us to step in units of two texels per sample, rather
                 // than just one at a time. The 1.5 offset kicks things off by
                 // positioning us nicely in between two texels.
-                float sampleOffset = i * 2 + 1.5f;
+                float sampleOffset = (i * 2) + 1.5f;
 
                 Vector2 delta = new Vector2(dx, dy) * sampleOffset;
 
                 // Store texture coordinate offsets for the positive and negative taps.
-                sampleOffsets[i * 2 + 1] = delta;
-                sampleOffsets[i * 2 + 2] = -delta;
+                sampleOffsets[(i * 2) + 1] = delta;
+                sampleOffsets[(i * 2) + 2] = -delta;
             }
 
             // Normalize the list of sample weightings, so they will always sum to one.
@@ -327,7 +323,7 @@ namespace WaveEngine.ImageEffects
             this.shaderParameters.SampleOffsets11 = sampleOffsets[11];
             this.shaderParameters.SampleOffsets12 = sampleOffsets[12];
             this.shaderParameters.SampleOffsets13 = sampleOffsets[13];
-            
+
             this.shaderParameters.SampleWeights0 = sampleWeights[0];
             this.shaderParameters.SampleWeights1 = sampleWeights[1];
             this.shaderParameters.SampleWeights2 = sampleWeights[2];
@@ -348,11 +344,11 @@ namespace WaveEngine.ImageEffects
         /// Computes the gaussian.
         /// </summary>
         /// <param name="n">The n.</param>
-        /// <returns></returns>
+        /// <returns>float</returns>
         private float ComputeGaussian(float n)
         {
-            float BlurAmount = 4;
-            float theta = BlurAmount;
+            float blurAmount = 4;
+            float theta = blurAmount;
 
             return (float)((1.0 / Math.Sqrt(2 * Math.PI * theta)) *
                            Math.Exp(-(n * n) / (2 * theta * theta)));

@@ -1,11 +1,4 @@
-﻿#region File Description
-// -----------------------------------------------------------------------------
-// KinectFaceBehavior
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-// -----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -20,6 +13,7 @@ using WaveEngine.Framework.Graphics;
 using WaveEngine.Framework.Services;
 using WaveEngine.Kinect.Enums;
 using System.Runtime.Serialization;
+using WaveEngine.Common.Attributes;
 #endregion
 
 namespace WaveEngine.Kinect.Behaviors
@@ -60,7 +54,28 @@ namespace WaveEngine.Kinect.Behaviors
         /// </summary>
         private float textureFactorY;
 
+        /// <summary>
+        /// The color factor x
+        /// </summary>
+        private float colorFactorX;
+
+        /// <summary>
+        /// The color factor y
+        /// </summary>
+        private float colorFactorY;
+
+        /// <summary>
+        /// The depth factor x
+        /// </summary>
+        private float depthFactorX;
+
+        /// <summary>
+        /// The depth factor y
+        /// </summary>
+        private float depthFactorY;
+
         #region Cache
+
         /// <summary>
         /// The left top  position
         /// </summary>
@@ -87,6 +102,8 @@ namespace WaveEngine.Kinect.Behaviors
         /// </summary>
         private KinectSources currentSource;
 
+        #region Properties
+
         /// <summary>
         /// Gets or sets the current source.
         /// </summary>
@@ -106,13 +123,32 @@ namespace WaveEngine.Kinect.Behaviors
                 this.currentSource = value;
             }
         }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether you can set the size to virtualscreen size automatically
+        /// </summary>
+        [RenderProperty(Tag = 1)]
+        [DataMember]
+        public bool UseVirtualScreenSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets space size (Default 1920x180)
+        /// </summary>
+        [RenderProperty(AttatchToTag = 1, AttachToValue = false)]
+        [DataMember]
+        public Vector2 Size { get; set; }
+
+        #endregion
+
         /// <summary>
         /// Initialize default values
         /// </summary>
         protected override void DefaultValues()
         {
             base.DefaultValues();
+
+            this.Size = new Vector2(1920, 1080);
+            this.UseVirtualScreenSize = false;
 
             this.DrawPoints = new List<Vector2>();
             this.DrawLines = new List<Line>(4);
@@ -126,7 +162,29 @@ namespace WaveEngine.Kinect.Behaviors
         {
             base.ResolveDependencies();
 
-            this.kinectService = WaveServices.GetService<KinectService>();            
+            this.kinectService = WaveServices.GetService<KinectService>();
+        }
+
+        /// <summary>
+        /// Initialize method
+        /// </summary>
+        protected override void Initialize()
+        {
+            base.Initialize();
+
+            if (this.UseVirtualScreenSize)
+            {
+                var virtualScreenManager = this.RenderManager.ActiveCamera2D.UsedVirtualScreen;
+                this.Size = new Vector2(virtualScreenManager.VirtualWidth, virtualScreenManager.VirtualHeight);
+            }
+
+            if (this.kinectService != null)
+            {
+                this.colorFactorX = this.Size.X / (float)this.kinectService.ColorTexture.Width;
+                this.colorFactorY = this.Size.Y / (float)this.kinectService.ColorTexture.Height;
+                this.depthFactorX = this.Size.X / (float)this.kinectService.DepthTexture.Width;
+                this.depthFactorY = this.Size.Y / (float)this.kinectService.DepthTexture.Height;
+            }
         }
 
         /// <summary>
@@ -170,36 +228,17 @@ namespace WaveEngine.Kinect.Behaviors
                                 points = face.FacePointsInColorSpace.Values;
                                 rectangle = face.FaceBoundingBoxInColorSpace;
 
-                                this.textureFactorX = 1;
-                                this.textureFactorY = 1;
+                                this.textureFactorX = this.Size.X / (float)this.kinectService.ColorTexture.Width;
+                                this.textureFactorY = this.Size.Y / (float)this.kinectService.ColorTexture.Height;
 
-                                ////if (WaveServices.ViewportManager != null && WaveServices.ViewportManager.IsActivated)
-                                ////{
-                                ////    this.textureFactorX = (float)WaveServices.ViewportManager.VirtualWidth / (float)this.kinectService.ColorTexture.Width;
-                                ////    this.textureFactorY = (float)WaveServices.ViewportManager.VirtualHeight / (float)this.kinectService.ColorTexture.Height;
-                                ////}
-                                ////else
-                                ////{
-                                ////    this.textureFactorX = (float)WaveServices.Platform.ScreenWidth / (float)this.kinectService.ColorTexture.Width;
-                                ////    this.textureFactorY = (float)WaveServices.Platform.ScreenHeight / (float)this.kinectService.ColorTexture.Height;
-                                ////}
-                                
                                 break;
                             case KinectSources.Depth:
                             case KinectSources.Infrared:
                                 points = face.FacePointsInInfraredSpace.Values;
                                 rectangle = face.FaceBoundingBoxInInfraredSpace;
 
-                                ////if (WaveServices.ViewportManager != null && WaveServices.ViewportManager.IsActivated)
-                                ////{
-                                ////    this.textureFactorX = (float)WaveServices.ViewportManager.VirtualWidth / (float)this.kinectService.InfraredTexture.Width;
-                                ////    this.textureFactorY = (float)WaveServices.ViewportManager.VirtualHeight / (float)this.kinectService.InfraredTexture.Height;
-                                ////}
-                                ////else
-                                ////{
-                                ////    this.textureFactorX = (float)WaveServices.Platform.ScreenWidth / (float)this.kinectService.InfraredTexture.Width;
-                                ////    this.textureFactorY = (float)WaveServices.Platform.ScreenHeight / (float)this.kinectService.InfraredTexture.Height;
-                                ////}
+                                this.textureFactorX = this.Size.X / (float)this.kinectService.InfraredTexture.Width;
+                                this.textureFactorY = this.Size.Y / (float)this.kinectService.InfraredTexture.Height;
 
                                 this.textureFactorX = 1;
                                 this.textureFactorY = 1;
@@ -241,10 +280,10 @@ namespace WaveEngine.Kinect.Behaviors
                             {
                                 var text = string.Format("{0} : {1}", property.Key.ToString(), property.Value.ToString());
                                 this.DrawTexts.Add(new TextStruct()
-                                                {
-                                                    Text = text,
-                                                    Position = position,
-                                                });
+                                {
+                                    Text = text,
+                                    Position = position,
+                                });
                                 position.Y += 20;
                             }
                         }

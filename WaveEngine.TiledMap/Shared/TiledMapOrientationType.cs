@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TiledMapOrientationType
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -22,10 +15,29 @@ namespace WaveEngine.TiledMap
     /// </summary>
     public enum TiledMapOrientationType
     {
+        /// <summary>
+        /// Unknown
+        /// </summary>
         Unknown,
+
+        /// <summary>
+        /// Orthogonal
+        /// </summary>
         Orthogonal,
+
+        /// <summary>
+        /// Isometric
+        /// </summary>
         Isometric,
+
+        /// <summary>
+        /// Staggered
+        /// </summary>
         Staggered,
+
+        /// <summary>
+        /// Hexagonal
+        /// </summary>
         Hexagonal
     }
 }

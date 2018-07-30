@@ -9,17 +9,34 @@
     <Import_RootNamespace>WaveEngine.Vuforia</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ARCamera.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ARCameraComponent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AROrientation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ARState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ARServiceBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ARVuMarkTrackableBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ARTrackableBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\VuforiaProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfoExt.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QCAR\QCAR_Hint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QCAR\QCAR_Orientation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QCAR\QCAR_Matrix4x4.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QCAR\QCAR_Trackable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QCAR\QCAR_LoadDataSetResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QCAR\QCAR_UpdateResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QCAR\QCAR_TrackableResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QCAR\QCAR_VideoMesh.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)QCAR\QCAR_TrackResult.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)VuforiaStartTackCallback.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WorldCenterMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Targets\DataSet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Targets\ImageTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Targets\ImageTargetType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Targets\Results\TargetTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Targets\Results\TrackableResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Targets\Results\TrackableStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Targets\Results\VuMarkDataTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Targets\Results\VuMarkTargetResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Targets\TargetFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Targets\Trackable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Targets\VuMarkTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VuforiaStartTrackCallback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VuforiaInitializedCallback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VuforiaService.cs" />
   </ItemGroup>

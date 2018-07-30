@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// DepthOfFieldLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -28,7 +21,7 @@ namespace WaveEngine.ImageEffects
         private float maxBlur;
 
         /// <summary>
-        /// The ratio of the lens's focal length to the diameter of the entrance pupil.
+        /// Gets or sets the ratio of the lens's focal length to the diameter of the entrance pupil.
         /// </summary>
         #region Properties
         [RenderPropertyAsSlider(0.0f, 50.0f, 1.0f)]
@@ -45,12 +38,12 @@ namespace WaveEngine.ImageEffects
                 this.fstops = value;
 
                 // Update aperture
-                (this.material as BokehMaterial).Aperture = this.FocalLength / fstops;
+                (this.material as BokehMaterial).Aperture = this.FocalLength / (this.fstops * 100);
             }
         }
 
         /// <summary>
-        /// Focus distance of the lens.
+        /// Gets or sets focus distance of the lens.
         /// </summary>
         [DataMember]
         public float FocalDistance
@@ -67,7 +60,7 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
-        /// Focus range of the lens.
+        /// Gets or sets focus range of the lens.
         /// </summary>
         [DataMember]
         [RenderPropertyAsSlider(0.0f, 100.0f, 1.0f)]
@@ -83,13 +76,13 @@ namespace WaveEngine.ImageEffects
                 float focal = value / 100;
                 (this.material as BokehMaterial).FocalLength = focal;
 
-                //Update apeture
-                (this.material as BokehMaterial).Aperture = focal / fstops;
+                // Update apeture
+                (this.material as BokehMaterial).Aperture = focal / this.fstops;
             }
         }
 
         /// <summary>
-        /// Film width, 24 mm by default.
+        /// Gets or sets film width, 24 mm by default.
         /// </summary>
         [DataMember]
         [RenderPropertyAsSlider(0.0f, 100.0f, 1.0f)]
@@ -107,7 +100,7 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
-        /// Maximun Circle of Confusion diameter.
+        /// Gets or sets maximun Circle of Confusion diameter.
         /// </summary>
         [DataMember]
         [RenderPropertyAsSlider(1.0f, 100.0f, 1.0f)]
@@ -125,7 +118,7 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
-        /// Shine Threshold
+        /// Gets or sets shine Threshold
         /// </summary>
         [DataMember]
         [RenderPropertyAsSlider(0.0f, 1.0f, 0.1f)]
@@ -143,7 +136,7 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
-        /// Shine amount
+        /// Gets or sets shine amount
         /// </summary>
         [DataMember]
         [RenderPropertyAsSlider(0.0f, 3.0f, 0.1f)]
@@ -161,7 +154,7 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
-        /// Bokeh quality, Low by default.
+        /// Gets or sets bokeh quality, Low by default.
         /// </summary>
         [DataMember]
         public BokehMaterial.EffectQuality Quality
@@ -179,6 +172,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BokehLens"/> class.
         /// </summary>
@@ -201,6 +195,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Renders to image.
         /// </summary>
@@ -226,13 +221,13 @@ namespace WaveEngine.ImageEffects
 
             // Horizontal blur pass
             mat.Pass = BokehMaterial.Passes.HorizontalBlur;
-            mat.BlurDisp = (new Vector2(0, 1f) / aspect) * maxBlur;
+            mat.BlurDisp = (new Vector2(0, 1f) / aspect) * this.maxBlur;
             mat.Texture = rt0;
             this.RenderToImage(rt1, this.material);
 
             // Diagonal blur pass
             mat.Pass = BokehMaterial.Passes.DiagonalBlurCombine;
-            mat.BlurDisp = (new Vector2(1.0f, 0.57735f) / aspect) * maxBlur;
+            mat.BlurDisp = (new Vector2(1.0f, 0.57735f) / aspect) * this.maxBlur;
             mat.Texture = rt1;
             this.RenderToImage(this.Destination, this.material);
 
@@ -242,6 +237,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>

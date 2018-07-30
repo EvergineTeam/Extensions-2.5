@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// MotionBlurMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -65,12 +58,13 @@ namespace WaveEngine.ImageEffects
         /// </summary>
         private static ShaderTechnique[] techniques =
         {
-            new ShaderTechnique("MotionBlurLow", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psMotionBlur", VertexPositionTexture.VertexFormat, null, new string[]{"LOW"}),
-            new ShaderTechnique("MotionBlurMedium", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psMotionBlur", VertexPositionTexture.VertexFormat, null, new string[]{"MEDIUM"}),
-            new ShaderTechnique("MotionBlurHigh", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psMotionBlur", VertexPositionTexture.VertexFormat, null, new string[]{"HIGH"}),
+            new ShaderTechnique("MotionBlurLow", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psMotionBlur", VertexPositionTexture.VertexFormat, null, new string[] { "LOW" }),
+            new ShaderTechnique("MotionBlurMedium", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psMotionBlur", VertexPositionTexture.VertexFormat, null, new string[] { "MEDIUM" }),
+            new ShaderTechnique("MotionBlurHigh", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psMotionBlur", VertexPositionTexture.VertexFormat, null, new string[] { "HIGH" }),
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -94,13 +88,14 @@ namespace WaveEngine.ImageEffects
         private MotionBlurEffectParameters shaderParameters;
 
         #region Properties
+
         /// <summary>
-        /// Blur ratio.
+        /// Gets or sets blur ratio.
         /// </summary>
         public float BlurLength { get; set; }
 
         /// <summary>
-        /// Motion blur quality effect, Low by default.
+        /// Gets or sets motion blur quality effect, Low by default.
         /// </summary>
         public EffectQuality Quality { get; set; }
 
@@ -156,6 +151,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MotionBlurMaterial"/> class.
         /// </summary>
@@ -171,7 +167,6 @@ namespace WaveEngine.ImageEffects
         {
             base.DefaultValues();
 
-            this.SamplerMode = AddressMode.LinearClamp;
             this.BlurLength = 0.5f;
             this.Quality = EffectQuality.Medium;
             this.shaderParameters = new MotionBlurEffectParameters();
@@ -191,6 +186,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>
@@ -220,19 +216,19 @@ namespace WaveEngine.ImageEffects
                 }
 
                 // Set Depth texture
-                //if (camera.GBufferRT1 != null)
-                //{
+                // if (camera.GBufferRT1 != null)
+                // {
                 //    this.depthTexture = camera.GBufferRT1;
-                //}
-                //else if (this.renderManager.GraphicsDevice.RenderTargets.IsDepthAsTextureSupported)
-                //{
-                depthTexture = this.renderManager.GraphicsDevice.RenderTargets.DefaultDepthTexture;
-                //}
-                //else
-                //{
-                //    depthTexture = null;
-                //}
+                // }
+                // else if (this.renderManager.GraphicsDevice.RenderTargets.IsDepthAsTextureSupported)
+                // {
+                this.depthTexture = this.renderManager.GraphicsDevice.RenderTargets.DefaultDepthTexture;
 
+                // }
+                // else
+                // {
+                //    depthTexture = null;
+                // }
                 if (this.depthTexture != null)
                 {
                     this.graphicsDevice.SetTexture(this.depthTexture, 1);

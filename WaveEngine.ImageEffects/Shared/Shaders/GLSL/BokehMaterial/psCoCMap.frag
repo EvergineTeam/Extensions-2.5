@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------------
 // Bokeh.fx
 //
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
+// Copyright © 2018 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 
@@ -11,11 +11,11 @@ precision highp float;
 
 // Parameters
 uniform vec2 BlurDisp;
-uniform float Aperture;  
-uniform float LastCoeff;		
-uniform float FocalDistance;			
+uniform float Aperture;
+uniform float LastCoeff;
+uniform float FocalDistance;
 uniform float NearPlane;
-uniform float FarParam;		
+uniform float FarParam;
 uniform float FilmWidth;
 uniform float ShineThreshold;
 uniform float ShineAmount;

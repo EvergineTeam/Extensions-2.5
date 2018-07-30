@@ -16,11 +16,11 @@
     <Import_RootNamespace>WaveEngine.AI.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)BehaviorTrees\InitNode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)BehaviorTrees\Node.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BehaviorTrees\InitNode`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BehaviorTrees\Node`1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BehaviorTrees\NodeInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)BehaviorTrees\TreeEvaluator.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)BehaviorTrees\TreeExecutorBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BehaviorTrees\TreeEvaluator`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BehaviorTrees\TreeExecutorBehavior`1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BehaviorTrees\TreeValidator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ChaseAndEvade\ChaseState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ChaseAndEvade\ChaseStrategy.cs" />
@@ -35,12 +35,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)ChaseAndEvade\SimpleChaseStrategy3D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ChaseAndEvade\SimpleEvadeStrategy2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ChaseAndEvade\SimpleEvadeStrategy3D.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PathFinding\Adjacency.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PathFinding\AdjacencyMatrix.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PathFinding\AStar.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PathFinding\PathFinder.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PathFinding\PathFindingAlgorithm.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PathFinding\PathFindingQueueNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PathFinding\Adjacency`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PathFinding\AdjacencyMatrix`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PathFinding\AStar`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PathFinding\PathFinder`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PathFinding\PathFindingAlgorithm`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PathFinding\PathFindingQueueNode`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfoExt.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)ChaseAndEvade\ChasingDiagram.dgml" />

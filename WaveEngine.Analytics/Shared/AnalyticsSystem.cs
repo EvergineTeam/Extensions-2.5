@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// AnalyticsSystem
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -26,29 +19,21 @@ namespace WaveEngine.Analytics
     public abstract class AnalyticsSystem
     {
         #region Properties
-        /// <summary>
-        /// Gets the adapter.
-        /// </summary>
-        /// <value>
-        /// Handle the adapter.
-        /// </value>
-        protected IAdapter Adapter { get; private set; }
-
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AnalyticsSystem"/> class.
         /// </summary>
-        /// <param name="adapter">The adapter.</param>
         /// <param name="info">The info.</param>
-        public AnalyticsSystem(IAdapter adapter, AnalyticsInfo info)
+        public AnalyticsSystem(AnalyticsInfo info)
         {
-            this.Adapter = adapter;
         }
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Opens this instance.
         /// </summary>

@@ -1,14 +1,7 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TouchState
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
-using WaveEngine.Common.Input; 
+using WaveEngine.Common.Input;
 #endregion
 
 namespace WaveEngine.OculusRift.Input

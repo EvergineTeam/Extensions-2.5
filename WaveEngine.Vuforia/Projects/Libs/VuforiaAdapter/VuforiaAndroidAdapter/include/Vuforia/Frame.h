@@ -47,7 +47,7 @@ public:
     /// Destructor
     ~Frame();
 
-    /// Thread save assignment operator
+    /// Thread safe assignment operator
     Frame& operator=(const Frame& other);
 
     /// A time stamp that defines when the original camera image was shot
@@ -57,7 +57,7 @@ public:
      *  the camera image was shot.
      */
     double getTimeStamp() const;
-
+    
     /// Index of the frame
     int getIndex() const;
 

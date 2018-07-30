@@ -26,7 +26,6 @@ namespace Vuforia
 /// DX-specific classes
 
 
-
 /**
 *  DXTextureData object passed to Vuforia to set the DX texture info of the video
 *  background texture created by the app.
@@ -62,7 +61,7 @@ public:
 class VUFORIA_API DXRenderData : public RenderData
 {
 public:
-	DXRenderData();
+    DXRenderData();
     DXRenderData(ID3D11Device* d3d11Device);
     ~DXRenderData();
 

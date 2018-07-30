@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TilesetTerrain
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -18,9 +11,13 @@ using TiledSharp;
 
 namespace WaveEngine.TiledMap
 {
+    /// <summary>
+    /// TilesetTerrain
+    /// </summary>
     public class TilesetTerrain
     {
         #region Properties
+
         /// <summary>
         /// Gets the terrain name
         /// </summary>
@@ -34,7 +31,7 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Gets the tile ID
         /// </summary>
-        public int Tile { get; private set; } 
+        public int Tile { get; private set; }
         #endregion
 
         /// <summary>

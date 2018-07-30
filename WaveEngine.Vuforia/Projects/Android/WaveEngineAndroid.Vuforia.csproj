@@ -37,6 +37,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedNativeLibrary Include="..\Libs\Android\libVuforia.so">
@@ -47,7 +49,6 @@
     </EmbeddedNativeLibrary>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Additions\ARHttpClient.cs" />
     <Compile Include="Additions\ViewerParametersList.cs" />
     <Compile Include="ARServiceAndroid.cs" />
   </ItemGroup>
@@ -61,20 +62,20 @@
     <TransformFile Include="Transforms\EnumMethods.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Common\Projects\WaveEngineAndroid.Common.csproj">
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Common\Projects\Android\WaveEngineAndroid.Common.csproj">
       <Project>{e22c0026-1e87-437f-ab95-a39cd5a7ed5e}</Project>
       <Name>WaveEngineAndroid.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Components\Projects\WaveEngineAndroid.Components.csproj">
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Components\Projects\Android\WaveEngineAndroid.Components.csproj">
       <Project>{82f1fc93-95cb-4025-8ed3-7b4bbf6d4de0}</Project>
       <Name>WaveEngineAndroid.Components</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Framework\Projects\WaveEngineAndroid.Framework.csproj">
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Framework\Projects\Android\WaveEngineAndroid.Framework.csproj">
       <Project>{304c0e4f-637a-4ef6-8ec4-15f3408b9aea}</Project>
       <Name>WaveEngineAndroid.Framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Materials\Projects\WaveEngineAndroid.Materials.csproj">
-      <Project>{B22A299B-C0DA-43A0-A3AE-19361FCAFBD4}</Project>
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Materials\Projects\Android\WaveEngineAndroid.Materials.csproj">
+      <Project>{b22a299b-c0da-43a0-a3ae-19361fcafbd4}</Project>
       <Name>WaveEngineAndroid.Materials</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\Platforms\Android\WaveEngineAndroid.Adapter\WaveEngineAndroid.Adapter.csproj">

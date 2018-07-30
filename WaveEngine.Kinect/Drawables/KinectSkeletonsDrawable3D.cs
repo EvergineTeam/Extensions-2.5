@@ -1,11 +1,4 @@
-﻿#region File Description
-// -----------------------------------------------------------------------------
-// KinectSkeletonsDrawable3D
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-// -----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -39,19 +32,24 @@ namespace WaveEngine.Kinect.Drawables
 
         /// <summary>
         /// The color1
-        /// </summary>        
+        /// </summary>
         private Color pointColor;
 
         /// <summary>
         /// The points
         /// </summary>
-        private Vector3 point0, point1;
+        private Vector3 point0;
+
+        /// <summary>
+        /// The points
+        /// </summary>
+        private Vector3 point1;
 
         #region Properties
 
         /// <summary>
         /// Gets or sets line color
-        /// </summary>      
+        /// </summary>
         [DataMember]
         public Color LineColor
         {
@@ -68,7 +66,7 @@ namespace WaveEngine.Kinect.Drawables
 
         /// <summary>
         /// Gets or sets point color
-        /// </summary>      
+        /// </summary>
         [DataMember]
         public Color PointColor
         {
@@ -101,7 +99,7 @@ namespace WaveEngine.Kinect.Drawables
         /// </summary>
         /// <param name="gameTime">Current Gametime</param>
         public override void Draw(TimeSpan gameTime)
-        {            
+        {
             if (this.behavior == null ||
                 this.behavior.DrawPoints3D == null ||
                 this.behavior.DrawOrientations == null)
@@ -112,7 +110,7 @@ namespace WaveEngine.Kinect.Drawables
             foreach (var p in this.behavior.DrawPoints3D)
             {
                 this.point0 = p;
-         
+
                 this.RenderManager.LineBatch3D.DrawPoint(ref this.point0, 0.02f, ref this.lineColor);
             }
 
@@ -121,7 +119,7 @@ namespace WaveEngine.Kinect.Drawables
                 this.point0 = line.StartPoint;
                 this.point1 = line.EndPoint;
                 var c = line.Color;
-                this.RenderManager.LineBatch3D.DrawLine(ref point0, ref point1, ref c);
+                this.RenderManager.LineBatch3D.DrawLine(ref this.point0, ref this.point1, ref c);
             }
         }
 

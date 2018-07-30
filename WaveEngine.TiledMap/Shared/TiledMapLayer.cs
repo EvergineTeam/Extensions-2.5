@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TiledMapLayer
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -55,7 +48,7 @@ namespace WaveEngine.TiledMap
         /// </summary>
         internal bool NeedRefresh;
 
-        /// The TMX Layer name
+        // The TMX Layer name
         [DataMember]
         private string tmxLayerName;
 
@@ -65,6 +58,7 @@ namespace WaveEngine.TiledMap
         private bool isLayerLoaded;
 
         #region Properties
+
         /// <summary>
         /// Gets the layer names.
         /// </summary>
@@ -116,6 +110,7 @@ namespace WaveEngine.TiledMap
         #endregion
 
         #region Initialization
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TiledMapLayer" /> class.
         /// </summary>
@@ -143,11 +138,12 @@ namespace WaveEngine.TiledMap
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Gets a <see cref="NeighboursCollection"/> that contains the neighbour of the spefied tile.
         /// </summary>
         /// <param name="tile">The tile.</param>
-        /// <returns></returns>
+        /// <returns>NeighboursCollection</returns>
         /// <exception cref="System.ArgumentNullException">The tile argument can not be null</exception>
         public NeighboursCollection GetNeighboursFromTile(LayerTile tile)
         {
@@ -161,7 +157,7 @@ namespace WaveEngine.TiledMap
                 return null;
             }
 
-            switch (tiledMap.Orientation)
+            switch (this.tiledMap.Orientation)
             {
                 case TiledMapOrientationType.Orthogonal:
                     return new OrthogonalNeighbours(this, tile);
@@ -170,10 +166,10 @@ namespace WaveEngine.TiledMap
                     return new IsometricNeighbours(this, tile);
 
                 case TiledMapOrientationType.Staggered:
-                    return new StaggeredNeighbours(this, tile, tiledMap.StaggerAxis, tiledMap.StaggerIndex);
+                    return new StaggeredNeighbours(this, tile, this.tiledMap.StaggerAxis, this.tiledMap.StaggerIndex);
 
                 case TiledMapOrientationType.Hexagonal:
-                    return new HexagonalNeighbours(this, tile, tiledMap.StaggerAxis, tiledMap.StaggerIndex);
+                    return new HexagonalNeighbours(this, tile, this.tiledMap.StaggerAxis, this.tiledMap.StaggerIndex);
 
                 default:
                     return null;
@@ -184,6 +180,7 @@ namespace WaveEngine.TiledMap
         /// Get Tile coordinates (x, y) by world position
         /// </summary>
         /// <param name="position">The world position</param>
+        /// <returns>LayerTile</returns>
         public LayerTile GetLayerTileByWorldPosition(Vector2 position)
         {
             if (!this.isLayerLoaded)
@@ -198,10 +195,10 @@ namespace WaveEngine.TiledMap
 
         /// <summary>
         /// Gets a tile by its map coordinates
-        /// </summary>        
+        /// </summary>
         /// <param name="x">The X coord of the tile.</param>
         /// <param name="y">The Y coord of the tile.</param>
-        /// <returns></returns>
+        /// <returns>LayerTile</returns>
         public LayerTile GetLayerTileByMapCoordinates(int x, int y)
         {
             LayerTile result = null;
@@ -228,6 +225,7 @@ namespace WaveEngine.TiledMap
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Refresh the layer
         /// </summary>
@@ -245,7 +243,7 @@ namespace WaveEngine.TiledMap
             this.tiledMap = null;
             this.tileTable = null;
             this.tiles = null;
-            this.tmxLayer = null;            
+            this.tmxLayer = null;
 
             this.isLayerLoaded = false;
         }
@@ -257,7 +255,7 @@ namespace WaveEngine.TiledMap
         {
             this.tiles = new List<LayerTile>();
 
-            if(this.Owner.Parent == null)
+            if (this.Owner.Parent == null)
             {
                 return;
             }

@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// KinectSkeletonsBehavior
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -19,6 +12,7 @@ using WaveEngine.Framework.Services;
 using System.Runtime.Serialization;
 using WaveEngine.Kinect.Enums;
 using WaveEngine.Common.Attributes;
+using WaveEngine.Framework.Managers;
 #endregion
 
 namespace WaveEngine.Kinect.Behaviors
@@ -76,7 +70,7 @@ namespace WaveEngine.Kinect.Behaviors
         public List<Vector3> DrawPoints3D { get; set; }
 
         /// <summary>
-        /// Projected DrawPoints
+        /// Gets or sets projected DrawPoints
         /// </summary>
         [DontRenderProperty]
         public List<Vector2> DrawPoints2DProjected { get; set; }
@@ -91,7 +85,7 @@ namespace WaveEngine.Kinect.Behaviors
         public List<Line> DrawLines { get; set; }
 
         /// <summary>
-        /// Orientations
+        /// Gets or sets orientations
         /// </summary>
         [DontRenderProperty]
         public List<Line> DrawOrientations { get; set; }
@@ -114,7 +108,21 @@ namespace WaveEngine.Kinect.Behaviors
             {
                 this.currentSource = value;
             }
-        } 
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether you can set the size to virtualscreen size automatically
+        /// </summary>
+        [RenderProperty(Tag = 1)]
+        [DataMember]
+        public bool UseVirtualScreenSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets space size (Default 1920x180)
+        /// </summary>
+        [RenderProperty(AttatchToTag = 1, AttachToValue = false)]
+        [DataMember]
+        public Vector2 Size { get; set; }
 
         #endregion
 
@@ -132,6 +140,8 @@ namespace WaveEngine.Kinect.Behaviors
         {
             base.DefaultValues();
 
+            this.Size = new Vector2(1920, 1080);
+            this.UseVirtualScreenSize = false;
             this.CurrentSource = KinectSources.Color;
 
             // a bone defined as a line between two joints
@@ -181,29 +191,6 @@ namespace WaveEngine.Kinect.Behaviors
 
             this.kinectService = WaveServices.GetService<KinectService>();
 
-            this.colorFactorX = 1;
-            this.colorFactorY = 1;
-            this.depthFactorX = 1;
-            this.depthFactorY = 1;
-
-            ////if (this.kinectService != null)
-            ////{
-            ////    if (WaveServices.ViewportManager != null && WaveServices.ViewportManager.IsActivated)
-            ////    {
-            ////        this.colorFactorX = (float)WaveServices.ViewportManager.VirtualWidth / (float)this.kinectService.ColorTexture.Width;
-            ////        this.colorFactorY = (float)WaveServices.ViewportManager.VirtualHeight / (float)this.kinectService.ColorTexture.Height;
-            ////        this.depthFactorX = (float)WaveServices.ViewportManager.VirtualWidth / (float)this.kinectService.DepthTexture.Width;
-            ////        this.depthFactorY = (float)WaveServices.ViewportManager.VirtualHeight / (float)this.kinectService.DepthTexture.Height;
-            ////    }
-            ////    else
-            ////    {
-            ////        this.colorFactorX = (float)WaveServices.Platform.ScreenWidth / (float)this.kinectService.ColorTexture.Width;
-            ////        this.colorFactorY = (float)WaveServices.Platform.ScreenHeight / (float)this.kinectService.ColorTexture.Height;
-            ////        this.depthFactorX = (float)WaveServices.Platform.ScreenWidth / (float)this.kinectService.DepthTexture.Width;
-            ////        this.depthFactorY = (float)WaveServices.Platform.ScreenHeight / (float)this.kinectService.DepthTexture.Height;
-            ////    }
-            ////}
-
             this.DrawPoints2DProjected = new List<Vector2>();
             this.DrawPoints3D = new List<Vector3>();
             this.DrawLines = new List<Line>();
@@ -211,14 +198,36 @@ namespace WaveEngine.Kinect.Behaviors
         }
 
         /// <summary>
+        /// Initialize method
+        /// </summary>
+        protected override void Initialize()
+        {
+            base.Initialize();
+
+            if (this.UseVirtualScreenSize)
+            {
+                var virtualScreenManager = this.RenderManager.ActiveCamera2D.UsedVirtualScreen;
+                this.Size = new Vector2(virtualScreenManager.VirtualWidth, virtualScreenManager.VirtualHeight);
+            }
+
+            if (this.kinectService != null)
+            {
+                this.colorFactorX = this.Size.X / (float)this.kinectService.ColorTexture.Width;
+                this.colorFactorY = this.Size.Y / (float)this.kinectService.ColorTexture.Height;
+                this.depthFactorX = this.Size.X / (float)this.kinectService.DepthTexture.Width;
+                this.depthFactorY = this.Size.Y / (float)this.kinectService.DepthTexture.Height;
+            }
+        }
+
+        /// <summary>
         /// Allows this instance to execute custom logic during its <c>Update</c>.
         /// </summary>
         /// <param name="gameTime">The game time.</param>
         /// <remarks>
-        /// This method will not be executed if the 
-        /// <see cref="T:WaveEngine.Framework.Component" />, or the 
+        /// This method will not be executed if the
+        /// <see cref="T:WaveEngine.Framework.Component" />, or the
         /// <see cref="T:WaveEngine.Framework.Entity" />
-        /// owning it are not 
+        /// owning it are not
         /// <c>Active</c>.
         /// </remarks>
         protected override void Update(TimeSpan gameTime)
@@ -234,6 +243,8 @@ namespace WaveEngine.Kinect.Behaviors
             this.DrawLines.Clear();
             this.DrawOrientations.Clear();
             this.DrawPoints3D.Clear();
+
+            var camera2D = this.RenderManager.ActiveCamera2D;
 
             if (bodies != null)
             {
@@ -336,6 +347,7 @@ namespace WaveEngine.Kinect.Behaviors
                 case KinectSources.Color:
                     var colorPoint = this.kinectService.Mapper.MapCameraPointToColorSpace(point);
                     position = new Vector2(colorPoint.X * this.colorFactorX, colorPoint.Y * this.colorFactorY);
+
                     break;
                 case KinectSources.Depth:
                     var depthPoint = this.kinectService.Mapper.MapCameraPointToDepthSpace(point);

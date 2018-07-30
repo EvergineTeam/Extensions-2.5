@@ -2,14 +2,21 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitleAttribute("WaveEngine.Vuforia linux")]
+[assembly: AssemblyTitleAttribute("WaveEngine.Vuforia Android")]
 [assembly: AssemblyCompanyAttribute("Wave Engine")]
-[assembly: AssemblyDescriptionAttribute("linux")]
-[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2017")]
+[assembly: AssemblyDescriptionAttribute("Android")]
+[assembly: AssemblyCopyrightAttribute("Copyright (c) Wave Engine 2016")]
+[assembly: GuidAttribute("E210DB9F-8AA2-4CD7-BDB8-CF78A871B236")]
 [assembly: ComVisibleAttribute(false)]
-[assembly: AssemblyVersionAttribute("2.3.1.0000")]
+[assembly: AssemblyVersionAttribute("2.5.0.0000")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "2.3.1.0000";
+        internal const System.String AssemblyTitle = "WaveEngine.Vuforia Android";
+        internal const System.String AssemblyCompany = "Wave Engine";
+        internal const System.String AssemblyDescription = "Android";
+        internal const System.String AssemblyCopyright = "Copyright (c) Wave Engine 2016";
+        internal const System.String Guid = "E210DB9F-8AA2-4CD7-BDB8-CF78A871B236";
+        internal const System.Boolean ComVisible = false;
+        internal const System.String AssemblyVersion = "2.5.0.0000";
     }
 }

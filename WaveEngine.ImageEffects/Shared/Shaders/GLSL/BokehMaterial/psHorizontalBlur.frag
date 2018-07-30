@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------------
 // Bokeh.fx
 //
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
+// Copyright © 2018 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 
@@ -25,11 +25,11 @@ float bleedingBias = 0.02;
 
 // Parameters
 uniform vec2 BlurDisp;
-uniform float Aperture;  
-uniform float LastCoeff;  	
-uniform float FocalDistance;			
+uniform float Aperture;
+uniform float LastCoeff;
+uniform float FocalDistance;
 uniform float NearPlane;
-uniform float FarParam;		
+uniform float FarParam;
 uniform float FilmWidth;
 uniform float ShineThreshold;
 uniform float ShineAmount;
@@ -42,8 +42,6 @@ varying vec2 outTexCoord;
 
 vec3 Blur(vec4 c0, vec2 uv, vec2 step)
 {
-	//uv += hash12n(uv) * step;
-
 	// Accumulation
 	vec3 acc = c0.xyz;
 
@@ -67,7 +65,7 @@ vec3 Blur(vec4 c0, vec2 uv, vec2 step)
 }
 
 void main()
-{	
+{
 	// Get Color and Coc value
 	vec4 c0 = texture2D(Texture, outTexCoord);
 
@@ -77,5 +75,5 @@ void main()
 	// Horizontal Blur
 	vec3 color = Blur(c0, outTexCoord, step);
 
-	gl_FragColor = vec4(color, c0.a);	
+	gl_FragColor = vec4(color, c0.a);
 }

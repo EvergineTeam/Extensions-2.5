@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// SimpleChaseStrategy2D
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 using System;
 using System.Collections.Generic;
@@ -133,7 +126,7 @@ namespace WaveEngine.AI.ChaseAndEvade
         }
 
         /// <summary>
-        /// Chases the target 
+        /// Chases the target
         /// </summary>
         /// <param name="timeSpan">The time span.</param>
         public override void Chase(TimeSpan timeSpan)

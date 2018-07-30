@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// DolbyEventListener
-//
-// Copyright © 2016 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿
 
 #region Usings Statements
 using Com.Dolby.Dap;

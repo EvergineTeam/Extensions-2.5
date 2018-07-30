@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// LeaderboardScore
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 
@@ -57,7 +50,7 @@ namespace WaveEngine.Social
         /// The score holder.
         /// </value>
         public Player ScoreHolder { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the score tag.
         /// </summary>

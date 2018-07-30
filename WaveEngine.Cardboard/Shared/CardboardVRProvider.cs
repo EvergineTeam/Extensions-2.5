@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// CardboardVRProvider
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -15,7 +8,9 @@ using System.Runtime.Serialization;
 using WaveEngine.Cardboard;
 using WaveEngine.Common.Attributes;
 using WaveEngine.Common.Graphics;
+using WaveEngine.Common.Graphics.VertexFormats;
 using WaveEngine.Common.Helpers;
+using WaveEngine.Common.Input;
 using WaveEngine.Common.IO;
 using WaveEngine.Common.Math;
 using WaveEngine.Common.VR;
@@ -42,6 +37,11 @@ namespace WaveEngine.Cardboard
         private const string BarrelDistortionModel = "Content/barrelDistortionMesh";
 
         /// <summary>
+        /// The name of the custom layer for draw lens
+        /// </summary>
+        private const string VRLensLayerName = "VRLensLayer";
+
+        /// <summary>
         /// The default interpupillary distance in meters
         /// </summary>
         private const float DefaultInterpupillaryDistance = 0.065f;
@@ -49,7 +49,7 @@ namespace WaveEngine.Cardboard
         /// <summary>
         /// The default interpupillary distance in meters
         /// </summary>
-        private static Vector3 DefaultNeckModelFactor = new Vector3(0, 0.15f, -0.08f);
+        private static Vector3 defaultNeckModelFactor = new Vector3(0, 0.15f, -0.08f);
 
         /// <summary>
         /// Default view of view
@@ -72,20 +72,20 @@ namespace WaveEngine.Cardboard
         private Input input;
 
         /// <summary>
+        /// The device info
+        /// </summary>
+        private CardboardDeviceInfo deviceInfo;
+
+        /// <summary>
         /// The barrel distortion is enabled
         /// </summary>
         [DataMember]
         private bool isBarrelDistortionEnabled;
 
         /// <summary>
-        /// Eye textures
+        /// Eye properties
         /// </summary>
-        private VREyeTexture[] eyeTextures;
-
-        /// <summary>
-        /// Eye poses
-        /// </summary>
-        private VREyePose[] eyePoses;
+        private VREye[] eyesProperties;
 
         /// <summary>
         /// Barrel distortion entity mini-scene
@@ -93,9 +93,19 @@ namespace WaveEngine.Cardboard
         private Entity barrelDistortionEntity;
 
         /// <summary>
-        /// Distortion Mesh 
+        /// The distortion mesh has been generated
         /// </summary>
-        private InternalStaticModel distortionMesh;
+        private bool distortionMeshGenerated;
+
+        /// <summary>
+        /// Distortion Mesh for left eye
+        /// </summary>
+        private Mesh distortionMeshLeft;
+
+        /// <summary>
+        /// Distortion Mesh for right eye
+        /// </summary>
+        private Mesh distortionMeshRight;
 
         /// <summary>
         /// First update
@@ -106,6 +116,16 @@ namespace WaveEngine.Cardboard
         /// Cached monoscopic value
         /// </summary>
         private bool cachedMonoscopicValue;
+
+        /// <summary>
+        /// The left VR distortion mesh material
+        /// </summary>
+        private StandardMaterial vrMeshLeftMaterial;
+
+        /// <summary>
+        /// The right VR distortion mesh material
+        /// </summary>
+        private StandardMaterial vrMeshRightMaterial;
 
         /// <summary>
         /// Cached VRMode
@@ -131,8 +151,9 @@ namespace WaveEngine.Cardboard
         private bool isNeckDisplacementEnabled;
 
         #region Properties
+
         /// <summary>
-        /// Gets a valie indicating whether barrel distortion is enabled
+        /// Gets or sets a value indicating whether gets a valie indicating whether barrel distortion is enabled
         /// </summary>
         public bool IsBarrelDistortionEnabled
         {
@@ -164,10 +185,10 @@ namespace WaveEngine.Cardboard
         }
 
         /// <summary>
-        /// Gets the eye poses
+        /// Gets the eye properties
         /// </summary>
         [DontRenderProperty]
-        public override VREyePose[] EyePoses
+        public override VREye[] EyesProperties
         {
             get
             {
@@ -176,7 +197,7 @@ namespace WaveEngine.Cardboard
                     throw new Exception("Cardboard is not available. See console output to find the reason");
                 }
 
-                return this.eyePoses;
+                return this.eyesProperties;
             }
         }
 
@@ -184,7 +205,7 @@ namespace WaveEngine.Cardboard
         /// Gets the tracker camera pose
         /// </summary>
         [DontRenderProperty]
-        public override VREyePose TrackerCameraPose
+        public override VRPose TrackerCameraPose
         {
             get
             {
@@ -193,46 +214,70 @@ namespace WaveEngine.Cardboard
                     throw new Exception("Cardboard is not available. See console output to find the reason");
                 }
 
-                return VREyePose.DefaultPose;
+                return VRPose.DefaultPose;
             }
         }
 
         /// <summary>
-        /// Gets the left controller pose
+        /// Gets the left controller index
         /// </summary>
         [DontRenderProperty]
-        public override VREyePose LeftControllerPose
+        public override int LeftControllerIndex
         {
-            get;
+            get
+            {
+                if (!this.IsConnected)
+                {
+                    throw new Exception("Cardboard is not available. See console output to find the reason");
+                }
+
+                return -1;
+            }
         }
 
         /// <summary>
-        /// Gets the right controller pose
+        /// Gets the right controller index
         /// </summary>
         [DontRenderProperty]
-        public override VREyePose RightControllerPose
+        public override int RightControllerIndex
         {
-            get;
+            get
+            {
+                if (!this.IsConnected)
+                {
+                    throw new Exception("Cardboard is not available. See console output to find the reason");
+                }
+
+                return -1;
+            }
         }
 
         /// <summary>
-        /// Gets the eye textures information.
+        /// Gets the controller state list
+        /// </summary>
+        public override VRGenericControllerState[] ControllerStates
+        {
+            get
+            {
+                if (!this.IsConnected)
+                {
+                    throw new Exception("Cardboard is not available. See console output to find the reason");
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the state of the generic controller.
         /// </summary>
         /// <value>
-        /// The render target.
+        /// The state of the generic controller.
         /// </value>
         [DontRenderProperty]
-        public override VREyeTexture[] EyeTextures
+        public override GamePadState GamepadState
         {
-            get
-            {
-                if (!this.IsConnected)
-                {
-                    throw new Exception("Cardboard is not available. See console output to find the reason");
-                }
-
-                return this.eyeTextures;
-            }
+            get;
         }
 
         /// <summary>
@@ -244,13 +289,13 @@ namespace WaveEngine.Cardboard
             {
                 return this.interpupillaryDistance;
             }
+
             set
             {
                 this.interpupillaryDistance = value;
                 this.RefreshNeckModel();
             }
         }
-
 
         /// <summary>
         /// Gets or sets the distance between the neck to central eye position
@@ -261,6 +306,7 @@ namespace WaveEngine.Cardboard
             {
                 return this.eyeToNeckDistance;
             }
+
             set
             {
                 this.eyeToNeckDistance = value;
@@ -269,7 +315,7 @@ namespace WaveEngine.Cardboard
         }
 
         /// <summary>
-        /// Gets or sets a value indicating if the neck model simulated position tracking is enabled
+        /// Gets or sets a value indicating whether gets or sets a value indicating if the neck model simulated position tracking is enabled
         /// </summary>
         public bool IsNeckDisplacementEnabled
         {
@@ -277,6 +323,7 @@ namespace WaveEngine.Cardboard
             {
                 return this.isNeckDisplacementEnabled;
             }
+
             set
             {
                 this.isNeckDisplacementEnabled = value;
@@ -286,6 +333,7 @@ namespace WaveEngine.Cardboard
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Set default values
         /// </summary>
@@ -294,7 +342,7 @@ namespace WaveEngine.Cardboard
             base.DefaultValues();
 
             this.interpupillaryDistance = DefaultInterpupillaryDistance;
-            this.eyeToNeckDistance = DefaultNeckModelFactor;
+            this.eyeToNeckDistance = defaultNeckModelFactor;
             this.UpdateOrder = 0;
             this.isBarrelDistortionEnabled = true;
             this.needRefreshBarrelModel = true;
@@ -302,18 +350,12 @@ namespace WaveEngine.Cardboard
             this.platform = WaveServices.Platform;
             this.input = WaveServices.Input;
 
-            // eye textures
-            this.eyeTextures = new VREyeTexture[2];
-            for (int eyeIndex = 0; eyeIndex < this.eyeTextures.Length; eyeIndex++)
+            // eye properties
+            this.eyesProperties = new VREye[3];
+            for (int eyeIndex = 0; eyeIndex < this.eyesProperties.Length; eyeIndex++)
             {
-                this.eyeTextures[eyeIndex] = new VREyeTexture();
-            }
-
-            // eye poses
-            this.eyePoses = new VREyePose[3];
-            for (int eyeIndex = 0; eyeIndex < this.eyePoses.Length; eyeIndex++)
-            {
-                this.eyePoses[eyeIndex] = VREyePose.DefaultPose;
+                this.eyesProperties[eyeIndex] = new VREye();
+                this.eyesProperties[eyeIndex].Texture = new VREyeTexture();
             }
 
             this.neckAnchorVector = new Vector3[3];
@@ -324,6 +366,7 @@ namespace WaveEngine.Cardboard
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Allows to execute custom logic during the initialization of this instance.
         /// </summary>
@@ -331,6 +374,9 @@ namespace WaveEngine.Cardboard
         protected override void Initialize()
         {
             base.Initialize();
+
+            this.deviceInfo = new CardboardDeviceInfo();
+
             this.platform.OnScreenSizeChanged += this.OnScreenSizeChanged;
 
             if (this.input.MotionState.IsConnected)
@@ -397,7 +443,7 @@ namespace WaveEngine.Cardboard
         {
             for (int eyeIndex = 0; eyeIndex < 2; eyeIndex++)
             {
-                var eyeTexture = this.eyeTextures[eyeIndex];
+                var eyeTexture = this.eyesProperties[eyeIndex].Texture;
 
                 if (eyeTexture.RenderTarget != null && (!this.cachedMonoscopicValue || eyeIndex == 0))
                 {
@@ -410,18 +456,18 @@ namespace WaveEngine.Cardboard
             {
                 for (int eyeIndex = 0; eyeIndex < 2; eyeIndex++)
                 {
-                    var eyeTexture = this.eyeTextures[eyeIndex];
+                    var eyeTexture = this.eyesProperties[eyeIndex].Texture;
 
                     if (this.IsBarrelDistortionEnabled)
                     {
                         if (!this.cachedMonoscopicValue || eyeIndex == 0)
                         {
-                            eyeTexture.RenderTarget = WaveServices.GraphicsDevice.RenderTargets.CreateRenderTarget(platform.ScreenWidth / 2, platform.ScreenHeight);
+                            eyeTexture.RenderTarget = WaveServices.GraphicsDevice.RenderTargets.CreateRenderTarget(this.platform.ScreenWidth / 2, this.platform.ScreenHeight);
                             this.cameraRig.RightEyeCamera.IsActive = true;
                         }
                         else
                         {
-                            eyeTexture.RenderTarget = this.EyeTextures[0].RenderTarget;
+                            eyeTexture.RenderTarget = this.eyesProperties[0].Texture.RenderTarget;
                             this.cameraRig.RightEyeCamera.IsActive = false;
                         }
 
@@ -433,6 +479,8 @@ namespace WaveEngine.Cardboard
                     }
                 }
             }
+
+            this.RefreshBarrelDistortionMaterials();
         }
 
         /// <summary>
@@ -440,7 +488,8 @@ namespace WaveEngine.Cardboard
         /// </summary>
         private void RefreshNeckModel()
         {
-            Vector3 finalNeckModel = (this.isNeckDisplacementEnabled) ? this.eyeToNeckDistance : Vector3.Zero;
+            Vector3 finalNeckModel = this.isNeckDisplacementEnabled ? this.eyeToNeckDistance : Vector3.Zero;
+
             // Central
             this.neckAnchorVector[2] = finalNeckModel;
 
@@ -458,13 +507,56 @@ namespace WaveEngine.Cardboard
         {
             Quaternion orientation = this.input.MotionState.IsConnected ? this.input.MotionState.Orientation : Quaternion.Identity;
 
-            for (int eyeIndex = 0; eyeIndex < this.eyePoses.Length; eyeIndex++)
+            for (int eyeIndex = 0; eyeIndex < this.eyesProperties.Length; eyeIndex++)
             {
-                this.eyePoses[eyeIndex].Orientation = orientation;
+                var pose = this.eyesProperties[eyeIndex].Pose;
+                pose.Orientation = orientation;
 
-                Vector3.Transform(ref this.neckAnchorVector[eyeIndex], ref orientation, out this.eyePoses[eyeIndex].Position);
-                this.eyePoses[eyeIndex].Position -= this.neckAnchorVector[2];
+                Vector3.Transform(ref this.neckAnchorVector[eyeIndex], ref orientation, out pose.Position);
+                pose.Position -= this.neckAnchorVector[2];
+                this.eyesProperties[eyeIndex].Pose = pose;
             }
+        }
+
+        /// <summary>
+        /// Refresh the barrel distortion materials
+        /// </summary>
+        private void RefreshBarrelDistortionMaterials()
+        {
+            if (this.vrMeshLeftMaterial != null)
+            {
+                this.vrMeshLeftMaterial.Diffuse1 = this.eyesProperties[0].Texture.RenderTarget;
+            }
+
+            if (this.vrMeshRightMaterial != null)
+            {
+                this.vrMeshRightMaterial.Diffuse1 = this.eyesProperties[1].Texture.RenderTarget;
+                    }
+        }
+
+        /// <summary>
+        /// Find VRLens layer id
+        /// </summary>
+        /// <returns>The id of the VRLens layer</returns>
+        private int FindVRLensLayerId()
+        {
+                    var layer = this.RenderManager.FindLayerByName(VRLensLayerName);
+
+                    if (layer == null)
+                    {
+                        RenderLayerDescription vrLensLayer = new RenderLayerDescription(RasterizeStateEnum.CullBack, BlendStateEnum.Opaque, DepthStencilStateEnum.Write)
+                        {
+                            Name = VRLensLayerName,
+                            DepthRange = DepthRange.Default,
+                        };
+
+                        layer = new RenderLayer(vrLensLayer);
+                        layer.LayerMaskDefaultValue = false;
+
+                        this.RenderManager.RegisterLayer(layer);
+                    }
+
+            return layer.Id;
         }
 
         /// <summary>
@@ -478,43 +570,41 @@ namespace WaveEngine.Cardboard
             {
                 if (this.barrelDistortionEntity == null)
                 {
-                    if (this.distortionMesh == null)
+                    if (!this.distortionMeshGenerated)
                     {
-                        var assembly = typeof(CardboardVRProvider).GetTypeAssembly();
-
-                        using (var stream = ResourceLoader.GetEmbeddedResourceStream(assembly, "WaveEngine.Cardboard.BarrelDistortionMesh.wpk"))
-                        {
-                            this.distortionMesh = this.Assets.LoadAsset<InternalStaticModel>(BarrelDistortionModel, stream);
-                        }
+                        this.CreateDistortedMeshes();
                     }
 
-                    if (this.RenderManager.FindLayer(typeof(VRLensLayer)) == null)
-                    {
-                        this.RenderManager.RegisterLayer(new VRLensLayer(this.RenderManager));
-                    }
+                    int layerId = this.FindVRLensLayerId();
+                    this.vrMeshLeftMaterial = new StandardMaterial() { LightingEnabled = false, LayerId = layerId };
+                    this.vrMeshRightMaterial = new StandardMaterial() { LightingEnabled = false, LayerId = layerId };
 
-                    Dictionary<string, Material> materials = new Dictionary<string, Material>();
-                    materials.Add("vrMeshLeft", new StandardMaterial() { LightingEnabled = false, Diffuse = this.eyeTextures[0].RenderTarget, LayerType = typeof(VRLensLayer), SamplerMode = AddressMode.LinearClamp });
-                    materials.Add("vrMeshRight", new StandardMaterial() { LightingEnabled = false, Diffuse = this.eyeTextures[1].RenderTarget, LayerType = typeof(VRLensLayer), SamplerMode = AddressMode.LinearClamp });
-
-                    MaterialsMap materialsMap = new MaterialsMap(materials);
+                    this.RefreshBarrelDistortionMaterials();
 
                     this.barrelDistortionEntity = new Entity("_VRCardboardDistortMesh");
 
-                    Entity distortMeshEntity = new Entity("VRMesh")
-                        .AddComponent(new Transform3D())
-                        .AddComponent(new Model(BarrelDistortionModel))
-                        .AddComponent(materialsMap)
-                        .AddComponent(new ModelRenderer());
+                    Entity distortMeshEntityLeft = new Entity("VRMeshLeft")
+                        .AddComponent(new Transform3D() { LocalScale = Vector3.One * 0.5f })
+                        .AddComponent(new MaterialComponent() { Material = this.vrMeshLeftMaterial })
+                        .AddComponent(new CustomMesh() { Mesh = this.distortionMeshLeft })
+                        .AddComponent(new MeshRenderer());
+
+                    Entity distortMeshEntityRight = new Entity("VRMeshRight")
+                        .AddComponent(new Transform3D() { LocalScale = Vector3.One * 0.5f })
+                        .AddComponent(new MaterialComponent() { Material = this.vrMeshRightMaterial })
+                        .AddComponent(new CustomMesh() { Mesh = this.distortionMeshRight })
+                        .AddComponent(new MeshRenderer());
 
                     var vrCamera = new FixedCamera3D("VRDistortCamera", new Vector3(0, 1, 0), Vector3.Zero);
                     var camera = vrCamera.Entity.FindComponent<Camera3D>();
+                    camera.CameraOrder = float.MaxValue;
                     camera.UpVector = -Vector3.UnitZ;
                     camera.SetCustomProjection(Matrix.CreateOrthographic(1, 1, 0.1f, 100));
                     camera.LayerMaskDefaultValue = false;
-                    camera.LayerMask.Add(typeof(VRLensLayer), true);
+                    camera.LayerMask.Add(layerId, true);
 
-                    this.barrelDistortionEntity.AddChild(distortMeshEntity);
+                    this.barrelDistortionEntity.AddChild(distortMeshEntityLeft);
+                    this.barrelDistortionEntity.AddChild(distortMeshEntityRight);
                     this.barrelDistortionEntity.AddChild(vrCamera.Entity);
 
                     this.EntityManager.Add(this.barrelDistortionEntity);
@@ -526,7 +616,7 @@ namespace WaveEngine.Cardboard
                 {
                     this.EntityManager.Remove(this.barrelDistortionEntity);
                     this.barrelDistortionEntity = null;
-                    var lensLayer = this.RenderManager.FindLayer(typeof(VRLensLayer));
+                    var lensLayer = this.RenderManager.FindLayerByName(VRLensLayerName);
                     if (lensLayer != null)
                     {
                         this.RenderManager.RemoveLayer(lensLayer);
@@ -536,15 +626,148 @@ namespace WaveEngine.Cardboard
         }
 
         /// <summary>
+        /// Create distorted meshes
+        /// </summary>
+        private void CreateDistortedMeshes()
+        {
+            int width = 50;
+            int height = 40;
+
+            var vertices = this.ComputeMeshVertices(width, height);
+            var indices = this.ComputeMeshIndices(width, height);
+
+            VertexBuffer vertexBuffer = new VertexBuffer(VertexPositionTexture.VertexFormat);
+            vertexBuffer.SetData(vertices);
+
+            IndexBuffer indexBuffer = new IndexBuffer(indices);
+
+            int halfIndices = indices.Length / (3 * 2);
+
+            this.distortionMeshLeft = new Mesh(0, vertices.Length, 0, halfIndices, vertexBuffer, indexBuffer, PrimitiveType.TriangleList) { Name = "vrLeft" };
+            this.distortionMeshRight = new Mesh(0, vertices.Length, halfIndices * 3, halfIndices, vertexBuffer, indexBuffer, PrimitiveType.TriangleList) { Name = "vrRight" };
+
+            this.distortionMeshGenerated = true;
+        }
+
+        /// <summary>
+        /// Compute mesh vertices distortion
+        /// </summary>
+        /// <param name="width">The width</param>
+        /// <param name="height">The height</param>
+        /// <returns>The vertices</returns>
+        private VertexPositionTexture[] ComputeMeshVertices(int width, int height)
+        {
+            var vertices = new VertexPositionTexture[2 * width * height];
+
+            var lensFrustum = this.deviceInfo.GetLeftEyeVisibleTanAngles();
+            var noLensFrustum = this.deviceInfo.GetLeftEyeNoLensTanAngles();
+            var viewport = this.deviceInfo.GetLeftEyeVisibleScreenRect(noLensFrustum);
+            var vidx = 0;
+
+            for (var e = 0; e < 2; e++)
+            {
+                for (var j = 0; j < height; j++)
+                {
+                    for (var i = 0; i < width; i++, vidx++)
+                    {
+                        float u = (float)i / (width - 1);
+                        float v = (float)j / (height - 1);
+
+                        // Grid points regularly spaced in StreoScreen, and barrel distorted in
+                        // the mesh.
+                        float s = u;
+                        float t = v;
+                        float x = MathHelper.Lerp(lensFrustum[0], lensFrustum[2], u);
+                        float y = MathHelper.Lerp(lensFrustum[3], lensFrustum[1], v);
+                        float d = (float)Math.Sqrt((x * x) + (y * y));
+                        float r = this.deviceInfo.Distortion.DistortInverse(d);
+                        float p = x * r / d;
+                        float q = y * r / d;
+                        u = (p - noLensFrustum[0]) / (noLensFrustum[2] - noLensFrustum[0]);
+                        v = (q - noLensFrustum[3]) / (noLensFrustum[1] - noLensFrustum[3]);
+
+                        // Convert u,v to mesh screen coordinates.
+                        var aspect = this.deviceInfo.Device.WidthMeters / this.deviceInfo.Device.HeightMeters;
+
+                        u = (viewport.X + (u * viewport.Width) - 0.5f) * 2.0f;
+                        v = (viewport.Y + (v * viewport.Height) - 0.5f) * 2.0f;
+
+                        VertexPositionTexture vertex = new VertexPositionTexture();
+                        vertex.Position.X = u;
+                        vertex.Position.Y = 0;
+                        vertex.Position.Z = v;
+                        vertex.TexCoord.X = s;
+                        vertex.TexCoord.Y = t;
+
+                        vertices[vidx] = vertex;
+                    }
+                }
+
+                var w = lensFrustum[2] - lensFrustum[0];
+                lensFrustum[0] = -(w + lensFrustum[0]);
+                lensFrustum[2] = w - lensFrustum[2];
+                w = noLensFrustum[2] - noLensFrustum[0];
+                noLensFrustum[0] = -(w + noLensFrustum[0]);
+                noLensFrustum[2] = w - noLensFrustum[2];
+                viewport.X = 1 - (viewport.X + viewport.Width);
+            }
+
+            return vertices;
+        }
+
+        private ushort[] ComputeMeshIndices(int width, int height)
+        {
+            var indices = new ushort[2 * (width - 1) * (height - 1) * 6];
+            var halfwidth = width / 2;
+            var halfheight = height / 2;
+            var vidx = 0;
+            var iidx = 0;
+            for (var e = 0; e < 2; e++)
+            {
+                for (var j = 0; j < height; j++)
+                {
+                    for (var i = 0; i < width; i++, vidx++)
+                    {
+                        if (i == 0 || j == 0)
+                        {
+                            continue;
+                        }
+
+                        // Build a quad.  Lower right and upper left quadrants have quads with
+                        // the triangle diagonal flipped to get the vignette to interpolate
+                        // correctly.
+                        if ((i <= halfwidth) == (j <= halfheight))
+                        {
+                            // Quad diagonal lower left to upper right.
+                            indices[iidx++] = (ushort)vidx;
+                            indices[iidx++] = (ushort)(vidx - width - 1);
+                            indices[iidx++] = (ushort)(vidx - width);
+                            indices[iidx++] = (ushort)(vidx - width - 1);
+                            indices[iidx++] = (ushort)vidx;
+                            indices[iidx++] = (ushort)(vidx - 1);
+                        }
+                        else
+                        {
+                            // Quad diagonal upper left to lower right.
+                            indices[iidx++] = (ushort)(vidx - 1);
+                            indices[iidx++] = (ushort)(vidx - width);
+                            indices[iidx++] = (ushort)vidx;
+                            indices[iidx++] = (ushort)(vidx - width);
+                            indices[iidx++] = (ushort)(vidx - 1);
+                            indices[iidx++] = (ushort)(vidx - width - 1);
+                        }
+                    }
+                }
+            }
+
+            return indices;
+        }
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
         {
-            if (this.input.MotionState.IsConnected)
-            {
-                this.input.StopMotion();
-            }
-
             this.platform.OnScreenSizeChanged -= this.OnScreenSizeChanged;
         }
         #endregion

@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TiledMapImageLayer
-//
-// Copyright © 2015 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -23,11 +16,12 @@ using WaveEngine.Framework.Graphics;
 namespace WaveEngine.TiledMap
 {
     /// <summary>
-    /// The represent the TMX image layer 
+    /// The represent the TMX image layer
     /// </summary>
     public class TiledMapImageLayer
     {
         #region Properties
+
         /// <summary>
         /// Gets the image layer name
         /// </summary>
@@ -64,6 +58,7 @@ namespace WaveEngine.TiledMap
         #endregion
 
         #region Initialziation
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TiledMapImageLayer" /> class.
         /// </summary>
@@ -75,13 +70,13 @@ namespace WaveEngine.TiledMap
             this.Opacity = tmxImageLayer.Opacity;
             this.Visible = tmxImageLayer.Visible;
             this.Offset = new Vector2((float)tmxImageLayer.OffsetX, (float)tmxImageLayer.OffsetY);
-            
+
             this.Properties = new Dictionary<string, string>(tmxImageLayer.Properties);
 
             string fullPath = tmxImageLayer.Image.Source;
             string relativePath = fullPath.Substring(fullPath.IndexOf("Content"));
             this.ImagePath = relativePath;
-        } 
+        }
         #endregion
     }
 }

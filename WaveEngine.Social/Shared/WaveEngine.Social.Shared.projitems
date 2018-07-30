@@ -9,6 +9,8 @@
     <Import_RootNamespace>WaveEngine.Social</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfoExt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SocialSimulationHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SocialFakeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SocialService.cs" />

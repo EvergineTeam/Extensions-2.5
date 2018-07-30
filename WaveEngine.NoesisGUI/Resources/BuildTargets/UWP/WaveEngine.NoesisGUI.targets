@@ -1,0 +1,10 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Add NoesisGUI libraries to the project -->
+  <ItemGroup>
+	<Content Include="$(MSBuildThisFileDirectory)\NoesisGUI\$(PlatformName)\Noesis.dll">
+		<Link>Noesis.dll</Link>
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+  </ItemGroup>  
+  
+</Project>

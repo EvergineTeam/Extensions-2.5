@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// AnalyticsInfo
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -30,6 +23,7 @@ namespace WaveEngine.Analytics
         public Type InternalType { get; private set; }
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AnalyticsInfo"/> class.
         /// </summary>

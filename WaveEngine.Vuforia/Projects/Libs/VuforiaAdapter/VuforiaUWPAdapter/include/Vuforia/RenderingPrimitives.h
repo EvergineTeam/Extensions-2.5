@@ -28,8 +28,10 @@ namespace Vuforia
 
 /// RenderingPrimitives class
 /**
- * This class provides rendering primitives to be used when building
- * virtual reality experiences with an external VR viewer.
+ * This class provides rendering primitives to assist in developing AR/VR
+ * experiences across a broad range of handheld, headmounted and wearable
+ * mobile devices.  The APIs enable a common rendering loop to be created
+ * for apps targeting AR or VR on both mono and stereoscopic displays.
  *
  * The transformation measurement unit used is the same as the one used
  * to define the target size (usually meters).

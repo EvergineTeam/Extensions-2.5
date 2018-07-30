@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// OculusVRHelpers
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using OculusWrap;
@@ -28,7 +21,7 @@ namespace WaveEngine.OculusRift
         /// <summary>
         /// Convert an ovrVector3f to Wave Vector3.
         /// </summary>
-        /// <param name="ovrVector3f">ovrVector3f to convert to a SharpDX Vector3.</param>
+        /// <param name="ovrVector3f">ovrVector3f to convert to a Wave Vector3.</param>
         /// <returns>SharpDX Vector3, based on the ovrVector3f.</returns>
         public static Vector3 ToVector3(this OVRTypes.Vector3f ovrVector3f)
         {
@@ -38,8 +31,8 @@ namespace WaveEngine.OculusRift
         /// <summary>
         /// Convert an ovrVector3f to Wave Vector3.
         /// </summary>
-        /// <param name="ovrVector3f">ovrVector3f to convert to a SharpDX Vector3.</param>
-        /// <param name="vector3">Wave Vector3, based on the ovrVector3f.</param>        
+        /// <param name="ovrVector3f">ovrVector3f to convert to a Wave Vector3.</param>
+        /// <param name="vector3">Wave Vector3, based on the ovrVector3f.</param>
         public static void ToVector3(this OVRTypes.Vector3f ovrVector3f, out Vector3 vector3)
         {
             vector3.X = ovrVector3f.X;
@@ -50,7 +43,7 @@ namespace WaveEngine.OculusRift
         /// <summary>
         /// Convert an ovrMatrix4f to a Wave Matrix.
         /// </summary>
-        /// <param name="ovrMatrix4f">ovrMatrix4f to convert to a SharpDX Matrix.</param>
+        /// <param name="ovrMatrix4f">ovrMatrix4f to convert to a Wave Matrix.</param>
         /// <returns>SharpDX Matrix, based on the ovrMatrix4f.</returns>
         public static Matrix ToMatrix(this OVRTypes.Matrix4f ovrMatrix4f)
         {
@@ -60,7 +53,7 @@ namespace WaveEngine.OculusRift
         /// <summary>
         /// Convert an ovrMatrix4f to a Wave Matrix.
         /// </summary>
-        /// <param name="ovrMatrix4f">ovrMatrix4f to convert to a SharpDX Matrix.</param>
+        /// <param name="ovrMatrix4f">ovrMatrix4f to convert to a Wave Matrix.</param>
         /// <param name="matrix">Wave Matrix, based on the ovrMatrix4f.</param>
         public static void ToMatrix(this OVRTypes.Matrix4f ovrMatrix4f, out Matrix matrix)
         {
@@ -98,8 +91,8 @@ namespace WaveEngine.OculusRift
         /// <summary>
         /// Converts an ovrQuatf to a Wave Quaternion.
         /// </summary>
-        /// <param name="ovrQuatf">ovrVector3f to convert to a SharpDX Vector3.</param>
-        /// <param name="quaternion">Wave Vector3, based on the ovrVector3f.</param>        
+        /// <param name="ovrQuatf">ovrVector3f to convert to a Wave Vector3.</param>
+        /// <param name="quaternion">Wave Vector3, based on the ovrVector3f.</param>
         public static void ToQuaternion(this OVRTypes.Quaternionf ovrQuatf, out Quaternion quaternion)
         {
             quaternion.X = ovrQuatf.X;
@@ -135,12 +128,12 @@ namespace WaveEngine.OculusRift
         /// Please note that writing text to the debug output window is a slow operation and will affect performance,
         /// if too many messages are written in a short timespan.
         /// </summary>
-        /// <param name="oculus">OculusWrap object for which the error occurred.</param>        
+        /// <param name="oculus">OculusWrap object for which the error occurred.</param>
         /// <param name="message">Error message to include in the debug text.</param>
         public static void WriteErrorDetails(Wrap oculus, string message)
         {
             // Retrieve the error message from the last occurring error.
-            OVRTypes.ErrorInfo errorInformation = oculus.GetLastError();            
+            OVRTypes.ErrorInfo errorInformation = oculus.GetLastError();
 
             string formattedMessage = string.Format("{0}. \nMessage: {1} (Error code={2})", message, errorInformation.ErrorString, errorInformation.Result);
             Console.WriteLine(formattedMessage);

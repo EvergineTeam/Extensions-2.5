@@ -11,12 +11,13 @@
     <AssemblyName>WaveEngine.Vuforia</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.15063.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <StyleCopTreatErrorsAsWarnings>true</StyleCopTreatErrorsAsWarnings>
+    <RuntimeIdentifiers>win10-arm;win10-arm-aot;win10-x86;win10-x86-aot;win10-x64;win10-x64-aot</RuntimeIdentifiers>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -41,12 +42,6 @@
     <GenerateLibraryLayout>false</GenerateLibraryLayout>
     <DocumentationFile>bin\UAP\AnyCPU\Release\WaveEngine.Vuforia.XML</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>WaveEngineKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -75,28 +70,23 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <None Include="WaveEngineKey.snk" />
-    <None Include="WaveEngineUWP.Vuforia.project.json" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\WaveEngineUWP.Vuforia.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Common\Projects\WaveEngineUWP.Common.csproj">
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Common\Projects\UWP\WaveEngineUWP.Common.csproj">
       <Project>{97d63324-2a19-4f8e-8990-68bff8cc3b8f}</Project>
       <Name>WaveEngineUWP.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Components\Projects\WaveEngineUWP.Components.csproj">
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Components\Projects\UWP\WaveEngineUWP.Components.csproj">
       <Project>{2eb2a744-6554-4120-b705-429d322178a7}</Project>
       <Name>WaveEngineUWP.Components</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Framework\Projects\WaveEngineUWP.Framework.csproj">
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Framework\Projects\UWP\WaveEngineUWP.Framework.csproj">
       <Project>{fb59f167-39c2-475d-8eb5-7ff9d4fad7de}</Project>
       <Name>WaveEngineUWP.Framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Materials\Projects\WaveEngineUWP.Materials.csproj">
-      <Project>{058585B4-DAEC-4DD0-9DB4-6BE6D9D8A644}</Project>
+    <ProjectReference Include="..\..\..\..\Common\WaveEngine.Materials\Projects\UWP\WaveEngineUWP.Materials.csproj">
+      <Project>{058585b4-daec-4dd0-9db4-6be6d9d8a644}</Project>
       <Name>WaveEngineUWP.Materials</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\Platforms\UWP\WaveEngineUWP.Adapter\WaveEngineUWP.Adapter.csproj">
@@ -108,19 +98,18 @@
     <Compile Include="ARServiceUWP.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="SharpDX">
-      <HintPath>..\..\..\..\Platforms\UWP\Libraries\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\..\Platforms\UWP\Libraries\SharpDX.Direct3D11.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>5.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers">
+      <Version>1.0.2</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="..\..\Shared\WaveEngine.Vuforia.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <Import Project="..\..\..\..\Resources\StyleCop\StyleCop.Targets" />
   <Import Project="..\..\..\..\Resources\PostBuildTargets\UWP.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

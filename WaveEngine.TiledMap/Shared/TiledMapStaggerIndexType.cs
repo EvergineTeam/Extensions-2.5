@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TiledMapStaggerIndexType
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -22,7 +15,14 @@ namespace WaveEngine.TiledMap
     /// </summary>
     public enum TiledMapStaggerIndexType
     {
+        /// <summary>
+        /// Odd
+        /// </summary>
         Odd = 0,
+
+        /// <summary>
+        /// Even
+        /// </summary>
         Even = 1,
     }
 }

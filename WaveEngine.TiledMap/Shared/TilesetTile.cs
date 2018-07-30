@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// Tile
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -24,6 +17,7 @@ namespace WaveEngine.TiledMap
     public class TilesetTile
     {
         #region Properties
+
         /// <summary>
         /// Gets the tile ID
         /// </summary>
@@ -71,6 +65,7 @@ namespace WaveEngine.TiledMap
         #endregion
 
         #region Initialization
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TilesetTile" /> class.
         /// </summary>>

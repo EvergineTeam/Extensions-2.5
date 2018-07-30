@@ -1,11 +1,5 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// EvadingBehavior
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

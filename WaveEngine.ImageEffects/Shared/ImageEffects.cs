@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// ImageEffects
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 
@@ -63,7 +56,7 @@ namespace WaveEngine.ImageEffects
         /// </returns>
         public static ConvolutionLens ConvolutionMatrix(ConvolutionMaterial.FilterType filter)
         {
-            ConvolutionLens convolution = new ConvolutionLens() { Filter = filter};
+            ConvolutionLens convolution = new ConvolutionLens() { Filter = filter };
             return convolution;
         }
 
@@ -230,7 +223,7 @@ namespace WaveEngine.ImageEffects
         /// <summary>
         /// Gets a new <see cref="ScreenOverlayLens"/>.
         /// </summary>
-        /// <param name="normalTexturePath">Texture use to apply the ScreenOverlay effect.</param>
+        /// <param name="overlayTexturePath">Texture use to apply the ScreenOverlay effect.</param>
         /// <returns>A instance of ScreenOverlayLens.</returns>
         public static ScreenOverlayLens ScreenOverlay(string overlayTexturePath = null)
         {

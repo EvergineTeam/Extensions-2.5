@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// FogLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -25,6 +18,7 @@ namespace WaveEngine.ImageEffects
     public class FogLens : Lens
     {
         #region Properties
+
         /// <summary>
         /// Gets or sets the fog based technique, default value is Exponential.
         /// </summary>
@@ -119,6 +113,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FogLens"/> class.
         /// </summary>
@@ -139,13 +134,14 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Renders to image.
         /// </summary>
         /// <param name="gameTime">The game time.</param>
         public override void Render(TimeSpan gameTime)
         {
-            var mat = (this.material as FogMaterial);
+            var mat = this.material as FogMaterial;
             mat.Texture = this.Source;
             this.RenderToImage(this.Destination, this.material);
 
@@ -154,6 +150,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
@@ -168,7 +165,7 @@ namespace WaveEngine.ImageEffects
         /// <returns>Density visibility state</returns>
         private bool DensityCondition()
         {
-            return (this.Technique == FogMaterial.Techniques.Exponencial || this.Technique == FogMaterial.Techniques.ExponencialSquared);
+            return this.Technique == FogMaterial.Techniques.Exponencial || this.Technique == FogMaterial.Techniques.ExponencialSquared;
         }
         #endregion
     }

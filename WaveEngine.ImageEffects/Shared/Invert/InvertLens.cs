@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// InvertLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -37,6 +30,7 @@ namespace WaveEngine.ImageEffects
             base.DefaultValues();
             this.material = new InvertMaterial();
         }
+
         /// <summary>
         /// Renders to image.
         /// </summary>

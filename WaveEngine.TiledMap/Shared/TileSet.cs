@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TileSet
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -23,7 +16,7 @@ using WaveEngine.Materials;
 namespace WaveEngine.TiledMap
 {
     /// <summary>
-    /// A TMX tileset wrapper class 
+    /// A TMX tileset wrapper class
     /// </summary>
     public class Tileset : IDisposable
     {
@@ -43,6 +36,7 @@ namespace WaveEngine.TiledMap
         private List<TilesetTile> tiles;
 
         #region Properties
+
         /// <summary>
         /// Gets the name of the tileset.
         /// </summary>
@@ -161,7 +155,7 @@ namespace WaveEngine.TiledMap
         }
 
         /// <summary>
-        /// Thetileset terrains
+        /// Gets thetileset terrains
         /// </summary>
         public ReadOnlyDictionary<string, TilesetTerrain> Terrains
         {
@@ -176,6 +170,7 @@ namespace WaveEngine.TiledMap
         #endregion
 
         #region Initialization
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Tileset" /> class.
         /// </summary>
@@ -218,15 +213,16 @@ namespace WaveEngine.TiledMap
 
                 this.tiles.Add(tilesetTile);
                 this.TilesTable[tilesetTile.ID] = tilesetTile;
-            }            
+            }
 
-            string fullPath = tmxTileset.Image.Source;            
+            string fullPath = tmxTileset.Image.Source;
             string relativePath = fullPath.Substring(fullPath.IndexOf("Content"));
-            this.Image = this.tiledMap.Owner.Scene.Assets.LoadAsset<Texture2D>(relativePath);            
+            this.Image = this.tiledMap.Owner.Scene.Assets.LoadAsset<Texture2D>(relativePath);
         }
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Dispose this tileset instance
         /// </summary>

@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// SSAOMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -24,6 +17,9 @@ namespace WaveEngine.ImageEffects
     /// </summary>
     public class SSAOMaterial : Material
     {
+        /// <summary>
+        /// Passes
+        /// </summary>
         public enum Passes
         {
             /// <summary>
@@ -78,6 +74,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -104,6 +101,7 @@ namespace WaveEngine.ImageEffects
         private SSAOEffectParameters shaderParameters;
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the ao intensity.
         /// </summary>
@@ -113,12 +111,12 @@ namespace WaveEngine.ImageEffects
         public float AOIntensity { get; set; }
 
         /// <summary>
-        /// Distance Threshold
+        /// Gets or sets distance Threshold
         /// </summary>
         public float DistanceThreshold { get; set; }
 
         /// <summary>
-        /// Filter Radius
+        /// Gets or sets filter Radius
         /// </summary>
         public Vector2 FilterRadius { get; set; }
 
@@ -210,6 +208,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SSAOMaterial"/> class.
         /// </summary>
@@ -225,7 +224,6 @@ namespace WaveEngine.ImageEffects
         {
             base.DefaultValues();
 
-            this.SamplerMode = AddressMode.LinearClamp;
             this.DistanceThreshold = 1.5f;
             this.AOIntensity = 2;
             this.FilterRadius = new Vector2(0.015f);
@@ -234,7 +232,7 @@ namespace WaveEngine.ImageEffects
             this.shaderParameters.DistanceThreshold = this.DistanceThreshold;
             this.shaderParameters.FilterRadius = this.FilterRadius;
             this.Parameters = this.shaderParameters;
-                        
+
             this.InitializeTechniques(techniques);
         }
 
@@ -249,6 +247,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>
@@ -271,7 +270,7 @@ namespace WaveEngine.ImageEffects
                 this.shaderParameters.AOintensity = this.AOIntensity;
 
                 this.Parameters = this.shaderParameters;
-                
+
                 this.gBufferTexture = camera.GBufferRT0;
                 this.depthTexture = camera.GBufferDepthBuffer;
 

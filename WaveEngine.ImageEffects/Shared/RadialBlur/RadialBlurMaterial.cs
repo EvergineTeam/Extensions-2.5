@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// RadialBlurMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -26,7 +19,7 @@ namespace WaveEngine.ImageEffects
     public class RadialBlurMaterial : Material
     {
         /// <summary>
-        /// The nsamples
+        /// Gets or sets the nsamples
         /// </summary>
         [RenderPropertyAsInput(MinLimit = 0, MaxLimit = 30)]
         public int Nsamples
@@ -76,6 +69,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -135,13 +129,13 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="ScanlinesMaterial"/> class.
+        /// Initializes a new instance of the <see cref="RadialBlurMaterial"/> class.
         /// </summary>
         public RadialBlurMaterial()
             : base(DefaultLayers.Opaque)
         {
-            this.SamplerMode = AddressMode.LinearClamp;
             this.Nsamples = 10;
             this.BlurWidth = 0.1f;
             this.Center = new Vector2(0.5f);
@@ -166,6 +160,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>

@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// LensFlareMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -56,7 +49,7 @@ namespace WaveEngine.ImageEffects
         /// The pass
         /// </summary>
         public Passes Pass;
-       
+
         /// <summary>
         /// The pixel offset
         /// </summary>
@@ -93,12 +86,13 @@ namespace WaveEngine.ImageEffects
         private static ShaderTechnique[] techniques =
         {
             new ShaderTechnique("Combine", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psLensFlareCombine", VertexPositionTexture.VertexFormat),
-            new ShaderTechnique("Blur", string.Empty, "vsLensFlareBlur", string.Empty, "psLensFlareBlur", VertexPositionTexture.VertexFormat),            
+            new ShaderTechnique("Blur", string.Empty, "vsLensFlareBlur", string.Empty, "psLensFlareBlur", VertexPositionTexture.VertexFormat),
             new ShaderTechnique("LensFlare", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psLensFlare", VertexPositionTexture.VertexFormat),
-            new ShaderTechnique("Down", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psLensFlareDown", VertexPositionTexture.VertexFormat),            
+            new ShaderTechnique("Down", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psLensFlareDown", VertexPositionTexture.VertexFormat),
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -139,12 +133,12 @@ namespace WaveEngine.ImageEffects
         #region Properties
 
         /// <summary>
-        /// Bias.
+        /// Gets or sets bias.
         /// </summary>
         public float Bias { get; set; }
 
         /// <summary>
-        /// Scale.
+        /// Gets or sets scale.
         /// </summary>
         public float Scale { get; set; }
 
@@ -265,6 +259,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LensFlareMaterial"/> class.
         /// </summary>
@@ -280,8 +275,7 @@ namespace WaveEngine.ImageEffects
         {
             base.DefaultValues();
 
-            this.SamplerMode = AddressMode.LinearClamp;
-            this.Bias = -0.9f;
+            this.Bias = 0.9f;
             this.Scale = 7f;
             this.GhostDispersal = 0.37f;
             this.HaloWidth = 0.47f;
@@ -304,23 +298,30 @@ namespace WaveEngine.ImageEffects
             // LensColor
             var assembly = this.GetMemberAssembly();
             var currentNamespace = assembly.GetName().Name;
-            var textureResourcePath = currentNamespace + ".LensFlare.LensColor.wpk";
-            var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
-            this.lensColorTexture = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);
+            var textureResourcePath = currentNamespace + ".LensFlare.LensColor.png";
+            using (var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath))
+            {
+                this.lensColorTexture = Texture2D.FromFile(this.graphicsDevice, textureStream);
+            }
 
             // LensDirt
-            textureResourcePath = currentNamespace + ".LensFlare.LensDirt.wpk";
-            textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
-            this.lensDirtTexture = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);
+            textureResourcePath = currentNamespace + ".LensFlare.LensDirt.png";
+            using (var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath))
+            {
+                this.lensDirtTexture = Texture2D.FromFile(this.graphicsDevice, textureStream);
+            }
 
             // LensStar
-            textureResourcePath = currentNamespace + ".LensFlare.LensStar.wpk";
-            textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
-            this.lensStarTexture = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);
+            textureResourcePath = currentNamespace + ".LensFlare.LensStar.png";
+            using (var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath))
+            {
+                this.lensStarTexture = Texture2D.FromFile(this.graphicsDevice, textureStream);
+            }
         }
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>
@@ -331,7 +332,7 @@ namespace WaveEngine.ImageEffects
             {
                 Camera camera = this.renderManager.CurrentDrawingCamera;
 
-                this.shaderParameters.Bias = new Vector3(this.Bias);
+                this.shaderParameters.Bias = new Vector3(-this.Bias);
                 this.shaderParameters.Scale = new Vector3(this.Scale);
                 this.shaderParameters.GhostDispersal = this.GhostDispersal;
                 this.shaderParameters.HaloWidth = this.HaloWidth;

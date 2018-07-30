@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// LensFlareLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -25,8 +18,9 @@ namespace WaveEngine.ImageEffects
     public class LensFlareLens : Lens
     {
         #region Properties
+
         /// <summary>
-        /// Gets or sets bias of downsampler, default value is -0.9f.
+        /// Gets or sets bias of downsampler, default value is 0.9f.
         /// </summary>
         [DataMember]
         [RenderPropertyAsSlider(0.1f, 2.0f, 0.01f)]
@@ -78,7 +72,7 @@ namespace WaveEngine.ImageEffects
                 (this.material as LensFlareMaterial).GhostDispersal = value;
             }
         }
-        
+
         /// <summary>
         /// Gets or sets HaloWidth, default value is 0.47f.
         /// </summary>
@@ -96,7 +90,7 @@ namespace WaveEngine.ImageEffects
                 (this.material as LensFlareMaterial).HaloWidth = value;
             }
         }
-        
+
         /// <summary>
         /// Gets or sets Distortion, default value is 1.5f.
         /// </summary>
@@ -135,6 +129,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LensFlareLens"/> class.
         /// </summary>
@@ -155,6 +150,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Renders to image.
         /// </summary>
@@ -174,25 +170,28 @@ namespace WaveEngine.ImageEffects
 
             RenderTarget rt1 = graphicsDevice.RenderTargets.GetTemporalRenderTarget(width, height);
             RenderTarget rt2 = graphicsDevice.RenderTargets.GetTemporalRenderTarget(width, height);
-            graphicsDevice.RenderState.Viewport = new Viewport(0, 0, width, height);
+            graphicsDevice.Viewport = new Viewport(0, 0, width, height);
 
             // Down sampler
-            mat.Texture = this.Source;
             mat.Pass = LensFlareMaterial.Passes.DownSampler;
+            mat.Texture = this.Source;
+            mat.LensFlareTexture = null;
             this.RenderToImage(rt1, this.material);
 
             // LensFlare
             mat.Pass = LensFlareMaterial.Passes.LensFlare;
             mat.Texture = rt1;
+            mat.LensFlareTexture = null;
             this.RenderToImage(rt2, this.material);
 
             // Blur
             mat.Pass = LensFlareMaterial.Passes.Blur;
             mat.Texture = rt2;
+            mat.LensFlareTexture = null;
             this.RenderToImage(rt1, this.material);
 
             // Combine
-            graphicsDevice.RenderState.Viewport = new Viewport(0, 0, this.Source.Width, this.Source.Height);
+            graphicsDevice.Viewport = new Viewport(0, 0, this.Source.Width, this.Source.Height);
             mat.Pass = LensFlareMaterial.Passes.Combine;
             mat.Texture = this.Source;
             mat.LensFlareTexture = rt1;
@@ -207,6 +206,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>

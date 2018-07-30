@@ -18,6 +18,9 @@
       <Platform>x86</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{44f3189e-0b7d-467e-aaea-558597900d36}</ProjectGuid>
     <Keyword>Android</Keyword>
@@ -133,7 +136,7 @@
     </Lib>
     <Link>
       <LibraryDependencies>$(StlLibraryName);%(LibraryDependencies);Vuforia;GLESv2</LibraryDependencies>
-      <AdditionalLibraryDirectories>lib\armeabi-v7a;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(StlLibraryPath)\..\;lib\armeabi-v7a;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

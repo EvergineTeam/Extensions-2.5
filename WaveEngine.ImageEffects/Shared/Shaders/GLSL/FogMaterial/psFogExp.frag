@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------------
 // Fog.fx
 //
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
+// Copyright © 2018 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 
@@ -30,21 +30,17 @@ float LinearDepth(float z)
 
 void main()
 {
-	float depth = texture2D(DepthTexture, outTexCoord).r;
-	depth = depth  * 2.0 - 1.0;	
-
-//	vec3 scene = texture2D(Texture, outTexCoord).rgb;
+	float depth = texture2D(DepthTexture, outTexCoord).x;
+	vec3 scene = texture2D(Texture, outTexCoord).rgb;
 
 	// LinearDepth, range 0 - 1
-	//float distance = LinearDepth(depth);
+	float distance = LinearDepth(depth);
 
-	gl_FragColor = vec4(depth.xxx, 1.0);
+	// Calculate exponential fog amount
+	float fogAmount = exp2(-distance * FogDensity);
 
-//	// Calculate exponential fog amount
-//	float fogAmount = exp2(-distance * FogDensity);
-//
-//	// Compute resultant pixel
-//	vec3 color = mix(vec3(FogColor), scene, fogAmount);
-//
-//	gl_FragColor = vec4(distance.xxx, 1.0);
+	// Compute resultant pixel
+	vec3 color = mix(FogColor, scene, fogAmount);
+
+	gl_FragColor = vec4(color, 1.0);
 }

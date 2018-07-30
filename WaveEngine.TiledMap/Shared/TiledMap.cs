@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TiledMap
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -100,21 +93,23 @@ namespace WaveEngine.TiledMap
         private Dictionary<string, TiledMapImageLayer> imageLayers;
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the Path of the Tiled Map TMX file
         /// </summary>
         [RenderPropertyAsAsset(AssetType.Unknown, ".tmx")]
         public string TmxPath
         {
-            get { return this.tmxPath; }
+            get
+            {
+                return this.tmxPath;
+            }
+
             set
             {
                 this.tmxPath = value;
-
-                // We reset the stream to null for clearness
                 this.tmxStream = null;
                 this.tmxStreamAssetsPath = null;
-
                 if (this.isInitialized)
                 {
                     this.ReloadTmxFile();
@@ -214,60 +209,61 @@ namespace WaveEngine.TiledMap
         public string Version { get; private set; }
 
         /// <summary>
-        /// Map orientation. Tiled supports "orthogonal", "isometric", "staggered" and "hexagonal" (since 0.11.0) at the moment.
+        /// Gets map orientation. Tiled supports "orthogonal", "isometric", "staggered" and "hexagonal" (since 0.11.0) at the moment.
         /// </summary>
         public TiledMapOrientationType Orientation { get; private set; }
 
         /// <summary>
-        /// The order in which tiles on tile layers are rendered. 
-        /// Valid values are right-down (the default), right-up, left-down and left-up. 
-        /// In all cases, the map is drawn row-by-row. 
+        /// Gets the order in which tiles on tile layers are rendered.
+        /// Valid values are right-down (the default), right-up, left-down and left-up.
+        /// In all cases, the map is drawn row-by-row.
         /// (since 0.10, but only supported for orthogonal maps at the moment)
         /// </summary>
         public TiledMapRenderOrderType RenderOrder { get; private set; }
 
         /// <summary>
-        /// Stagger Axis. For staggered maps, indicates if the tiles are ordered in X axis or Y axis.
+        /// Gets stagger Axis. For staggered maps, indicates if the tiles are ordered in X axis or Y axis.
         /// </summary>
         public TiledMapStaggerAxisType StaggerAxis { get; private set; }
 
         /// <summary>
-        /// Stagger Index. For staggered maps, indicates if the tiles index is odd or even.
+        /// Gets stagger Index. For staggered maps, indicates if the tiles index is odd or even.
         /// </summary>
         public TiledMapStaggerIndexType StaggerIndex { get; private set; }
 
         /// <summary>
-        /// The tile side length for hexagonal maps.
+        /// Gets the tile side length for hexagonal maps.
         /// </summary>
         public int HexSideLength { get; private set; }
 
         /// <summary>
-        /// The map width in tiles.
+        /// Gets the map width in tiles.
         /// </summary>
         public int Width { get; private set; }
 
         /// <summary>
-        /// The map height in tiles.
+        /// Gets the map height in tiles.
         /// </summary>
         public int Height { get; private set; }
 
         /// <summary>
-        /// The width of a tile.
+        /// Gets the width of a tile.
         /// </summary>
         public int TileWidth { get; private set; }
 
         /// <summary>
-        /// The height of a tile.
+        /// Gets the height of a tile.
         /// </summary>
         public int TileHeight { get; private set; }
 
         /// <summary>
-        /// The background color of the map. (since 0.9.0)
+        /// Gets the background color of the map. (since 0.9.0)
         /// </summary>
         public Color BackgroundColor { get; private set; }
         #endregion
 
         #region Initialization
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TiledMap" /> class.
         /// </summary>
@@ -329,6 +325,7 @@ namespace WaveEngine.TiledMap
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Get a tileset by a Global ID
         /// </summary>
@@ -378,7 +375,7 @@ namespace WaveEngine.TiledMap
 
                 case TiledMapOrientationType.Isometric:
                     position = new Vector2(
-                        ((x - y) * this.TileWidth * 0.5f) + (this.Height * this.TileWidth * 0.5f) - this.TileWidth * 0.5f,
+                        ((x - y) * this.TileWidth * 0.5f) + (this.Height * this.TileWidth * 0.5f) - (this.TileWidth * 0.5f),
                         (x + y) * this.TileHeight * 0.5f);
                     break;
 
@@ -436,7 +433,7 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Calculate rectangle
         /// </summary>
-        /// <returns></returns>
+        /// <returns>RectangleF</returns>
         internal RectangleF CalcRectangle()
         {
             RectangleF rectangle = new RectangleF();
@@ -538,6 +535,7 @@ namespace WaveEngine.TiledMap
                         tileX = (coordX - coordY + evenOffset) / 2;
                         tileY = coordX + coordY;
                     }
+
                     break;
 
                 case TiledMapOrientationType.Hexagonal:
@@ -560,8 +558,8 @@ namespace WaveEngine.TiledMap
 
                     // Relative x and y position on the base square of the grid-aligned tile
                     Vector2 rel = new Vector2(
-                        position.X - referencePosition.X * (this.TileWidth + sideLengthX),
-                        position.Y - referencePosition.Y * (this.TileHeight + sideLengthY));
+                        position.X - (referencePosition.X * (this.TileWidth + sideLengthX)),
+                        position.Y - (referencePosition.Y * (this.TileHeight + sideLengthY)));
 
                     // Adjust the reference point to the correct tile coordinates
                     // Determine the nearest hexagon tile by the distance to the center
@@ -621,18 +619,20 @@ namespace WaveEngine.TiledMap
                         }
                     }
 
-                    var offsetsStaggerX = new Vector2[]{
-                        new Vector2( 0,  0),
+                    var offsetsStaggerX = new Vector2[]
+                    {
+                        new Vector2(0,  0),
                         new Vector2(+1, -1),
                         new Vector2(+1,  0),
                         new Vector2(+2,  0),
                     };
 
-                    var offsetsStaggerY = new Vector2[]{
-                        new Vector2( 0,  0),
+                    var offsetsStaggerY = new Vector2[]
+                    {
+                        new Vector2(0,  0),
                         new Vector2(-1, +1),
-                        new Vector2( 0, +1),
-                        new Vector2( 0, +2),
+                        new Vector2(0, +1),
+                        new Vector2(0, +2),
                     };
 
                     var offsets = staggerX ? offsetsStaggerX : offsetsStaggerY;
@@ -653,7 +653,7 @@ namespace WaveEngine.TiledMap
         /// Does the stagger x.
         /// </summary>
         /// <param name="x">The x.</param>
-        /// <returns></returns>
+        /// <returns>bool</returns>
         internal bool DoStaggerX(int x)
         {
             var isStaggerX = this.StaggerAxis == TiledMapStaggerAxisType.X;
@@ -666,7 +666,7 @@ namespace WaveEngine.TiledMap
         /// Does the stagger y.
         /// </summary>
         /// <param name="y">The y.</param>
-        /// <returns></returns>
+        /// <returns>bool</returns>
         internal bool DoStaggerY(int y)
         {
             var isStaggerX = this.StaggerAxis == TiledMapStaggerAxisType.X;
@@ -677,6 +677,7 @@ namespace WaveEngine.TiledMap
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Initializes Tiled Map
         /// </summary>
@@ -707,7 +708,7 @@ namespace WaveEngine.TiledMap
             {
                 tileset.Dispose();
             }
-            
+
             this.tilesets.Clear();
             this.tileLayers.Clear();
             this.objectLayers.Clear();
@@ -758,7 +759,7 @@ namespace WaveEngine.TiledMap
                 this.transform.Rectangle = this.CalcRectangle();
                 this.CreateImageLayers();
                 this.CreateTileLayers();
-                
+
                 this.UpdateLayerDrawOrders();
             }
             catch (Exception ex)
@@ -845,6 +846,7 @@ namespace WaveEngine.TiledMap
         /// </summary>
         /// <param name="tmxImageLayer">The tmx image layer.</param>
         /// <param name="layerIndex">The layer index</param>
+        /// <param name="previousEntities">previousEntities</param>
         private void CreateChildTileImageLayer(TmxImageLayer tmxImageLayer, int layerIndex, IList<Entity> previousEntities)
         {
             var tmxLayerName = tmxImageLayer.Name;
@@ -904,6 +906,7 @@ namespace WaveEngine.TiledMap
         /// </summary>
         /// <param name="tmxLayer">The tmx layer.</param>
         /// <param name="layerIndex">The layer index</param>
+        /// <param name="previousEntities">previousEntities</param>
         private void CreateChildTileLayer(TmxLayer tmxLayer, int layerIndex, IList<Entity> previousEntities)
         {
             var tmxLayerName = tmxLayer.Name;

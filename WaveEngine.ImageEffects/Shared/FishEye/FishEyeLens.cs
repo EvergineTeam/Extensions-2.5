@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// FishEyeLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -24,6 +17,7 @@ namespace WaveEngine.ImageEffects
     public class FishEyeLens : Lens
     {
         #region Properties
+
         /// <summary>
         /// Gets or sets the strength x, default value is 0.02f.
         /// </summary>
@@ -41,6 +35,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FishEyeLens"/> class.
         /// </summary>
@@ -62,6 +57,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Renders to image.
         /// </summary>
@@ -70,8 +66,8 @@ namespace WaveEngine.ImageEffects
         {
             float aspectRatio = this.Source.Width / this.Source.Height;
 
-            var mat = (this.material as FishEyeMaterial);
-            mat.Intensity = new Vector2(StrengthX * aspectRatio, StrengthY * aspectRatio);
+            var mat = this.material as FishEyeMaterial;
+            mat.Intensity = new Vector2(this.StrengthX * aspectRatio, this.StrengthY * aspectRatio);
             mat.Texture = this.Source;
             this.RenderToImage(this.Destination, this.material);
 
@@ -80,6 +76,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>

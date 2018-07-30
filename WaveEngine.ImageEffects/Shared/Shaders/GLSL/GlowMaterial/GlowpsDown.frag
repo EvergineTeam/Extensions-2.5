@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------------
 // Glow.fx
 //
-// Copyright © 2017 Wave Corporation
+// Copyright © 2018 Wave Corporation
 // Use is subject to license terms.
 // More info: http://http.developer.nvidia.com/GPUGems/gpugems_ch21.html
 //-----------------------------------------------------------------------------

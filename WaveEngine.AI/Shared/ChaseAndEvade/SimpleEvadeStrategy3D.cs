@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// SimpleEvadeStrategy3D
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 using System;
 using System.Collections.Generic;
@@ -146,7 +139,7 @@ namespace WaveEngine.AI.ChaseAndEvade
 
         /// <summary>
         /// Gets the evade entity transform.
-        /// </summary>        
+        /// </summary>
         private void GetEvadeEntityTransform()
         {
             if (this.evadeFromEntity != null)

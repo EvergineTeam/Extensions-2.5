@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// ScreenOverlayMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -95,6 +88,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -169,7 +163,6 @@ namespace WaveEngine.ImageEffects
             }
         }
 
-
         /// <summary>
         /// Gets the current technique.
         /// </summary>
@@ -191,12 +184,12 @@ namespace WaveEngine.ImageEffects
         /// <summary>
         /// Initializes a new instance of the <see cref="ScreenOverlayMaterial"/> class.
         /// </summary>
+        /// <param name="overlayTexturePath">overlayTexturePath</param>
         public ScreenOverlayMaterial(string overlayTexturePath = null)
             : base(DefaultLayers.Opaque)
         {
             this.OverlayMode = BlendMode.Multiply;
             this.overlayTexturePath = overlayTexturePath;
-            this.SamplerMode = AddressMode.LinearClamp;
             this.Intensity = 1.0f;
 
             this.shaderParameters = new ScreenOverlayEffectParameters();
@@ -219,6 +212,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>
@@ -264,10 +258,11 @@ namespace WaveEngine.ImageEffects
                 var assembly = this.GetMemberAssembly();
                 var currentNamespace = assembly.GetName().Name;
 
-                var textureResourcePath = currentNamespace + ".ScreenOverlay.Gradient.wpk";
-                var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
-
-                this.overlayTexture = this.assetsContainer.LoadAsset<Texture2D>(textureResourcePath, textureStream);
+                var textureResourcePath = currentNamespace + ".ScreenOverlay.Gradient.png";
+                using (var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath))
+                {
+                    this.overlayTexture = Texture2D.FromFile(this.graphicsDevice, textureStream);
+                }
             }
         }
         #endregion

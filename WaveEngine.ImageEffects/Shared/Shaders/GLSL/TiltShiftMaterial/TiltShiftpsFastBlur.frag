@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------------
 // TiltShift.fx
 //
-// Copyright © 2017 Wave Corporation
+// Copyright © 2018 Wave Corporation
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 

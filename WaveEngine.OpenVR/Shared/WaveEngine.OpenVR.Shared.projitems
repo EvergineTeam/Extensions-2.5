@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>78a89827-7863-44a7-8c6a-fe7a3f20036c</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WaveEngine.OpenVR</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ButtonMask.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\DeviceEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\OpenVRHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\OpenVRTrackingReference.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Input\OpenVRControllerState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OpenVRApplication.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OpenVRProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)openvr_api.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OpenVRService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfoExt.cs" />
+  </ItemGroup>
+</Project>

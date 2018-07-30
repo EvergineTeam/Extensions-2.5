@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TiltShiftMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -24,6 +17,9 @@ namespace WaveEngine.ImageEffects
     /// </summary>
     public class TiltShiftMaterial : Material
     {
+        /// <summary>
+        /// Passes
+        /// </summary>
         public enum Passes
         {
             /// <summary>
@@ -71,7 +67,7 @@ namespace WaveEngine.ImageEffects
         /// The texture1
         /// </summary>
         private Texture texture1;
-        
+
         /// <summary>
         /// The techniques
         /// </summary>
@@ -83,6 +79,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -163,13 +160,13 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="PosterizeMaterial"/> class.
+        /// Initializes a new instance of the <see cref="TiltShiftMaterial"/> class.
         /// </summary>
         public TiltShiftMaterial()
             : base(DefaultLayers.Opaque)
         {
-            this.SamplerMode = AddressMode.LinearClamp;
             this.TexcoordOffset = Vector2.Zero;
             this.Power = 3;
             this.TiltPosition = 0.5f;
@@ -193,6 +190,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>

@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// FilmGrainMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -59,7 +52,7 @@ namespace WaveEngine.ImageEffects
         /// <summary>
         /// The intensity
         /// </summary>
-        private float Intensity;
+        private float intensity;
 
         /// <summary>
         /// The path grain texture
@@ -90,6 +83,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -165,10 +159,12 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FilmGrainMaterial"/> class.
         /// </summary>
-        public FilmGrainMaterial() : this(null)
+        public FilmGrainMaterial()
+            : this(null)
         {
         }
 
@@ -180,7 +176,6 @@ namespace WaveEngine.ImageEffects
             : base(DefaultLayers.Opaque)
         {
             this.pathGrainTexture = pathGrainTexture;
-            this.SamplerMode = AddressMode.LinearClamp;
             this.GrainIntensityMin = 0.1f;
             this.GrainIntensityMax = 0.2f;
             this.GrainSize = 2.0f;
@@ -188,7 +183,7 @@ namespace WaveEngine.ImageEffects
             this.random = new Random(23);
 
             this.shaderParameters = new FilmGrainEffectParameters();
-            SetShaderParamenters();
+            this.SetShaderParamenters();
 
             this.InitializeTechniques(techniques);
         }
@@ -210,15 +205,17 @@ namespace WaveEngine.ImageEffects
                 var assembly = this.GetMemberAssembly();
                 var currentNamespace = assembly.GetName().Name;
 
-                var textureResourcePath = currentNamespace + ".FilmGrain.NoiseEffectGrain.wpk";
-                var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
-
-                this.grainTexture = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);
+                var textureResourcePath = currentNamespace + ".FilmGrain.NoiseEffectGrain.png";
+                using (var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath))
+                {
+                    this.grainTexture = Texture2D.FromFile(this.graphicsDevice, textureStream);
+                }
             }
         }
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>
@@ -227,17 +224,15 @@ namespace WaveEngine.ImageEffects
         {
             if (!cached)
             {
-                SetShaderParamenters();
-                this.SamplerMode = AddressMode.LinearClamp;
+                this.SetShaderParamenters();
                 if (this.Texture != null)
                 {
-                    this.graphicsDevice.SetTexture(this.Texture, 0);
+                    this.graphicsDevice.SetTexture(this.Texture, 0, SamplerStates.LinearClamp);
                 }
 
-                this.SamplerMode = AddressMode.LinearWrap;
                 if (this.grainTexture != null)
                 {
-                    this.graphicsDevice.SetTexture(this.grainTexture, 1);
+                    this.graphicsDevice.SetTexture(this.grainTexture, 1, SamplerStates.LinearWrap);
                 }
             }
         }
@@ -250,9 +245,9 @@ namespace WaveEngine.ImageEffects
         /// </summary>
         private void SetShaderParamenters()
         {
-            GrainIntensityMin =  MathHelper.Clamp(GrainIntensityMin, 0.0f, 5.0f);
-            GrainIntensityMax = MathHelper.Clamp(GrainIntensityMax, 0.0f, 5.0f);
-            GrainSize = MathHelper.Clamp(GrainSize, 0.1f, 50.0f);
+            this.GrainIntensityMin = MathHelper.Clamp(this.GrainIntensityMin, 0.0f, 5.0f);
+            this.GrainIntensityMax = MathHelper.Clamp(this.GrainIntensityMax, 0.0f, 5.0f);
+            this.GrainSize = MathHelper.Clamp(this.GrainSize, 0.1f, 50.0f);
 
             float grainScale = 1.0f / this.GrainSize;
 
@@ -263,17 +258,16 @@ namespace WaveEngine.ImageEffects
             else
             {
                 this.grainOffsetScale = new Vector4(
-                    (float)random.NextDouble(),
-                    (float)random.NextDouble(),
+                    (float)this.random.NextDouble(),
+                    (float)this.random.NextDouble(),
                     (float)this.ScreenWidth / (float)this.grainTexture.Width * grainScale,
-                    (float)this.ScreenHeigth / (float)this.grainTexture.Height * grainScale
-                );
+                    (float)this.ScreenHeigth / (float)this.grainTexture.Height * grainScale);
             }
 
-            this.Intensity = ((float)random.NextDouble() * (this.GrainIntensityMax - this.GrainIntensityMin)) + this.GrainIntensityMin;
+            this.intensity = ((float)this.random.NextDouble() * (this.GrainIntensityMax - this.GrainIntensityMin)) + this.GrainIntensityMin;
 
             this.shaderParameters.GrainOffsetScale = this.grainOffsetScale;
-            this.shaderParameters.Intensity = this.Intensity;
+            this.shaderParameters.Intensity = this.intensity;
 
             this.Parameters = this.shaderParameters;
         }

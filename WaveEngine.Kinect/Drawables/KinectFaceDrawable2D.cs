@@ -1,11 +1,4 @@
-﻿#region File Description
-// -----------------------------------------------------------------------------
-// KinectFaceDrawable2D
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-// -----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -44,14 +37,14 @@ namespace WaveEngine.Kinect.Drawables
 
         /// <summary>
         /// The line color
-        /// </summary>        
+        /// </summary>
         private Color lineColor;
 
         #region Properties
 
         /// <summary>
         /// Gets or sets line color
-        /// </summary>        
+        /// </summary>
         [DataMember]
         public Color LineColor
         {
@@ -125,6 +118,14 @@ namespace WaveEngine.Kinect.Drawables
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
+
+        /// <summary>
+        /// Refresh the bounding box of this drawable
+        /// </summary>
+        protected override void RefreshBoundingBox()
         {
         }
     }

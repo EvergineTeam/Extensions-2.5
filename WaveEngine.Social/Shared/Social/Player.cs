@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// Player
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 
@@ -51,7 +44,7 @@ namespace WaveEngine.Social
         public long RetrievedTimestamp { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance has hi resource image.
+        /// Gets a value indicating whether gets or sets a value indicating whether this instance has hi resource image.
         /// </summary>
         /// <value>
         /// <c>true</c> if this instance has hi resource image; otherwise, <c>false</c>.
@@ -65,7 +58,7 @@ namespace WaveEngine.Social
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance has icon image.
+        /// Gets a value indicating whether gets or sets a value indicating whether this instance has icon image.
         /// </summary>
         /// <value>
         /// <c>true</c> if this instance has icon image; otherwise, <c>false</c>.

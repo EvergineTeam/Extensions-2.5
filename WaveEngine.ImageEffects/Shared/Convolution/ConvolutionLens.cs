@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// ConvolutionLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -24,6 +17,7 @@ namespace WaveEngine.ImageEffects
     public class ConvolutionLens : Lens
     {
         #region Properties
+
         /// <summary>
         /// Gets or sets the filter, Laplace by default.
         /// </summary>
@@ -50,7 +44,7 @@ namespace WaveEngine.ImageEffects
         /// <value>
         /// The reduce_ mul.
         /// </value>
-        [DataMember]        
+        [DataMember]
         public float Scale
         {
             get
@@ -67,8 +61,9 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="AntialiasingLens"/> class.
+        /// Initializes a new instance of the <see cref="ConvolutionLens"/> class.
         /// </summary>
         public ConvolutionLens()
             : base()
@@ -86,13 +81,14 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Renders to image.
         /// </summary>
         /// <param name="gameTime">The game time.</param>
         public override void Render(TimeSpan gameTime)
         {
-            var mat = (this.material as ConvolutionMaterial);
+            var mat = this.material as ConvolutionMaterial;
             if (mat.TexcoordOffset == Vector2.Zero)
             {
                 mat.TexcoordOffset.X = 1f / this.Source.Width;
@@ -107,6 +103,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>

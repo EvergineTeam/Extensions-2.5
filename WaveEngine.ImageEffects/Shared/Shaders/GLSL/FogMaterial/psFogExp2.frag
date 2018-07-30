@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------------
 // Fog.fx
 //
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
+// Copyright © 2018 Wave Engine S.L. All rights reserved.
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ void main()
 	float fogAmount = exp2(- pow(distance * FogDensity, 2.0));
 
 	// Compute resultant pixel
-	vec3 color = mix(vec3(FogColor), scene, fogAmount);
+	vec3 color = mix(FogColor, scene, fogAmount);
 
 	gl_FragColor = vec4(color.rgb, 1.0);
 }

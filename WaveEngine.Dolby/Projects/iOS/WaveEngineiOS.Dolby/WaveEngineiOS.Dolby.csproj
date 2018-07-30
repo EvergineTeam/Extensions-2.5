@@ -36,21 +36,40 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Common\WaveEngine.Common\Projects\WaveEngineiOS.Common.csproj">
-      <Project>{ca72b53e-7cb1-48fb-b38f-cf1f85c6dab3}</Project>
-      <Name>WaveEngineiOS.Common</Name>
-      <IsAppExtension>false</IsAppExtension>
-      <IsWatchApp>false</IsWatchApp>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Common\WaveEngine.Common\Projects\iOS\WaveEngineiOS.Common.csproj">
+      <Project>{ca72b53e-7cb1-48fb-b38f-cf1f85c6dab3}</Project>
+      <Name>WaveEngineiOS.Common</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Common\WaveEngine.Components\Projects\iOS\WaveEngineiOS.Components.csproj">
+      <Project>{3efa8318-eb28-455d-b2a5-8c6189fff0a6}</Project>
+      <Name>WaveEngineiOS.Components</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Common\WaveEngine.Framework\Projects\iOS\WaveEngineiOS.Framework.csproj">
+      <Project>{3534edae-dd3c-4d93-b7f5-9c5d7edf6679}</Project>
+      <Name>WaveEngineiOS.Framework</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Common\WaveEngine.Materials\Projects\iOS\WaveEngineiOS.Materials.csproj">
+      <Project>{f3670bf5-0aad-43d6-b4e8-0a7f2dc34a02}</Project>
+      <Name>WaveEngineiOS.Materials</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\..\Shared\WaveEngine.Dolby\WaveEngine.Dolby.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

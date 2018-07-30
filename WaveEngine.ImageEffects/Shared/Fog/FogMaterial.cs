@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// FogMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -33,6 +26,7 @@ namespace WaveEngine.ImageEffects
             /// Linear fog based on start and end parameters.
             /// </summary>
             Linear = 0,
+
             /// <summary>
             /// Exponencial fog.
             /// </summary>
@@ -65,6 +59,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -97,6 +92,7 @@ namespace WaveEngine.ImageEffects
         private FogEffectParameters shaderParameters;
 
         #region Properties
+
         /// <summary>
         /// Gets or sets the technique.
         /// </summary>
@@ -106,22 +102,22 @@ namespace WaveEngine.ImageEffects
         public Techniques Technique { get; set; }
 
         /// <summary>
-        /// Start fog.
+        /// Gets or sets start fog.
         /// </summary>
         public float StartFog { get; set; }
 
         /// <summary>
-        /// End fog.
+        /// Gets or sets end fog.
         /// </summary>
         public float EndFog { get; set; }
 
         /// <summary>
-        /// Focus Distance
+        /// Gets or sets focus Distance
         /// </summary>
         public Color FogColor { get; set; }
 
         /// <summary>
-        /// Focus range
+        /// Gets or sets focus range
         /// </summary>
         public float FogDensity { get; set; }
 
@@ -177,6 +173,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FogMaterial"/> class.
         /// </summary>
@@ -193,7 +190,6 @@ namespace WaveEngine.ImageEffects
             base.DefaultValues();
 
             this.Technique = Techniques.Exponencial;
-            this.SamplerMode = AddressMode.LinearClamp;
             this.StartFog = 0.02f;
             this.EndFog = 0.8f;
             this.FogColor = new Color(0.5f, 0.6f, 0.7f);
@@ -215,6 +211,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>
@@ -229,7 +226,7 @@ namespace WaveEngine.ImageEffects
                 this.shaderParameters.FogEnd = this.EndFog;
                 this.shaderParameters.FogColor = this.FogColor.ToVector3();
                 this.shaderParameters.FogDensity = this.FogDensity;
-                this.shaderParameters.ZParamA = 1f - camera.FarPlane / camera.NearPlane;
+                this.shaderParameters.ZParamA = 1f - (camera.FarPlane / camera.NearPlane);
                 this.shaderParameters.ZParamB = camera.FarPlane / camera.NearPlane;
                 this.Parameters = this.shaderParameters;
 
@@ -237,8 +234,8 @@ namespace WaveEngine.ImageEffects
                 {
                     this.graphicsDevice.SetTexture(this.texture, 0);
                 }
-                
-                depthTexture = camera.GBufferDepthBuffer;
+
+                this.depthTexture = camera.GBufferDepthBuffer;
 
                 if (this.depthTexture != null)
                 {

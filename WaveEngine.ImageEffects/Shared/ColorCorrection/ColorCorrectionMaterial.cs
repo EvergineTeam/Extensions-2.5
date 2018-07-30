@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// ColorCorrectionMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -82,6 +75,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -161,18 +155,18 @@ namespace WaveEngine.ImageEffects
         /// </summary>
         public ColorCorrectionMaterial()
             : this(string.Empty)
-        { 
+        {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ScanlinesMaterial"/> class.
+        /// Initializes a new instance of the <see cref="ColorCorrectionMaterial"/> class.
         /// </summary>
-        public ColorCorrectionMaterial(string LUTTexture)
+        /// <param name="lUTTexture">lUTTexture</param>
+        public ColorCorrectionMaterial(string lUTTexture)
             : base(DefaultLayers.Opaque)
         {
             this.ColorSpace = ColorSpaceType.Default;
-            this.lutTexturePath = LUTTexture;
-            this.SamplerMode = AddressMode.LinearClamp;
+            this.lutTexturePath = lUTTexture;
             this.scale = (16f - 1f) / 16f;
             this.offset = 1.0f / (2.0f * 16f);
 
@@ -201,15 +195,17 @@ namespace WaveEngine.ImageEffects
                 var assembly = this.GetMemberAssembly();
                 var currentNamespace = assembly.GetName().Name;
 
-                var textureResourcePath = currentNamespace + ".ColorCorrection.RGBTable16x1.wpk";
-                var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
-
-                this.lutTexture = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);
+                var textureResourcePath = currentNamespace + ".ColorCorrection.RGBTable16x1.png";
+                using (var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath))
+                {
+                    this.lutTexture = Texture2D.FromFile(this.graphicsDevice, textureStream);
+                }
             }
         }
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>

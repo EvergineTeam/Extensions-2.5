@@ -22,6 +22,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Neighbours\StaggeredNeighbours.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Neighbours\HexagonalNeighbours.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Neighbours\NeighboursCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfoExt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TiledMapLayerRenderer.cs" />
@@ -37,6 +39,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)TileSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TilesetTerrain.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TilesetTile.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WaveXDocumentLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WaveDocumentLoader.cs" />
   </ItemGroup>
 </Project>

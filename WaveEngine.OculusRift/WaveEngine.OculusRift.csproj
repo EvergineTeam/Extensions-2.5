@@ -12,10 +12,14 @@
     <AssemblyName>WaveEngine.OculusRift</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -26,6 +30,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>bin\Windows\Release\</OutputPath>
@@ -53,25 +58,28 @@
     <Reference Include="OculusWrap">
       <HintPath>OculusWrap.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\Platforms\Windows\Libraries\SharpDX.DXGI.dll</HintPath>
+    <Reference Include="SharpDX, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpDX.3.0.0\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpDX.Direct3D11.3.0.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D9, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpDX.Direct3D9.3.0.0\lib\net45\SharpDX.Direct3D9.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpDX.DXGI.3.0.0\lib\net45\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.MediaFoundation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Platforms\Windows\Libraries\SharpDX.MediaFoundation.dll</HintPath>
+      <HintPath>..\..\packages\SharpDX.MediaFoundation.3.0.0\lib\net45\SharpDX.MediaFoundation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="SharpDX">
-      <HintPath>..\..\Platforms\Windows\Libraries\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\Platforms\Windows\Libraries\SharpDX.Direct3D11.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\OculusVRHelper.cs" />
     <Compile Include="Input\OculusRemoteState.cs" />
     <Compile Include="Input\OculusTouchControllerState.cs" />
     <Compile Include="Input\TouchState.cs" />
@@ -107,25 +115,37 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\WaveEngine.Common\Projects\WaveEngine.Common.csproj">
-      <Project>{55B6B4F4-BCE2-4EF7-836F-44F17332F924}</Project>
+    <ProjectReference Include="..\..\Common\WaveEngine.Common\Projects\Windows\WaveEngine.Common.csproj">
+      <Project>{55b6b4f4-bce2-4ef7-836f-44f17332f924}</Project>
       <Name>WaveEngine.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\WaveEngine.Components\Projects\WaveEngine.Components.csproj">
-      <Project>{D32883F0-E199-48F7-BAFB-DDC036CEB556}</Project>
+    <ProjectReference Include="..\..\Common\WaveEngine.Components\Projects\Windows\WaveEngine.Components.csproj">
+      <Project>{d32883f0-e199-48f7-bafb-ddc036ceb556}</Project>
       <Name>WaveEngine.Components</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\WaveEngine.Framework\Projects\WaveEngine.Framework.csproj">
-      <Project>{75527125-5AA8-45D0-A801-F674EE689E78}</Project>
+    <ProjectReference Include="..\..\Common\WaveEngine.Framework\Projects\Windows\WaveEngine.Framework.csproj">
+      <Project>{75527125-5aa8-45d0-a801-f674ee689e78}</Project>
       <Name>WaveEngine.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\WaveEngine.Materials\Projects\Windows\WaveEngine.Materials.csproj">
+      <Project>{97d4cef4-07b4-4f5e-8c47-4972d45d2456}</Project>
+      <Name>WaveEngine.Materials</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Platforms\Windows\Adapter\WaveEngine.Adapter.csproj">
       <Project>{D0D1320B-C32E-46CD-945B-CA6214B208A3}</Project>
       <Name>WaveEngine.Adapter</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\Resources\StyleCop\StyleCop.Targets" />
+  <Import Project="..\..\Resources\StyleCopV2\stylecop.props" />
   <Import Project="..\..\Resources\PostBuildTargets\Windows.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

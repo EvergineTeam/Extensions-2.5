@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// LeapExtensions
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using Leap;
@@ -39,7 +32,7 @@ namespace WaveEngine.LeapMotion
             }
             else
             {
-                result = new Vector3(-vector.x / 1000f, vector.y / 1000f, -vector.z / 1000f);                
+                result = new Vector3(-vector.x / 1000f, vector.y / 1000f, -vector.z / 1000f);
             }
 
             return result;

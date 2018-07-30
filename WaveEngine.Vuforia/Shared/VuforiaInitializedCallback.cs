@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// VuforiaInitializedCallback
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -25,11 +18,18 @@ namespace WaveEngine.Vuforia
         private static GCHandle callbackHandle;
         private static Action<bool> internalAction;
 
+        /// <summary>
+        /// Delegate for Vuforia initialization
+        /// </summary>
+        /// <param name="result">The result of the initialization</param>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void InitCallback(bool result);
 
         private InitCallback callback;
 
+        /// <summary>
+        /// Gets the initialization task
+        /// </summary>
         public Task<bool> Task
         {
             get
@@ -38,6 +38,9 @@ namespace WaveEngine.Vuforia
             }
         }
 
+        /// <summary>
+        /// Gets the initialization callback
+        /// </summary>
         public InitCallback CallBack
         {
             get
@@ -46,6 +49,10 @@ namespace WaveEngine.Vuforia
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VuforiaInitializedCallback"/> class.
+        /// </summary>
+        /// <param name="onCallbackAction">Action to be called when the callback is triggered</param>
         public VuforiaInitializedCallback(Action<bool> onCallbackAction)
         {
             internalAction = onCallbackAction;
@@ -63,7 +70,7 @@ namespace WaveEngine.Vuforia
         {
             if (taskCompletionSource != null)
             {
-                if(internalAction != null)
+                if (internalAction != null)
                 {
                     internalAction(result);
                 }

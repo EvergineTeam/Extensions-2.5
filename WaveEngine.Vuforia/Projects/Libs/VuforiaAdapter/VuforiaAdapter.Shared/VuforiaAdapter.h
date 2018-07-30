@@ -5,7 +5,10 @@
 // Use is subject to license terms.
 //-----------------------------------------------------------------------------
 
-#define MAX_TRACK_NAME 32
+#define MAX_TRACK_NAME_SIZE 64
+#define MAX_TRACK_ID 100
+
+#define MAX_TRACKABLE_RESULTS 5
 
 #if UWP
 #define DX11
@@ -23,6 +26,7 @@
 #include <Vuforia/TrackerManager.h>
 #include <Vuforia/Tracker.h>
 #include <Vuforia/TrackableResult.h>
+#include <Vuforia/VuMarkTargetResult.h>
 #include <Vuforia/DataSet.h>
 #include <Vuforia/CameraDevice.h>
 #include <Vuforia/Renderer.h>
@@ -56,6 +60,27 @@ using namespace Vuforia;
 #define strcpy(a, b) strcpy_s(a, b)
 #endif 
 
+enum QCAR_TargetTypes
+{
+	ImageTarget = 0,
+	VuMark
+};
+
+enum QCAR_TrackableResultStatus {
+	UNKNOWN = 0,
+	UNDEFINED,
+	DETECTED,
+	TRACKED,
+	EXTENDED_TRACKED
+};
+
+enum QCAR_VuMarkDataType
+{
+	BYTES = 0,
+	STRING = 1,
+	NUMERIC = 2
+};
+
 enum QCAR_State
 {
 	QCAR_STOPPED = 0,
@@ -72,20 +97,46 @@ enum QCAR_Orientation
 };
 
 /// Matrix with 4 rows and 4 columns of float items
-EXTERN struct Matrix4x4
+EXTERN struct QCAR_Matrix4x4
 {
 	float data[4 * 4];   /// Array of matrix items
 };
 
 // Track result
-EXTERN struct TrackResult
+EXTERN struct QCAR_Trackable
 {
-	bool isTracking;    // Is tracking an object ?
-	char trackName[MAX_TRACK_NAME]; // current trackable name
-	Matrix4x4 trackPose; // Track object pose
-	Matrix4x4 videoBackgroundProjection; // Video background projection
+	int id;
+	char trackName[MAX_TRACK_NAME_SIZE];
+	QCAR_TargetTypes targetType;
 };
 
+// Load dataSet result
+EXTERN struct LoadDataSetResult
+{
+	int NumTrackables;
+	QCAR_Trackable trackableResults[MAX_TRACKABLE_RESULTS];
+};
+
+// Track result
+EXTERN struct QCAR_TrackableResult
+{
+	int id;
+	QCAR_TrackableResultStatus status;
+	QCAR_Matrix4x4 trackPose;
+	int templateId;
+	unsigned char data[MAX_TRACK_ID];
+	unsigned int numericValue;
+	unsigned int dataSize;
+	QCAR_VuMarkDataType dataType;
+};
+
+// Update result
+EXTERN struct UpdateResult
+{
+	QCAR_Matrix4x4 videoBackgroundProjection;
+	int numTrackableResults;
+	QCAR_TrackableResult trackableResults[MAX_TRACKABLE_RESULTS];
+};
 
 EXTERN struct VertexProperty
 {
@@ -108,6 +159,7 @@ EXTERN void QCAR_getVideoInfo(int* textureWidth, int* textureHeight, VideoMesh* 
 #ifdef DX11
 EXTERN void QCAR_setVideoTexture(ID3D11Texture2D* texture);
 EXTERN void QCAR_updateVideoTexture(ID3D11Device* device);
+EXTERN bool QCAR_setHolographicAppCS(void* appSpecifiedCS);
 #endif
 
 #ifdef OPENGL
@@ -127,13 +179,16 @@ EXTERN void QCAR_init(const char* licenseKey, InitCallback callback);
 EXTERN bool QCAR_shutDown();
 
 // Initialize QCAR with a dataset
-EXTERN int QCAR_initialize(const char* dataSetPath, bool extendedTracking);
+EXTERN int QCAR_loadDataSet(const char* dataSetPath, bool extendedTracking, LoadDataSetResult* trackables);
 
 // Get current QCAR State
 EXTERN QCAR_State QCAR_getState();
 
 // Set camera orientation
 EXTERN void QCAR_setOrientation(int frameWidth, int frameHeight, QCAR_Orientation orientation);
+
+// Set hint
+EXTERN bool QCAR_setHint(unsigned int hint, int value);
 
 // Start AR track
 EXTERN typedef void(__stdcall * StartTrackCallback)(const bool result);
@@ -143,7 +198,7 @@ EXTERN void QCAR_startTrack(StartTrackCallback callback);
 EXTERN bool QCAR_stopTrack();
 
 // Get camera projection
-EXTERN void QCAR_getCameraProjection(float nearPlane, float farPlane, Matrix4x4* result);
+EXTERN void QCAR_getCameraProjection(float nearPlane, float farPlane, QCAR_Matrix4x4* result);
 
 // Update frame
-EXTERN void QCAR_update(TrackResult* trackResult);
+EXTERN void QCAR_update(UpdateResult* result);

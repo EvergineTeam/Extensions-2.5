@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TiledMapRenderOrderType
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -18,15 +11,30 @@ using System.Threading.Tasks;
 namespace WaveEngine.TiledMap
 {
     /// <summary>
-    /// The order in which tiles on tile layers are rendered. 
-    /// Valid values are right-down (the default), right-up, left-down and left-up. 
-    /// In all cases, the map is drawn row-by-row. 
+    /// The order in which tiles on tile layers are rendered.
+    /// Valid values are right-down (the default), right-up, left-down and left-up.
+    /// In all cases, the map is drawn row-by-row.
     /// </summary>
     public enum TiledMapRenderOrderType
     {
+        /// <summary>
+        /// Right_Down
+        /// </summary>
         Right_Down,
+
+        /// <summary>
+        /// Right_Up
+        /// </summary>
         Right_Up,
+
+        /// <summary>
+        /// Left_Down
+        /// </summary>
         Left_Down,
+
+        /// <summary>
+        /// Left_Up
+        /// </summary>
         Left_Up
     }
 }

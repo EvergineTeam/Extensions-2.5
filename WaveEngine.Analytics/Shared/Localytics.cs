@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// Localytics
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -18,6 +11,8 @@ using System.IO;
 using System.Globalization;
 using System.Diagnostics;
 using WaveEngine.Common;
+using WaveEngine.Framework.Services;
+using System.Runtime.Serialization;
 #endregion
 
 namespace WaveEngine.Analytics
@@ -98,13 +93,13 @@ namespace WaveEngine.Analytics
         private bool isUploading = false;
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Localytics"/> class.
         /// </summary>
-        /// <param name="adapter">The adapter.</param>
         /// <param name="analyticsInfo">The analytics info.</param>
-        public Localytics(IAdapter adapter, AnalyticsInfo analyticsInfo)
-            : base(adapter, analyticsInfo)
+        public Localytics(AnalyticsInfo analyticsInfo)
+            : base(analyticsInfo)
         {
             LocalyticsInfo info = analyticsInfo as LocalyticsInfo;
 
@@ -113,6 +108,7 @@ namespace WaveEngine.Analytics
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Opens or resumes the Localytics session.
         /// </summary>
@@ -139,7 +135,7 @@ namespace WaveEngine.Analytics
                 //// Format of an open session:
                 ////{ "dt":"s",       // This is a session blob
                 ////  "ct": long,     // seconds since Unix epoch
-                ////  "u": string     // A unique ID attached to this session 
+                ////  "u": string     // A unique ID attached to this session
                 ////  "nth": int,     // This is the nth session on the device. (not required)
                 ////  "new": boolean, // New vs returning (not required)
                 ////  "sl": long,     // seconds since last session (not required)
@@ -328,7 +324,7 @@ namespace WaveEngine.Analytics
             DateTime dt = DateTime.Now.ToUniversalTime();
 
             // reformat the time to: YYYY-MM-DDTHH:MM:SS
-            // use a StringBuilder to avoid creating multiple 
+            // use a StringBuilder to avoid creating multiple
             StringBuilder datestring = new StringBuilder();
             datestring.Append(dt.Year);
             datestring.Append("-");
@@ -364,7 +360,7 @@ namespace WaveEngine.Analytics
 
             ////{ "dt":"h",  // data type, h for header
             ////  "pa": int, // persistent store created at
-            ////  "seq": int,  // blob sequence number, incremented on each new blob, 
+            ////  "seq": int,  // blob sequence number, incremented on each new blob,
             ////               // remembered in the persistent store
             ////  "u": string, // A unique ID for the blob. Must be the same if the blob is re-uploaded!
             ////  "attrs": {
@@ -400,18 +396,20 @@ namespace WaveEngine.Analytics
             blobString.Append("\"seq\":" + sequenceNumber + ",");
             this.SetNextSequenceNumber((int.Parse(sequenceNumber) + 1).ToString());
 
+            var platform = WaveServices.Platform;
+
             blobString.Append("\"u\":\"" + Guid.NewGuid().ToString() + "\",");
             blobString.Append("\"attrs\":");
             blobString.Append("{\"dt\":\"a\",");
             blobString.Append("\"au\":\"" + this.appKey + "\",");
-            blobString.Append("\"du\":\"" + Adapter.DeviceUniqueID + "\",");
+            blobString.Append("\"du\":\"" + platform.DeviceUniqueId + "\",");
             blobString.Append("\"lv\":\"" + LibraryVersion + "\",");
-            blobString.Append("\"av\":\"" + Adapter.AppVersion + "\",");
-            blobString.Append("\"dp\":\"" + Adapter.Platform + "\",");
-            blobString.Append("\"dll\":\"" + Adapter.LocaleLanguage + "\",");
-            blobString.Append("\"dma\":\"" + Adapter.DeviceMake + "\",");
-            blobString.Append("\"dmo\":\"" + Adapter.DeviceModel + "\",");
-            blobString.Append("\"dov\":\"" + Adapter.OSVersion + "\",");
+            blobString.Append("\"av\":\"" + platform.AppVersion + "\",");
+            blobString.Append("\"dp\":\"" + platform.PlatformType + "\",");
+            blobString.Append("\"dll\":\"" + platform.LocaleLanguage + "\",");
+            blobString.Append("\"dma\":\"" + platform.DeviceMake + "\",");
+            blobString.Append("\"dmo\":\"" + platform.DeviceModel + "\",");
+            blobString.Append("\"dov\":\"" + platform.OSVersion + "\",");
             blobString.Append("\"iu\":\"" + this.GetInstallId() + "\"");
 
             blobString.Append("}}");
@@ -427,7 +425,8 @@ namespace WaveEngine.Analytics
         private string GetInstallId()
         {
             string installID;
-            var store = Adapter.IOManager;
+
+            var store = WaveServices.Storage;
             using (var file = store.OpenStorageFile(Path.Combine(DirectoryName, MetaFileName), WaveEngine.Common.IO.FileMode.Open))
             using (TextReader reader = new StreamReader(file))
             {
@@ -438,13 +437,13 @@ namespace WaveEngine.Analytics
         }
 
         /// <summary>
-        /// Gets the sequence number for the next upload blob. 
+        /// Gets the sequence number for the next upload blob.
         /// </summary>
         /// <returns>Sequence number as a string</returns>
         private string GetSequenceNumber()
         {
             // open the meta file and read the next sequence number.
-            var store = Adapter.IOManager;
+            var store = WaveServices.Storage;
             string metaFile = Path.Combine(DirectoryName, MetaFileName);
             if (!store.ExistsStorageFile(metaFile))
             {
@@ -469,7 +468,7 @@ namespace WaveEngine.Analytics
         /// <param name="number">Next sequence number</param>
         private void SetNextSequenceNumber(string number)
         {
-            var store = Adapter.IOManager;
+            var store = WaveServices.Storage;
             string metaFile = Path.Combine(DirectoryName, MetaFileName);
             if (!store.ExistsStorageFile(metaFile))
             {
@@ -502,7 +501,7 @@ namespace WaveEngine.Analytics
         /// <returns>A string containing a Unixtime</returns>
         private string GetPersistStoreCreateTime()
         {
-            var store = Adapter.IOManager;
+            var store = WaveServices.Storage;
             string metaFile = Path.Combine(DirectoryName, MetaFileName);
             if (!store.ExistsStorageFile(metaFile))
             {
@@ -544,7 +543,7 @@ namespace WaveEngine.Analytics
         /// <returns>Number of stored sessions.</returns>
         private int GetNumberOfStoredSessions()
         {
-            var store = Adapter.IOManager;
+            var store = WaveServices.Storage;
             if (store.DirectoryExists(DirectoryName) == false)
             {
                 return 0;
@@ -561,16 +560,16 @@ namespace WaveEngine.Analytics
         private void AppendTextToFile(string text, string filename)
         {
             // GetStreamForFile integrated inside this method
-            var store = Adapter.IOManager;
+            var store = WaveServices.Storage;
             if (!store.DirectoryExists(DirectoryName))
             {
                 store.CreateDirectory(DirectoryName);
             }
 
             string name = Path.Combine(DirectoryName, filename);
-            using (Stream file = store.OpenStorageFile(name, WaveEngine.Common.IO.FileMode.Append))                      
+            using (Stream file = store.OpenStorageFile(name, WaveEngine.Common.IO.FileMode.Append))
             using (TextWriter writer = new StreamWriter(file))
-            {                
+            {
                 writer.Write(text);
             }
         }
@@ -582,7 +581,7 @@ namespace WaveEngine.Analytics
         /// <returns>the contents of the file</returns>
         private string GetFileContents(string filename)
         {
-            var store = Adapter.IOManager;
+            var store = WaveServices.Storage;
             string contents;
             using (var file = store.OpenStorageFile(Path.Combine(DirectoryName, filename), WaveEngine.Common.IO.FileMode.Open))
             using (TextReader reader = new StreamReader(file))
@@ -603,7 +602,8 @@ namespace WaveEngine.Analytics
         private string GetUploadContents()
         {
             StringBuilder contents = new StringBuilder();
-            var store = Adapter.IOManager;
+
+            var store = WaveServices.Storage;
 
             if (store.DirectoryExists(DirectoryName))
             {
@@ -626,7 +626,7 @@ namespace WaveEngine.Analytics
         /// </summary>
         private void DeleteUploadFiles()
         {
-            var store = Adapter.IOManager;
+            var store = WaveServices.Storage;
 
             if (store.DirectoryExists(DirectoryName))
             {
@@ -648,10 +648,10 @@ namespace WaveEngine.Analytics
         /// </summary>
         private void RenameOrAppendSessionFiles()
         {
-            var store = Adapter.IOManager;
+            var store = WaveServices.Storage;
 
             if (store.DirectoryExists(DirectoryName))
-            {                
+            {
                 string[] files = store.GetFileNames(DirectoryName + @"/" + SessionFilePrefix + "*");
                 string destinationFilename = UploadFilePrefix + Guid.NewGuid().ToString();
 

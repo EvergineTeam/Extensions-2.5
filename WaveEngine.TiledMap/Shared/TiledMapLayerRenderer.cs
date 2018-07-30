@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TiledMapLayerRenderer
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -19,6 +12,7 @@ using WaveEngine.Common.Graphics.VertexFormats;
 using WaveEngine.Common.Math;
 using WaveEngine.Framework;
 using WaveEngine.Framework.Graphics;
+using WaveEngine.Framework.Services;
 using WaveEngine.Materials;
 #endregion
 
@@ -33,12 +27,17 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Number of indices per tile
         /// </summary>
-        private const int indicesPerTile = 6;
+        private const int IndicesPerTile = 6;
 
         /// <summary>
         /// Number of indices per tile
         /// </summary>
-        private const int verticesPerTile = 4;
+        private const int VerticesPerTile = 4;
+
+        /// <summary>
+        /// Maximum number of tiles per buffer
+        /// </summary>
+        private const int MaxTilesPerBuffer = ushort.MaxValue / IndicesPerTile;
 
         /// <summary>
         /// The associated tiled map
@@ -46,9 +45,14 @@ namespace WaveEngine.TiledMap
         private TiledMap tiledMap;
 
         /// <summary>
-        /// Meshes list associated to its material
+        /// Materials list for each tileset
         /// </summary>
-        private List<Tuple<StandardMaterial, Mesh>> meshes;
+        private List<StandardMaterial> materials;
+
+        /// <summary>
+        /// Meshes list
+        /// </summary>
+        private List<Mesh> meshes;
 
         /// <summary>
         /// Tiles count
@@ -58,17 +62,17 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Vertices data
         /// </summary>
-        VertexPositionColorTexture[] vertices;
+        private VertexPositionColorTexture[][] vertices;
 
         /// <summary>
         /// The layer vertex buffer
         /// </summary>
-        private DynamicVertexBuffer vertexBuffer;
+        private DynamicVertexBuffer[] vertexBuffer;
 
         /// <summary>
         /// The layer index buffer
         /// </summary>
-        private IndexBuffer indexBuffer;
+        private IndexBuffer[] indexBuffer;
 
         /// <summary>
         /// This component requires a Transfrom2D
@@ -83,11 +87,6 @@ namespace WaveEngine.TiledMap
         private TiledMapLayer tiledMapLayer = null;
 
         /// <summary>
-        /// The sampler mode
-        /// </summary>
-        private AddressMode samplerMode;
-
-        /// <summary>
         /// The cached origin
         /// </summary>
         private Vector2 cachedOrigin;
@@ -97,55 +96,23 @@ namespace WaveEngine.TiledMap
         /// </summary>
         private Matrix originTranslation;
 
-        /// <summary>
-        /// Gets the sampler mode
-        /// </summary>
-        public AddressMode SamplerMode
-        {
-            get
-            {
-                return this.samplerMode;
-            }
-
-            set
-            {
-                this.samplerMode = value;
-
-                // restore all materials
-                foreach (var tuple in this.meshes)
-                {
-                    tuple.Item1.SamplerMode = this.samplerMode;
-                }
-            }
-        }
-
         #region Initialization
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TiledMapLayerRenderer" /> class.
         /// </summary>
         public TiledMapLayerRenderer()
-            : this(DefaultLayers.Alpha, AddressMode.PointClamp)
+            : this(DefaultLayers.Alpha)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TiledMapLayerRenderer" /> class.
         /// </summary>
-        /// <param name="layerType">The layer type.</param>
-        public TiledMapLayerRenderer(Type layerType)
-            : this(layerType, AddressMode.PointClamp)
+        /// <param name="layerId">The layer type.</param>
+        public TiledMapLayerRenderer(int layerId)
+            : base(layerId)
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TiledMapLayerRenderer" /> class.
-        /// </summary>
-        /// <param name="layerType">The layer type.</param>
-        /// <param name="samplerMode">The sampler mode.</param>
-        public TiledMapLayerRenderer(Type layerType, AddressMode samplerMode)
-            : base(layerType)
-        {
-            this.samplerMode = samplerMode;
         }
 
         /// <summary>
@@ -154,19 +121,22 @@ namespace WaveEngine.TiledMap
         protected override void DefaultValues()
         {
             base.DefaultValues();
-            this.samplerMode = AddressMode.PointClamp;
-            this.meshes = new List<Tuple<StandardMaterial, Mesh>>();
+            this.materials = new List<StandardMaterial>();
+            this.meshes = new List<Mesh>();
             this.originTranslation = Matrix.Identity;
         }
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Draw debug lines
         /// </summary>
         protected override void DrawDebugLines()
         {
             base.DrawDebugLines();
+
+            Matrix worldTransform = this.originTranslation * this.transform2D.WorldTransform;
 
             Vector2 startPoint = Vector2.Zero;
             Vector2 endPoint = Vector2.Zero;
@@ -175,8 +145,6 @@ namespace WaveEngine.TiledMap
             int height = this.tiledMap.Height;
             int tileWidth = this.tiledMap.TileWidth;
             int tileHeight = this.tiledMap.TileHeight;
-
-            RenderManager.LineBatch2D.DrawPoint(Vector2.Zero, 10, Color.Red, -10);
 
             switch (this.tiledMap.Orientation)
             {
@@ -191,7 +159,7 @@ namespace WaveEngine.TiledMap
                         endPoint.X = x;
                         endPoint.Y = height * tileHeight;
 
-                        this.DrawDebugLine(ref startPoint, ref endPoint);
+                        this.DrawDebugLine(ref startPoint, ref endPoint, ref worldTransform);
                     }
 
                     // Horizontal lines
@@ -203,8 +171,9 @@ namespace WaveEngine.TiledMap
                         endPoint.X = width * tileWidth;
                         endPoint.Y = y;
 
-                        this.DrawDebugLine(ref startPoint, ref endPoint);
+                        this.DrawDebugLine(ref startPoint, ref endPoint, ref worldTransform);
                     }
+
                     break;
                 #endregion
 
@@ -219,7 +188,7 @@ namespace WaveEngine.TiledMap
                         endPoint.X = ((i - height) * tileWidth * 0.5f) + (height * tileWidth * 0.5f);
                         endPoint.Y = (i + height) * tileHeight * 0.5f;
 
-                        this.DrawDebugLine(ref startPoint, ref endPoint);
+                        this.DrawDebugLine(ref startPoint, ref endPoint, ref worldTransform);
                     }
 
                     // Horizontal lines
@@ -230,7 +199,7 @@ namespace WaveEngine.TiledMap
                         endPoint.X = ((width - i) * tileWidth * 0.5f) + (height * tileWidth * 0.5f);
                         endPoint.Y = (width + i) * tileHeight * 0.5f;
 
-                        this.DrawDebugLine(ref startPoint, ref endPoint);
+                        this.DrawDebugLine(ref startPoint, ref endPoint, ref worldTransform);
                     }
 
                     break;
@@ -283,13 +252,15 @@ namespace WaveEngine.TiledMap
                             Vector2 rowPos = startPos;
 
                             if (this.tiledMap.DoStaggerX((int)startTile.X))
+                            {
                                 rowPos.Y += rowHeight;
+                            }
 
                             for (; /*rowPos.Y <= rect.bottom() && */rowTile.Y < height; rowTile.Y++)
                             {
-                                this.DrawDebugLine(rowPos + oct[1], rowPos + oct[2]);
-                                this.DrawDebugLine(rowPos + oct[2], rowPos + oct[3]);
-                                this.DrawDebugLine(rowPos + oct[3], rowPos + oct[4]);
+                                this.DrawDebugLine(rowPos + oct[1], rowPos + oct[2], ref worldTransform);
+                                this.DrawDebugLine(rowPos + oct[2], rowPos + oct[3], ref worldTransform);
+                                this.DrawDebugLine(rowPos + oct[3], rowPos + oct[4], ref worldTransform);
 
                                 bool isStaggered = this.tiledMap.DoStaggerX((int)startTile.X);
                                 bool lastRow = rowTile.Y == height - 1;
@@ -298,11 +269,19 @@ namespace WaveEngine.TiledMap
                                 bool bottomRight = lastColumn || (lastRow && isStaggered);
 
                                 if (bottomRight)
-                                    this.DrawDebugLine(rowPos + oct[5], rowPos + oct[6]);
+                                {
+                                    this.DrawDebugLine(rowPos + oct[5], rowPos + oct[6], ref worldTransform);
+                                }
+
                                 if (lastRow)
-                                    this.DrawDebugLine(rowPos + oct[6], rowPos + oct[7]);
+                                {
+                                    this.DrawDebugLine(rowPos + oct[6], rowPos + oct[7], ref worldTransform);
+                                }
+
                                 if (bottomLeft)
-                                    this.DrawDebugLine(rowPos + oct[7], rowPos + oct[0]);
+                                {
+                                    this.DrawDebugLine(rowPos + oct[7], rowPos + oct[0], ref worldTransform);
+                                }
 
                                 rowPos.Y += tileHeight + sideLengthY;
                             }
@@ -318,13 +297,15 @@ namespace WaveEngine.TiledMap
                             Vector2 rowPos = startPos;
 
                             if (this.tiledMap.DoStaggerY((int)startTile.Y))
+                            {
                                 rowPos.X += columnWidth;
+                            }
 
                             for (; /*rowPos.X <= rect.right() &&*/ rowTile.X < width; rowTile.X++)
                             {
-                                this.DrawDebugLine(rowPos + oct[0], rowPos + oct[1]);
-                                this.DrawDebugLine(rowPos + oct[1], rowPos + oct[2]);
-                                this.DrawDebugLine(rowPos + oct[3], rowPos + oct[4]);
+                                this.DrawDebugLine(rowPos + oct[0], rowPos + oct[1], ref worldTransform);
+                                this.DrawDebugLine(rowPos + oct[1], rowPos + oct[2], ref worldTransform);
+                                this.DrawDebugLine(rowPos + oct[3], rowPos + oct[4], ref worldTransform);
 
                                 bool isStaggered = this.tiledMap.DoStaggerY((int)startTile.Y);
                                 bool lastRow = rowTile.Y == height - 1;
@@ -333,11 +314,19 @@ namespace WaveEngine.TiledMap
                                 bool bottomRight = lastRow || (lastColumn && isStaggered);
 
                                 if (lastColumn)
-                                    this.DrawDebugLine(rowPos + oct[4], rowPos + oct[5]);
+                                {
+                                    this.DrawDebugLine(rowPos + oct[4], rowPos + oct[5], ref worldTransform);
+                                }
+
                                 if (bottomRight)
-                                    this.DrawDebugLine(rowPos + oct[5], rowPos + oct[6]);
+                                {
+                                    this.DrawDebugLine(rowPos + oct[5], rowPos + oct[6], ref worldTransform);
+                                }
+
                                 if (bottomLeft)
-                                    this.DrawDebugLine(rowPos + oct[7], rowPos + oct[0]);
+                                {
+                                    this.DrawDebugLine(rowPos + oct[7], rowPos + oct[0], ref worldTransform);
+                                }
 
                                 rowPos.X += tileWidth + sideLengthX;
                             }
@@ -345,8 +334,9 @@ namespace WaveEngine.TiledMap
                             startPos.Y += rowHeight;
                         }
                     }
+
                     break;
-                #endregion
+                    #endregion
             }
         }
 
@@ -368,41 +358,65 @@ namespace WaveEngine.TiledMap
                 this.originTranslation = Matrix.CreateTranslation(new Vector3(
                     -this.transform2D.Rectangle.Width * this.transform2D.Origin.X,
                     -this.transform2D.Rectangle.Height * this.transform2D.Origin.Y,
-                    0
-                    ));
+                    0));
             }
 
             Matrix worldTransform = this.originTranslation * this.transform2D.WorldTransform;
             float drawOrder = this.transform2D.DrawOrder;
-            float opacity = this.RenderManager.DebugLines ? DebugAlpha : this.transform2D.GlobalOpacity;
+
+            float opacity = this.Transform2D.GlobalOpacity;
+            if (this.RenderManager.ShouldDrawFlag(Framework.Managers.DebugLinesFlags.DebugAlphaOpacity))
+            {
+                opacity *= DebugAlpha;
+            }
 
             for (int i = 0; i < this.meshes.Count; i++)
             {
-                var tuple = this.meshes[i];
-                var material = tuple.Item1;
-                var mesh = tuple.Item2;
-                
-                material.Alpha = opacity;
-                material.LayerType = this.LayerType;
-                material.SamplerMode = this.samplerMode;
-                mesh.ZOrder = drawOrder;
-                this.RenderManager.DrawMesh(mesh, material, ref worldTransform);
+                var mesh = this.meshes[i];
+
+                if (this.CullingTest(mesh, ref worldTransform))
+                {
+                    var material = this.materials[mesh.MaterialIndex];
+
+                    material.Alpha = opacity;
+                    material.LayerId = this.LayerId;
+                    mesh.ZOrder = drawOrder;
+                    this.RenderManager.DrawMesh(mesh, material, ref worldTransform);
+                }
             }
         }
         #endregion
 
         #region Private Methods
-        private void DrawDebugLine(Vector2 startPoint, Vector2 endPoint)
+        private bool CullingTest(Mesh mesh, ref Matrix worldTransform)
         {
-            this.DrawDebugLine(ref startPoint, ref endPoint);
+            bool passesTest = true;
+            var camera = this.RenderManager.CurrentDrawingCamera2D;
+
+            if (camera != null &&
+                mesh.BoundingBox.HasValue)
+            {
+                var bbox = mesh.BoundingBox.Value;
+
+                bbox.Transform(ref worldTransform);
+
+                // Checks if intersects with the frustum
+                passesTest = camera.BoundingFrustum.Intersects(bbox);
+            }
+
+            return passesTest;
         }
 
-        private void DrawDebugLine(ref Vector2 startPoint, ref Vector2 endPoint)
+        private void DrawDebugLine(Vector2 startPoint, Vector2 endPoint, ref Matrix worldTransform)
+        {
+            this.DrawDebugLine(ref startPoint, ref endPoint, ref worldTransform);
+        }
+
+        private void DrawDebugLine(ref Vector2 startPoint, ref Vector2 endPoint, ref Matrix worldTransform)
         {
             Color color = Color.Yellow;
             float drawOrder = this.transform2D.DrawOrder;
             var lineBatch = this.RenderManager.LineBatch2D;
-            Matrix worldTransform = this.transform2D.WorldTransform;
 
             Vector2.Transform(ref startPoint, ref worldTransform, out startPoint);
             Vector2.Transform(ref endPoint, ref worldTransform, out endPoint);
@@ -434,35 +448,47 @@ namespace WaveEngine.TiledMap
                 this.RemoveBuffers();
                 this.nTiles = newNTiles;
 
-                // Vertices
-                this.vertices = new VertexPositionColorTexture[this.nTiles * verticesPerTile];
-                this.vertexBuffer = new DynamicVertexBuffer(VertexPositionColorTexture.VertexFormat);
+                var bufferCount = (int)Math.Ceiling((float)newNTiles / MaxTilesPerBuffer);
 
-                // Indices
-                ushort[] indices = new ushort[this.nTiles * indicesPerTile];
-                for (int i = 0; i < this.nTiles; i++)
+                this.vertices = new VertexPositionColorTexture[bufferCount][];
+                this.vertexBuffer = new DynamicVertexBuffer[bufferCount];
+                this.indexBuffer = new IndexBuffer[bufferCount];
+
+                for (int j = 0; j < bufferCount; j++)
                 {
-                    indices[i * 6] = (ushort)(i * 4);
-                    indices[(i * 6) + 1] = (ushort)((i * 4) + 1);
-                    indices[(i * 6) + 2] = (ushort)((i * 4) + 2);
-                    indices[(i * 6) + 3] = (ushort)((i * 4) + 2);
-                    indices[(i * 6) + 4] = (ushort)((i * 4) + 3);
-                    indices[(i * 6) + 5] = (ushort)(i * 4);
-                }
+                    int nBufferTiles = Math.Min(MaxTilesPerBuffer, this.nTiles - (j * MaxTilesPerBuffer));
 
-                this.indexBuffer = new IndexBuffer(indices);
+                    // Vertices
+                    this.vertices[j] = new VertexPositionColorTexture[nBufferTiles * VerticesPerTile];
+                    this.vertexBuffer[j] = new DynamicVertexBuffer(VertexPositionColorTexture.VertexFormat);
+
+                    // Indices
+                    ushort[] indices = new ushort[nBufferTiles * IndicesPerTile];
+                    for (int i = 0; i < nBufferTiles; i++)
+                    {
+                        indices[i * 6] = (ushort)(i * 4);
+                        indices[(i * 6) + 1] = (ushort)((i * 4) + 1);
+                        indices[(i * 6) + 2] = (ushort)((i * 4) + 2);
+                        indices[(i * 6) + 3] = (ushort)((i * 4) + 2);
+                        indices[(i * 6) + 4] = (ushort)((i * 4) + 3);
+                        indices[(i * 6) + 5] = (ushort)(i * 4);
+                    }
+
+                    this.indexBuffer[j] = new IndexBuffer(indices);
+                }
             }
 
             int tileIndex = 0;
             int startIndex = 0;
             int currentIndexCount = 0;
+            int bufferIndex = 0;
+            var boundingBox = new BoundingBox(new Vector3(float.MaxValue), new Vector3(float.MinValue));
             Tileset currentTileset = null;
 
             for (int i = 0; i < this.tiledMap.Height; i++)
             {
                 for (int j = 0; j < this.tiledMap.Width; j++)
                 {
-
                     int x, y;
                     this.GetCellRenderOrderByIndex(j, i, out x, out y);
 
@@ -481,26 +507,42 @@ namespace WaveEngine.TiledMap
                     }
                     else if (tileset != currentTileset)
                     {
-                        this.NewMesh(startIndex, currentIndexCount, currentTileset.Image);
+                        this.NewMesh(startIndex, currentIndexCount, bufferIndex, currentTileset.Image, ref boundingBox);
 
                         startIndex = tileIndex;
                         currentIndexCount = 0;
                         currentTileset = tileset;
+                        boundingBox = new BoundingBox(new Vector3(float.MaxValue), new Vector3(float.MinValue));
                     }
 
-                    this.FillTile(currentTileset, tile, tileIndex);
+                    this.FillTile(currentTileset, tile, bufferIndex, tileIndex, ref boundingBox);
 
                     tileIndex++;
                     currentIndexCount++;
+
+                    if (tileIndex == MaxTilesPerBuffer)
+                    {
+                        this.vertexBuffer[bufferIndex].SetData(this.vertices[bufferIndex]);
+                        this.GraphicsDevice.BindVertexBuffer(this.vertexBuffer[bufferIndex]);
+
+                        this.NewMesh(startIndex, currentIndexCount, bufferIndex, currentTileset.Image, ref boundingBox);
+
+                        tileIndex = 0;
+                        startIndex = 0;
+                        currentIndexCount = 0;
+                        currentTileset = null;
+                        boundingBox = new BoundingBox(new Vector3(float.MaxValue), new Vector3(float.MinValue));
+                        bufferIndex++;
+                    }
                 }
             }
 
             if (currentTileset != null)
             {
-                this.vertexBuffer.SetData(this.vertices);
-                this.GraphicsDevice.BindVertexBuffer(this.vertexBuffer);
+                this.vertexBuffer[bufferIndex].SetData(this.vertices[bufferIndex]);
+                this.GraphicsDevice.BindVertexBuffer(this.vertexBuffer[bufferIndex]);
 
-                this.NewMesh(startIndex, currentIndexCount, currentTileset.Image);
+                this.NewMesh(startIndex, currentIndexCount, bufferIndex, currentTileset.Image, ref boundingBox);
             }
 
             this.transform2D.Rectangle = this.tiledMap.CalcRectangle();
@@ -509,8 +551,8 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Get cell render order by the tile index
         /// </summary>
-        /// <param name="i">The tile x coord</param>
-        /// <param name="j">The tile y coord</param>
+        /// <param name="i">The tile x coordinate</param>
+        /// <param name="j">The tile y coordinate</param>
         /// <param name="x">The tile x render order</param>
         /// <param name="y">The tile y render order</param>
         private void GetCellRenderOrderByIndex(int i, int j, out int x, out int y)
@@ -542,8 +584,10 @@ namespace WaveEngine.TiledMap
         /// </summary>
         /// <param name="tileset">The tileset.</param>
         /// <param name="tile">The tile information.</param>
+        /// <param name="bufferIndex">The buffer index</param>
         /// <param name="tileIndex">Current tileId</param>
-        private void FillTile(Tileset tileset, LayerTile tile, int tileIndex)
+        /// <param name="boundingBox">Mesh bounding box</param>
+        private void FillTile(Tileset tileset, LayerTile tile, int bufferIndex, int tileIndex, ref BoundingBox boundingBox)
         {
             int textureWidth = tileset.Image.Width;
             int textureHeight = tileset.Image.Height;
@@ -556,16 +600,24 @@ namespace WaveEngine.TiledMap
                 rect.Width / (float)textureWidth,
                 rect.Height / (float)textureHeight);
 
-            int vertexId = tileIndex * verticesPerTile;
+            int vertexId = tileIndex * VerticesPerTile;
 
             Vector2 position;
             this.tiledMap.GetTilePosition(tile.X, tile.Y, tileset, out position);
             tile.LocalPosition = position;
 
+            var position0 = new Vector3(position.X, position.Y, 0);
+            var position1 = new Vector3(position.X + tileset.TileWidth, position.Y, 0);
+            var position2 = new Vector3(position.X + tileset.TileWidth, position.Y + tileset.TileHeight, 0);
+            var position3 = new Vector3(position.X, position.Y + tileset.TileHeight, 0);
+
             var textCoord0 = new Vector2(tileRectangle.X, tileRectangle.Y);
             var textCoord1 = new Vector2(tileRectangle.X + tileRectangle.Width, tileRectangle.Y);
             var textCoord2 = new Vector2(tileRectangle.X + tileRectangle.Width, tileRectangle.Y + tileRectangle.Height);
             var textCoord3 = new Vector2(tileRectangle.X, tileRectangle.Y + tileRectangle.Height);
+
+            Vector3.Min(ref position0, ref boundingBox.Min, out boundingBox.Min);
+            Vector3.Max(ref position2, ref boundingBox.Max, out boundingBox.Max);
 
             #region Flip calculation
             if (tile.HorizontalFlip)
@@ -588,7 +640,6 @@ namespace WaveEngine.TiledMap
                 texCoordAux = textCoord2;
                 textCoord2 = textCoord1;
                 textCoord1 = texCoordAux;
-
             }
 
             if (tile.DiagonalFlip)
@@ -600,27 +651,27 @@ namespace WaveEngine.TiledMap
             #endregion
 
             // Vertex 0
-            this.vertices[vertexId].Position = new Vector3(position.X, position.Y, 0);
-            this.vertices[vertexId].Color = Color.White;
-            this.vertices[vertexId].TexCoord = textCoord0;
+            this.vertices[bufferIndex][vertexId].Position = position0;
+            this.vertices[bufferIndex][vertexId].Color = Color.White;
+            this.vertices[bufferIndex][vertexId].TexCoord = textCoord0;
             vertexId++;
 
             // Vertex 1
-            this.vertices[vertexId].Position = new Vector3(position.X + tileset.TileWidth, position.Y, 0);
-            this.vertices[vertexId].Color = Color.White;
-            this.vertices[vertexId].TexCoord = textCoord1;
+            this.vertices[bufferIndex][vertexId].Position = position1;
+            this.vertices[bufferIndex][vertexId].Color = Color.White;
+            this.vertices[bufferIndex][vertexId].TexCoord = textCoord1;
             vertexId++;
 
             // Vertex 2
-            this.vertices[vertexId].Position = new Vector3(position.X + tileset.TileWidth, position.Y + tileset.TileHeight, 0);
-            this.vertices[vertexId].Color = Color.White;
-            this.vertices[vertexId].TexCoord = textCoord2;
+            this.vertices[bufferIndex][vertexId].Position = position2;
+            this.vertices[bufferIndex][vertexId].Color = Color.White;
+            this.vertices[bufferIndex][vertexId].TexCoord = textCoord2;
             vertexId++;
 
             // Vertex 3
-            this.vertices[vertexId].Position = new Vector3(position.X, position.Y + tileset.TileHeight, 0);
-            this.vertices[vertexId].Color = Color.White;
-            this.vertices[vertexId].TexCoord = textCoord3;
+            this.vertices[bufferIndex][vertexId].Position = position3;
+            this.vertices[bufferIndex][vertexId].Color = Color.White;
+            this.vertices[bufferIndex][vertexId].TexCoord = textCoord3;
             vertexId++;
         }
 
@@ -629,30 +680,34 @@ namespace WaveEngine.TiledMap
         /// </summary>
         /// <param name="startIndex">Start index.</param>
         /// <param name="count">Count indices</param>
+        /// <param name="bufferIndex">The buffer index</param>
         /// <param name="image">Mesh material</param>
-        private void NewMesh(int startIndex, int count, Texture2D image)
+        /// <param name="boundingBox">Mesh bounding box</param>
+        private void NewMesh(int startIndex, int count, int bufferIndex, Texture2D image, ref BoundingBox boundingBox)
         {
-            Mesh mesh = new Mesh(
+            var mesh = new Mesh(
                 0,
                 this.vertices.Length,
-                startIndex * indicesPerTile,
+                startIndex * IndicesPerTile,
                 count * 2,
-                this.vertexBuffer,
-                this.indexBuffer,
+                this.vertexBuffer[bufferIndex],
+                this.indexBuffer[bufferIndex],
                 PrimitiveType.TriangleList)
-                {
-                    DisableBatch = true
-                };
-
-            StandardMaterial material = new StandardMaterial(this.LayerType, image)
             {
-                LightingEnabled = false,
-                SamplerMode = this.samplerMode
+                DisableBatch = true,
+                MaterialIndex = this.materials.Count,
+                BoundingBox = boundingBox,
+            };
+
+            var material = new StandardMaterial(this.LayerId, image)
+            {
+                LightingEnabled = false
             };
 
             material.Initialize(this.Assets);
 
-            this.meshes.Add(new Tuple<StandardMaterial, Mesh>(material, mesh));
+            this.materials.Add(material);
+            this.meshes.Add(mesh);
         }
 
         /// <summary>
@@ -663,12 +718,18 @@ namespace WaveEngine.TiledMap
             this.vertices = null;
             if (this.vertexBuffer != null)
             {
-                this.RenderManager.GraphicsDevice.DestroyVertexBuffer(this.vertexBuffer);
+                for (int i = 0; i < this.vertexBuffer.Length; i++)
+                {
+                    this.RenderManager.GraphicsDevice.DestroyVertexBuffer(this.vertexBuffer[i]);
+                }
             }
 
             if (this.indexBuffer != null)
             {
-                this.RenderManager.GraphicsDevice.DestroyIndexBuffer(this.indexBuffer);
+                for (int i = 0; i < this.indexBuffer.Length; i++)
+                {
+                    this.RenderManager.GraphicsDevice.DestroyIndexBuffer(this.indexBuffer[i]);
+                }
             }
         }
 
@@ -678,6 +739,8 @@ namespace WaveEngine.TiledMap
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
+
             // Delete buffers
             this.RemoveBuffers();
         }

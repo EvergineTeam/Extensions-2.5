@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// FastBlurMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -48,6 +41,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -104,6 +98,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FastBlurMaterial"/> class.
         /// </summary>
@@ -112,12 +107,14 @@ namespace WaveEngine.ImageEffects
         {
         }
 
+        /// <summary>
+        /// DefaultValues
+        /// </summary>
         protected override void DefaultValues()
         {
             base.DefaultValues();
             this.BlurScale = 4.0f;
 
-            this.SamplerMode = AddressMode.LinearClamp;
             this.TexcoordOffset = Vector2.Zero;
 
             this.shaderParameters = new FastBlurEffectParameters();
@@ -138,6 +135,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>

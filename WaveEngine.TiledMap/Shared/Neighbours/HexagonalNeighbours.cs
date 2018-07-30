@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// HexagonalNeighbours
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -15,6 +8,9 @@ using System.Text;
 
 namespace WaveEngine.TiledMap
 {
+    /// <summary>
+    /// HexagonalNeighbours
+    /// </summary>
     public class HexagonalNeighbours : NeighboursCollection
     {
         /// <summary>
@@ -28,6 +24,7 @@ namespace WaveEngine.TiledMap
         private TiledMapStaggerIndexType staggerIndex;
 
         #region Properties
+
         /// <summary>
         /// Gets the top neighbour.
         /// </summary>
@@ -274,10 +271,11 @@ namespace WaveEngine.TiledMap
                     }
                 }
             }
-        } 
+        }
         #endregion
 
         #region Initilization
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HexagonalNeighbours"/> class.
         /// </summary>
@@ -290,7 +288,7 @@ namespace WaveEngine.TiledMap
         {
             this.staggerAxis = staggerAxis;
             this.staggerIndex = staggerIndex;
-        } 
+        }
         #endregion
     }
 }

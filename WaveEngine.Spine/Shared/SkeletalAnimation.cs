@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// SkeletalAnimation
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using Spine;
@@ -67,15 +60,10 @@ namespace WaveEngine.Spine
         /// </summary>
         private string currentAnimation;
 
-        /// <summary>
-        /// Whether animation need a refresh.
-        /// </summary>
-        private bool animationRefreshFlag;
-
         #region Properties
 
         /// <summary>
-        /// The skeleton
+        /// Gets the skeleton
         /// </summary>
         [DontRenderProperty]
         public Skeleton Skeleton { get; private set; }
@@ -112,7 +100,6 @@ namespace WaveEngine.Spine
                 {
                     this.Play(this.Loop);
                 }
-
             }
         }
 
@@ -129,10 +116,10 @@ namespace WaveEngine.Spine
             {
                 return this.animationPath;
             }
+
             set
             {
                 this.animationPath = value;
-                this.animationRefreshFlag = true;
 
                 if (this.isInitialized)
                 {
@@ -181,6 +168,11 @@ namespace WaveEngine.Spine
         [RenderPropertyAsSelector("SkinNames")]
         public string Skin
         {
+            get
+            {
+                return this.currentSkin;
+            }
+
             set
             {
                 if (!string.IsNullOrEmpty(value))
@@ -192,6 +184,7 @@ namespace WaveEngine.Spine
                         try
                         {
                             this.Skeleton.SetSkin(value);
+                            this.RefreshAnimation();
                         }
                         catch (Exception e)
                         {
@@ -199,11 +192,6 @@ namespace WaveEngine.Spine
                         }
                     }
                 }
-            }
-
-            get
-            {
-                return this.currentSkin;
             }
         }
 
@@ -268,14 +256,15 @@ namespace WaveEngine.Spine
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SkeletalAnimation" /> class.
         /// </summary>
-
         public SkeletalAnimation()
             : base("SkeletalAnimation")
         {
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SkeletalAnimation" /> class.
         /// </summary>
@@ -295,8 +284,6 @@ namespace WaveEngine.Spine
             this.Speed = 1;
             this.PlayAutomatically = false;
             this.Loop = false;
-
-            this.animationRefreshFlag = true;
         }
         #endregion
 
@@ -323,7 +310,7 @@ namespace WaveEngine.Spine
         }
 
         /// <summary>
-        /// Search if the skeletal animation contains 
+        /// Search if the skeletal animation contains
         /// </summary>
         /// <param name="animation">Animation name</param>
         /// <returns>Returns true if the skeletal animation contains the animation. False otherwise.</returns>
@@ -386,7 +373,7 @@ namespace WaveEngine.Spine
         protected override void DeleteDependencies()
         {
             this.SkeletalData.OnAtlasRefresh -= this.OnAtlasRefresh;
-            
+
             base.DeleteDependencies();
         }
 
@@ -456,7 +443,6 @@ namespace WaveEngine.Spine
         /// <param name="e">The event args.</param>
         private void OnAtlasRefresh(object sender, EventArgs e)
         {
-            this.animationRefreshFlag = true;
             this.RefreshAnimation();
         }
 
@@ -465,8 +451,7 @@ namespace WaveEngine.Spine
         /// </summary>
         private void RefreshAnimation()
         {
-            if (this.SkeletalData.Atlas == null
-             || !this.animationRefreshFlag)
+            if (this.SkeletalData.Atlas == null)
             {
                 return;
             }
@@ -534,7 +519,6 @@ namespace WaveEngine.Spine
                     this.state.End += this.OnEndAnimation;
 
                     this.Update(TimeSpan.Zero);
-                    this.animationRefreshFlag = false;
                 }
             }
             catch (Exception e)

@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// DistortionMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -55,6 +48,7 @@ namespace WaveEngine.ImageEffects
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -127,14 +121,15 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DistortionMaterial"/> class.
         /// </summary>
+        /// <param name="normalTexturePath">normalTexturePath</param>
         public DistortionMaterial(string normalTexturePath)
             : base(DefaultLayers.Opaque)
         {
             this.normalTexturePath = normalTexturePath;
-            this.SamplerMode = AddressMode.LinearClamp;
             this.Power = 0.05f;
 
             this.shaderParameters = new DistortionEffectParameters();
@@ -161,15 +156,17 @@ namespace WaveEngine.ImageEffects
                 var assembly = this.GetMemberAssembly();
                 var currentNamespace = assembly.GetName().Name;
 
-                var textureResourcePath = currentNamespace + ".Distortion.DistortionNormals.wpk";
-                var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath);
-
-                this.normal = assets.LoadAsset<Texture2D>(textureResourcePath, textureStream);
+                var textureResourcePath = currentNamespace + ".Distortion.DistortionNormals.png";
+                using (var textureStream = ResourceLoader.GetEmbeddedResourceStream(assembly, textureResourcePath))
+                {
+                    this.normal = Texture2D.FromFile(this.graphicsDevice, textureStream);
+                }
             }
         }
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>

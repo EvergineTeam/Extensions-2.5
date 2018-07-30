@@ -47,9 +47,9 @@ public:
 
     /// A time stamp that defines when the trackable result was generated
     /**
-    *  Value in seconds representing the offset to application startup time.
-    *  The timestamp can be used to compare trackable results.
-    */
+     *  Value in seconds representing the offset to application startup time.
+     *  The timestamp can be used to compare trackable results.
+     */
     virtual double getTimeStamp() const = 0;
 
 
@@ -71,9 +71,9 @@ public:
 
     /// Returns the current pose matrix in row-major order
     /**
-    *  A pose is defined in a base coordinate system and defines a transformation
-    *  from a target coordinate system to a base coordinate system.
-    */
+     *  A pose is defined in a base coordinate system and defines a transformation
+     *  from a target coordinate system to a base coordinate system.
+     */
     virtual const Matrix34F& getPose() const = 0;
 
     /// Returns the base coordinate system defined for the pose

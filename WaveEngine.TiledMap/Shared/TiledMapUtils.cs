@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TiledMapUtils
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -22,8 +15,17 @@ using WaveEngine.Framework.Physics2D;
 
 namespace WaveEngine.TiledMap
 {
+    /// <summary>
+    /// TiledMapUtils
+    /// </summary>
     public static class TiledMapUtils
     {
+        /// <summary>
+        /// CollisionEntityFromObject
+        /// </summary>
+        /// <param name="entityName">entityName</param>
+        /// <param name="mapObject">mapObject</param>
+        /// <returns>Entity</returns>
         public static Entity CollisionEntityFromObject(string entityName, TiledMapObject mapObject)
         {
             Entity entity = null;
@@ -79,11 +81,11 @@ namespace WaveEngine.TiledMap
         /// <returns>Tile rectangle</returns>
         public static Rectangle GetRectangleTileByID(Tileset tileset, int tileId)
         {
-            int rectangleX = (tileId % tileset.XTilesCount);
-            int rectangleY = ((tileId - rectangleX) / tileset.XTilesCount);
+            int rectangleX = tileId % tileset.XTilesCount;
+            int rectangleY = (tileId - rectangleX) / tileset.XTilesCount;
 
-            int x = tileset.Margin + (tileset.TileWidth + tileset.Spacing) * rectangleX;
-            int y = tileset.Margin + (tileset.TileHeight + tileset.Spacing) * rectangleY;
+            int x = tileset.Margin + ((tileset.TileWidth + tileset.Spacing) * rectangleX);
+            int y = tileset.Margin + ((tileset.TileHeight + tileset.Spacing) * rectangleY);
 
             return new Rectangle(x, y, tileset.TileWidth, tileset.TileHeight);
         }

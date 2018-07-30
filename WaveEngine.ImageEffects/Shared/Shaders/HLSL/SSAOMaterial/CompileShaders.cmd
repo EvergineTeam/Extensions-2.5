@@ -1,5 +1,5 @@
 @echo off
-rem Copyright (c) Wave Coorporation 2017. All rights reserved.
+rem Copyright (c) Wave Coorporation 2018. All rights reserved.
 
 setlocal
 set error=0

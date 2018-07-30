@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TiledMapObject
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -18,9 +11,13 @@ using TiledSharp;
 
 namespace WaveEngine.TiledMap
 {
+    /// <summary>
+    /// TiledMapObject
+    /// </summary>
     public class TiledMapObject
     {
         #region Properties
+
         /// <summary>
         /// Gets the object name
         /// </summary>
@@ -72,7 +69,7 @@ namespace WaveEngine.TiledMap
         public bool Visible { get; private set; }
 
         /// <summary>
-        /// Gets the point list 
+        /// Gets the point list
         /// </summary>
         public List<TmxObjectPoint> Points { get; private set; }
 
@@ -83,6 +80,7 @@ namespace WaveEngine.TiledMap
         #endregion
 
         #region Initialization
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TiledMapObject" /> class.
         /// </summary>

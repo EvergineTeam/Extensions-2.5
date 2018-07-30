@@ -1,0 +1,25 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Add NoesisGUI library to the project -->
+  <ItemGroup Condition=" '$(Platform)' == 'x86' ">
+    <None Include="$(MSBuildThisFileDirectory)\NoesisGUI\x86\Noesis.dll">
+      <Link>NativeLibraries/x86/Noesis.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'x64' ">
+    <None Include="$(MSBuildThisFileDirectory)\NoesisGUI\x64\Noesis.dll">
+      <Link>NativeLibraries/x64/Noesis.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <None Include="$(MSBuildThisFileDirectory)\NoesisGUI\x86\Noesis.dll">
+      <Link>NativeLibraries/x86/Noesis.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)\NoesisGUI\x64\Noesis.dll">
+      <Link>NativeLibraries/x64/Noesis.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

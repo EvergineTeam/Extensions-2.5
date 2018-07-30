@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// WaveTextureLoader
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using Spine;
@@ -28,6 +21,7 @@ namespace WaveEngine.Spine
         private AssetsContainer assets;
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="WaveTextureLoader" /> class.
         /// </summary>
@@ -39,6 +33,7 @@ namespace WaveEngine.Spine
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Loads the specified page.
         /// </summary>
@@ -49,13 +44,13 @@ namespace WaveEngine.Spine
             var material = new StandardMaterial()
             {
                 LightingEnabled = false,
-                DiffusePath = path,
+                Diffuse1Path = path,
                 VertexColorEnable = true
             };
 
             material.Initialize(this.assets);
 
-            var texture = material.Diffuse;
+            var texture = material.Diffuse1;
             page.rendererObject = material;
             page.width = texture.Width;
             page.height = texture.Height;
@@ -68,7 +63,7 @@ namespace WaveEngine.Spine
         public void Unload(object material)
         {
             var mat = material as StandardMaterial;
-            mat.DiffusePath = null;
+            mat.Diffuse1Path = null;
         }
         #endregion
     }

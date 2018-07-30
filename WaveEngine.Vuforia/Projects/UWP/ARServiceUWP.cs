@@ -1,11 +1,4 @@
-#region File Description
-//-----------------------------------------------------------------------------
-// ARServiceUWP
-//
-// Copyright � 2015 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -28,7 +21,7 @@ namespace WaveEngine.Vuforia
     /// </summary>
     internal class ARServiceUWP : ARServiceBase
     {
-        private static readonly Matrix cameraCorrectionRotationMatrix = Matrix.CreateRotationZ(MathHelper.PiOver2);
+        private static readonly Matrix CameraCorrectionRotationMatrix = Matrix.CreateRotationZ(MathHelper.PiOver2);
 
         #region P/Invoke
         [DllImport(DllName)]
@@ -36,6 +29,9 @@ namespace WaveEngine.Vuforia
 
         [DllImport(DllName)]
         private extern static void QCAR_updateVideoTexture(IntPtr devicePtr);
+
+        [DllImport(DllName)]
+        private extern static bool QCAR_setHolographicAppCS(IntPtr appSpecifiedCS);
         #endregion
 
         #region Variables
@@ -47,6 +43,9 @@ namespace WaveEngine.Vuforia
 
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ARServiceUWP"/> class.
+        /// </summary>
         public ARServiceUWP()
             : base()
         {
@@ -55,17 +54,15 @@ namespace WaveEngine.Vuforia
             this.dxContext = adapter.GraphicsDevice.ContextDirect3D;
         }
 
-        /// <summary>
-        /// Stops the track.
-        /// </summary>
-        /// <returns></returns>
-        public override bool StopTrack()
+        /// <inheritdoc />
+        public override bool StopTracking()
         {
             this.dxDevicePtr = IntPtr.Zero;
 
-            return base.StopTrack();
+            return base.StopTracking();
         }
 
+        /// <inheritdoc />
         protected override Task<bool> InternalInitialize(string licenseKey)
         {
             var rasterizeDescription = new SharpDX.Direct3D11.RasterizerStateDescription()
@@ -88,12 +85,7 @@ namespace WaveEngine.Vuforia
             return base.InternalInitialize(licenseKey);
         }
 
-        /// <summary>
-        /// Creates the camera texture.
-        /// </summary>
-        /// <param name="textureWidth">Width of the texture.</param>
-        /// <param name="textureHeight">Height of the texture.</param>
-        /// <returns>The new texture</returns>
+        /// <inheritdoc />
         protected override Texture CreateCameraTexture(int textureWidth, int textureHeight)
         {
             var cameraTexture = new VideoTexture()
@@ -116,24 +108,23 @@ namespace WaveEngine.Vuforia
             return cameraTexture;
         }
 
-        /// <summary>
-        /// Updates the camera texture.
-        /// </summary>
+        /// <inheritdoc />
         protected override void UpdateCameraTexture()
         {
-            var oldState = this.dxContext.Rasterizer.State;
+            var oldRasterizerState = this.dxContext.Rasterizer.State;
+            var oldDepthStencilState = this.dxContext.OutputMerger.DepthStencilState;
             this.dxContext.Rasterizer.State = this.rasterizerState;
 
             QCAR_updateVideoTexture(this.dxDevicePtr);
 
-            this.dxContext.Rasterizer.State = oldState;
+            this.dxContext.Rasterizer.State = oldRasterizerState;
+            this.dxContext.OutputMerger.DepthStencilState = oldDepthStencilState;
         }
 
-        public override void Update(TimeSpan gameTime)
+        /// <inheritdoc />
+        protected override void AdjustVideoTextureProjection(ref Matrix videoTextureProjection)
         {
-            base.Update(gameTime);
-
-            this.videoTextureProjection = cameraCorrectionRotationMatrix * this.videoTextureProjection;
+            videoTextureProjection = CameraCorrectionRotationMatrix * videoTextureProjection;
         }
     }
 }

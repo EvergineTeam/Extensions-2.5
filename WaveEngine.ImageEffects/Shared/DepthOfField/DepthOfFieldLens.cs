@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// DepthOfFieldLens
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Usings Statements
 using System;
@@ -30,6 +23,7 @@ namespace WaveEngine.ImageEffects
         private float downSampleFactor;
 
         #region Properties
+
         /// <summary>
         /// Gets or sets blur scale, default value is 4.0f.
         /// </summary>
@@ -52,9 +46,9 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
-        /// Focus distance of the lens.
+        /// Gets or sets focus distance of the lens.
         /// </summary>
-        [DataMember]        
+        [DataMember]
         public float FocusDistance
         {
             get
@@ -69,7 +63,7 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
-        /// Blur Downsample factor.
+        /// Gets or sets blur Downsample factor.
         /// </summary>
         [DataMember]
         [RenderPropertyAsSlider(1, 16, 1f)]
@@ -87,7 +81,7 @@ namespace WaveEngine.ImageEffects
         }
 
         /// <summary>
-        /// Focus range of the lens.
+        /// Gets or sets focus range of the lens.
         /// </summary>
         [DataMember]
         [RenderPropertyAsSlider(0.0f, 10, 1f)]
@@ -106,6 +100,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DepthOfFieldLens"/> class.
         /// </summary>
@@ -127,13 +122,14 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Renders to image.
         /// </summary>
         /// <param name="gameTime">The game time.</param>
         public override void Render(TimeSpan gameTime)
         {
-            if(this.Source == null)
+            if (this.Source == null)
             {
                 return;
             }
@@ -150,20 +146,22 @@ namespace WaveEngine.ImageEffects
 
             RenderTarget rt1 = graphicsDevice.RenderTargets.GetTemporalRenderTarget(width, height);
             RenderTarget rt2 = graphicsDevice.RenderTargets.GetTemporalRenderTarget(width, height);
-            graphicsDevice.RenderState.Viewport = new Viewport(0, 0, width, height);
+            graphicsDevice.Viewport = new Viewport(0, 0, width, height);
 
             // Down sampler
             mat.Pass = DepthOfFieldMaterial.Passes.DownSampler;
             mat.Texture = this.Source;
+            mat.Texture1 = null;
             this.RenderToImage(rt1, this.material);
 
             // Blur
             mat.Pass = DepthOfFieldMaterial.Passes.Blur;
             mat.Texture = rt1;
+            mat.Texture1 = null;
             this.RenderToImage(rt2, this.material);
 
             // UpCombine
-            graphicsDevice.RenderState.Viewport = new Viewport(0, 0, this.Source.Width, this.Source.Height);
+            graphicsDevice.Viewport = new Viewport(0, 0, this.Source.Width, this.Source.Height);
             mat.Pass = DepthOfFieldMaterial.Passes.Combine;
             mat.Texture = this.Source;
             mat.Texture1 = rt2;
@@ -175,6 +173,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>

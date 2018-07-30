@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// TiledMapObjectLayer
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -22,11 +15,12 @@ using WaveEngine.Framework;
 namespace WaveEngine.TiledMap
 {
     /// <summary>
-    /// The represent the TMX object layer 
+    /// The represent the TMX object layer
     /// </summary>
     public class TiledMapObjectLayer
     {
         #region Properties
+
         /// <summary>
         /// Gets the object layer name
         /// </summary>
@@ -60,10 +54,11 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Gets the object layer properties
         /// </summary>
-        public IReadOnlyDictionary<string, string> Properties { get; private set; } 
+        public IReadOnlyDictionary<string, string> Properties { get; private set; }
         #endregion
 
         #region Initialziation
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TiledMapObjectLayer" /> class.
         /// </summary>
@@ -79,12 +74,12 @@ namespace WaveEngine.TiledMap
             this.Objects = new List<TiledMapObject>();
             this.Properties = new Dictionary<string, string>(tmxObjectLayer.Properties);
 
-            foreach(var tmxObject in tmxObjectLayer.Objects)
+            foreach (var tmxObject in tmxObjectLayer.Objects)
             {
                 var tiledMapObject = new TiledMapObject(tmxObject);
                 this.Objects.Add(tiledMapObject);
             }
-        } 
+        }
         #endregion
     }
 }

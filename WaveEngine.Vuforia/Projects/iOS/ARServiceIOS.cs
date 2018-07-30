@@ -1,21 +1,10 @@
-#region File Description
-//-----------------------------------------------------------------------------
-// ARServiceIOS
-//
-// Copyright © 2015 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System.Runtime.InteropServices;
-using UIKit;
-using Foundation;
 using WaveEngine.Common.Graphics;
-using System.Threading.Tasks;
 using WaveEngine.Framework;
 using WaveEngine.Framework.Graphics;
-using System;
 using WaveEngine.Common.Math;
 #endregion
 
@@ -26,9 +15,9 @@ namespace WaveEngine.Vuforia
         /// <summary>
         ///  The camera correction matrix
         /// </summary>
-        protected static readonly Matrix cameraCorrectionRotationMatrix = Matrix.CreateRotationZ(-MathHelper.PiOver2);
+        protected static readonly Matrix CameraCorrectionRotationMatrix = Matrix.CreateRotationZ(-MathHelper.PiOver2);
 
-        protected static readonly Matrix cameraCorrectionRotationPortraitUpsideDownMatrix = Matrix.CreateRotationZ(MathHelper.PiOver2);
+        protected static readonly Matrix CameraCorrectionRotationPortraitUpsideDownMatrix = Matrix.CreateRotationZ(MathHelper.PiOver2);
 
         #region P/Invoke
         [DllImport(DllName)]
@@ -37,7 +26,8 @@ namespace WaveEngine.Vuforia
         [DllImport(DllName)]
         private extern static void QCAR_updateVideoTexture();
         #endregion
-            
+
+        /// <inheritdoc />
         protected override Texture CreateCameraTexture(int textureWidth, int textureHeight)
         {
             var adapter = Game.Current.Application.Adapter as Adapter.Adapter;
@@ -55,31 +45,27 @@ namespace WaveEngine.Vuforia
             QCAR_setVideoTexture((int)texturePtr);
             return cameraTexture;
         }
-        
+
+        /// <inheritdoc />
         protected override void UpdateCameraTexture()
         {
             QCAR_updateVideoTexture();
         }
 
-        /// <summary>
-        /// Update the service
-        /// </summary>
-        /// <param name="gameTime">The game time</param>
-        public override void Update(TimeSpan gameTime)
+        /// <inheritdoc />
+        protected override void AdjustVideoTextureProjection(ref Matrix videoTextureProjection)
         {
-            base.Update(gameTime);
-
-            switch(this.currentOrientation)
+            switch (this.currentOrientation)
             {
-                case AROrientation.ORIENTATION_PORTRAIT:
-                    this.videoTextureProjection = cameraCorrectionRotationMatrix * this.videoTextureProjection;
+                case QCAR_Orientation.ORIENTATION_PORTRAIT:
+                    videoTextureProjection = CameraCorrectionRotationMatrix * videoTextureProjection;
                     break;
-                case AROrientation.ORIENTATION_PORTRAIT_UPSIDEDOWN:
-                    this.videoTextureProjection = cameraCorrectionRotationPortraitUpsideDownMatrix * this.videoTextureProjection;
+                case QCAR_Orientation.ORIENTATION_PORTRAIT_UPSIDEDOWN:
+                    videoTextureProjection = CameraCorrectionRotationPortraitUpsideDownMatrix * videoTextureProjection;
                     break;
                 default:
                     break;
-            }            
+            }
         }
     }
 }

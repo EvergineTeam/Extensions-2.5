@@ -1,11 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// BokehMaterial
-//
-// Copyright © 2017 Wave Engine S.L. All rights reserved.
-// Use is subject to license terms.
-//-----------------------------------------------------------------------------
-#endregion
+﻿// Copyright © 2018 Wave Engine S.L. All rights reserved. Use is subject to license terms.
 
 #region Using Statements
 using System;
@@ -87,15 +80,16 @@ namespace WaveEngine.ImageEffects
         private static ShaderTechnique[] techniques =
         {
             new ShaderTechnique("CoCMap", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psCoCMap", VertexPositionTexture.VertexFormat),
-            new ShaderTechnique("HorizontalBlur_Low", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psHorizontalBlur", VertexPositionTexture.VertexFormat, null, new string[]{"LOW"}),
-            new ShaderTechnique("HorizontalBlur_Medium", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psHorizontalBlur", VertexPositionTexture.VertexFormat, null, new string[]{"MEDIUM"}),
-            new ShaderTechnique("HorizontalBlur_High", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psHorizontalBlur", VertexPositionTexture.VertexFormat, null, new string[]{"HIGH"}),
-            new ShaderTechnique("DiagonalBlurCombine_Low", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psDiagonalBlurCombine", VertexPositionTexture.VertexFormat, null, new string[]{"LOW"}),
-            new ShaderTechnique("DiagonalBlurCombine_Medium", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psDiagonalBlurCombine", VertexPositionTexture.VertexFormat, null, new string[]{"MEDIUM"}),
-            new ShaderTechnique("DiagonalBlurCombine_High", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psDiagonalBlurCombine", VertexPositionTexture.VertexFormat, null, new string[]{"HIGH"}),
+            new ShaderTechnique("HorizontalBlur_Low", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psHorizontalBlur", VertexPositionTexture.VertexFormat, null, new string[] { "LOW" }),
+            new ShaderTechnique("HorizontalBlur_Medium", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psHorizontalBlur", VertexPositionTexture.VertexFormat, null, new string[] { "MEDIUM" }),
+            new ShaderTechnique("HorizontalBlur_High", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psHorizontalBlur", VertexPositionTexture.VertexFormat, null, new string[] { "HIGH" }),
+            new ShaderTechnique("DiagonalBlurCombine_Low", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psDiagonalBlurCombine", VertexPositionTexture.VertexFormat, null, new string[] { "LOW" }),
+            new ShaderTechnique("DiagonalBlurCombine_Medium", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psDiagonalBlurCombine", VertexPositionTexture.VertexFormat, null, new string[] { "MEDIUM" }),
+            new ShaderTechnique("DiagonalBlurCombine_High", "ImageEffectMaterial", "ImageEffectvsImageEffect", string.Empty, "psDiagonalBlurCombine", VertexPositionTexture.VertexFormat, null, new string[] { "HIGH" }),
         };
 
         #region Struct
+
         /// <summary>
         /// Shader parameters.
         /// </summary>
@@ -137,43 +131,44 @@ namespace WaveEngine.ImageEffects
         private BokehEffectParameters shaderParameters;
 
         #region Properties
+
         /// <summary>
-        /// Effect quality, Low by default.
+        /// Gets or sets effect quality, Low by default.
         /// </summary>
         public EffectQuality Quality { get; set; }
 
         /// <summary>
-        /// Focus Distance
+        /// Gets or sets focus Distance
         /// </summary>
         public float FocalDistance { get; set; }
 
         /// <summary>
-        /// Focus range
+        /// Gets or sets focus range
         /// </summary>
         public float FocalLength { get; set; }
 
         /// <summary>
-        /// Aperture
+        /// Gets or sets aperture
         /// </summary>
         public float Aperture { get; set; }
 
         /// <summary>
-        /// Film width, 24 mm by default.
+        /// Gets or sets film width, 24 mm by default.
         /// </summary>
         public float FilmWidth { get; set; }
 
         /// <summary>
-        /// Shine threshold
+        /// Gets or sets shine threshold
         /// </summary>
         public float ShineThreshold { get; set; }
 
         /// <summary>
-        ///  Shine amount
+        ///  Gets or sets shine amount
         /// </summary>
         public float ShineAmount { get; set; }
 
         /// <summary>
-        /// Calculated offset.
+        /// Gets or sets calculated offset.
         /// </summary>
         public Vector2 BlurDisp { get; set; }
 
@@ -250,6 +245,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Initialize
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BokehMaterial"/> class.
         /// </summary>
@@ -265,7 +261,6 @@ namespace WaveEngine.ImageEffects
         {
             base.DefaultValues();
 
-            this.SamplerMode = AddressMode.LinearClamp;
             this.Quality = EffectQuality.Low;
             this.Aperture = 0.35f;
             this.FocalLength = 0.05f;
@@ -290,6 +285,7 @@ namespace WaveEngine.ImageEffects
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the pass.
         /// </summary>
@@ -309,7 +305,7 @@ namespace WaveEngine.ImageEffects
             this.shaderParameters.ShineAmount = this.ShineAmount;
             this.Parameters = this.shaderParameters;
 
-            depthTexture = this.renderManager.GraphicsDevice.RenderTargets.DefaultDepthTexture;
+            this.depthTexture = this.renderManager.GraphicsDevice.RenderTargets.DefaultDepthTexture;
 
             if (this.texture != null)
             {
